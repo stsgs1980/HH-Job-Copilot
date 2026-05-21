@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle, Logo } from '@/components/shared'
 import { ChatProvider, useChatContext } from '@/contexts/chat-context'
+import { DashboardModeProvider, useDashboardMode } from '@/contexts/dashboard-mode-context'
 import { useFeatureFlag } from '@/hooks/use-feature-flag'
+import { useAnalytics } from '@/hooks/use-analytics'
 import { GradientOrb } from '@/components/neuro'
 import {
   Zap, MessageSquare, Search, Briefcase, Mic, BarChart3, Check, LogOut, Send,
@@ -17,44 +18,41 @@ import type { DashboardMode } from '@/types'
 const modes: Array<{ id: DashboardMode; label: string; icon: React.ComponentType<{ className?: string }> }> = [
   { id: 'chat', label: 'Чат', icon: MessageSquare },
   { id: 'search', label: 'Поиск', icon: Search },
-  { id: 'vacancies', label: 'Вакансии', icon: Briefcase },
+  { id: 'vacancies', label: 'Отклики', icon: Briefcase },
   { id: 'interview', label: 'Интервью', icon: Mic },
   { id: 'analytics', label: 'Аналитика', icon: BarChart3 },
 ]
 
-export default function AppLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ChatProvider>
-      <AppShell>{children}</AppShell>
-    </ChatProvider>
+    <DashboardModeProvider>
+      <ChatProvider>
+        <AppShell>{children}</AppShell>
+      </ChatProvider>
+    </DashboardModeProvider>
   )
 }
 
 function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter()
-  const [activeMode, setActiveMode] = useState<DashboardMode>('chat')
+  const { activeMode, setActiveMode } = useDashboardMode()
   const chat = useChatContext()
   const asrEnabled = useFeatureFlag('asr')
+  const { stats } = useAnalytics()
+
+  // Parse analytics stats for topbar
+  const отклики = stats.find(s => s.label === 'Отклики')?.value ?? '0'
+  const приглашения = stats.find(s => s.label === 'Приглашения')?.value ?? '0'
 
   return (
     <div className="h-screen flex flex-col bg-background relative overflow-hidden">
-      {/* NEURO: Ambient glow — stronger presence */}
+      {/* Ambient glow */}
       <div className="ambient-glow w-[600px] h-[600px] bg-cyan -top-64 -right-64" aria-hidden="true" />
       <div className="ambient-glow w-[400px] h-[400px] bg-purple -bottom-40 -left-40" style={{ animationDelay: '-12s' }} aria-hidden="true" />
-      <div className="ambient-glow w-[300px] h-[300px] bg-emerald top-1/2 left-1/3" style={{ animationDelay: '-6s', opacity: 0.05 }} aria-hidden="true" />
-
-      {/* NEURO v4: Premium gradient orbs */}
       <GradientOrb color="cyan" size={300} x="85%" y="15%" />
       <GradientOrb color="purple" size={250} x="15%" y="75%" />
 
-      {/* NEURO: Dot pattern in background */}
-      <div className="dot-pattern top-20 right-20 opacity-20" aria-hidden="true" />
-
-      {/* Top Bar — glass nav with gradient accent */}
+      {/* Top Bar */}
       <header className="relative z-50 glass-nav shrink-0" role="banner">
         <div className="px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -84,15 +82,11 @@ function AppShell({ children }: { children: React.ReactNode }) {
             <div className="hidden lg:flex items-center gap-3 text-xs">
               <span className="flex items-center gap-1.5 glass-card px-2.5 py-1 rounded-lg stat-card">
                 <Zap className="w-3 h-3 text-cyan" />
-                <span className="font-semibold tabular-nums">47</span> откликов
+                <span className="font-semibold tabular-nums">{отклики}</span> откликов
               </span>
               <span className="flex items-center gap-1.5 glass-card px-2.5 py-1 rounded-lg stat-card">
                 <Check className="w-3 h-3 text-emerald" />
-                <span className="font-semibold tabular-nums">8</span> приглашений
-              </span>
-              <span className="flex items-center gap-1.5 glass-card px-2.5 py-1 rounded-lg stat-card">
-                <MessageSquare className="w-3 h-3 text-purple" />
-                <span className="font-semibold tabular-nums">5</span> чатов
+                <span className="font-semibold tabular-nums">{приглашения}</span> приглашений
               </span>
             </div>
             <ThemeToggle size="icon" className="h-8 w-8" />
@@ -101,6 +95,24 @@ function AppShell({ children }: { children: React.ReactNode }) {
             </Button>
           </div>
         </div>
+        {/* Mobile mode tabs */}
+        <div className="md:hidden flex gap-1 px-4 pb-2 overflow-x-auto" role="tablist" aria-label="Режимы дашборда (мобильная)">
+          {modes.map(m => (
+            <button
+              key={m.id}
+              role="tab"
+              aria-selected={activeMode === m.id}
+              onClick={() => setActiveMode(m.id)}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+                activeMode === m.id
+                  ? 'bg-background shadow-sm text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              <m.icon className="w-3.5 h-3.5" /> {m.label}
+            </button>
+          ))}
+        </div>
       </header>
 
       {/* Main Content Area */}
@@ -108,68 +120,69 @@ function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </div>
 
-      {/* Input Bar — glass nav style with gradient accent */}
-      <div className="relative z-50 glass-nav shrink-0">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3">
-          <div className="flex items-center gap-2 glass-card rounded-xl px-4 py-2 hover-glow">
-            {chat.isLoading ? (
-              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-red-400 hover:text-red-300" onClick={chat.stopStreaming} aria-label="Остановить">
-                <Square className="w-4 h-4" />
-              </Button>
-            ) : (
-              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={chat.handleSubmit} disabled={!chat.inputValue.trim()} aria-label="Отправить">
-                <Send className="w-4 h-4" />
-              </Button>
-            )}
-            <input
-              value={chat.inputValue}
-              onChange={e => chat.setInputValue(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chat.handleSubmit() } }}
-              placeholder={chat.isRecording ? 'Слушаю...' : 'Спросите что угодно или дайте команду...'}
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-              aria-label="Ввод сообщения"
-            />
-            <div className="flex items-center gap-1">
-              {chat.isRecording ? (
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-300" onClick={chat.stopRecording} aria-label="Остановить запись">
-                  <MicOff className="w-4 h-4" />
+      {/* Input Bar — only visible in chat mode */}
+      {activeMode === 'chat' && (
+        <div className="relative z-50 glass-nav shrink-0">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3">
+            <div className="flex items-center gap-2 glass-card rounded-xl px-4 py-2 hover-glow">
+              {chat.isLoading ? (
+                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-red-400 hover:text-red-300" onClick={chat.stopStreaming} aria-label="Остановить">
+                  <Square className="w-4 h-4" />
                 </Button>
               ) : (
+                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={chat.handleSubmit} disabled={!chat.inputValue.trim()} aria-label="Отправить">
+                  <Send className="w-4 h-4" />
+                </Button>
+              )}
+              <input
+                value={chat.inputValue}
+                onChange={e => chat.setInputValue(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chat.handleSubmit() } }}
+                placeholder={chat.isRecording ? 'Слушаю...' : 'Спросите что угодно или дайте команду...'}
+                className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                aria-label="Ввод сообщения"
+              />
+              <div className="flex items-center gap-1">
+                {chat.isRecording ? (
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-300" onClick={chat.stopRecording} aria-label="Остановить запись">
+                    <MicOff className="w-4 h-4" />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={asrEnabled ? chat.startRecording : undefined}
+                    title={asrEnabled ? 'Голосовой ввод' : 'Скоро'}
+                    aria-label={asrEnabled ? 'Голосовой ввод' : 'Голосовой ввод скоро'}
+                  >
+                    <Mic className={`w-4 h-4 ${asrEnabled ? 'text-emerald' : 'text-muted-foreground'}`} />
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={asrEnabled ? chat.startRecording : undefined}
-                  title={asrEnabled ? 'Голосовой ввод' : 'Скоро'}
-                  aria-label={asrEnabled ? 'Голосовой ввод' : 'Голосовой ввод скоро'}
+                  onClick={() => { chat.setInputValue('Найди вакансии по '); setActiveMode('search') }}
+                  title="Поиск вакансий"
+                  aria-label="Поиск вакансий"
                 >
-                  <Mic className={`w-4 h-4 ${asrEnabled ? 'text-emerald' : 'text-muted-foreground'}`} />
-                  {chat.isRecording && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-400 animate-pulse-dot" />}
+                  <Briefcase className="w-4 h-4 text-cyan" />
                 </Button>
-              )}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => { chat.setInputValue('Найди вакансии по '); }}
-                title="Поиск вакансий"
-                aria-label="Поиск вакансий"
-              >
-                <Briefcase className="w-4 h-4 text-cyan" />
-              </Button>
+              </div>
             </div>
+            <p className="text-center text-[10px] text-muted-foreground mt-2">
+              {chat.isRecording ? (
+                <span className="text-red-400 flex items-center justify-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse-dot" /> Запись...
+                </span>
+              ) : (
+                'HH Job Copilot может ошибаться. Проверяйте важную информацию.'
+              )}
+            </p>
           </div>
-          <p className="text-center text-[10px] text-muted-foreground mt-2">
-            {chat.isRecording ? (
-              <span className="text-red-400 flex items-center justify-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse-dot" /> Запись...
-              </span>
-            ) : (
-              'HH Job Copilot может ошибаться. Проверяйте важную информацию.'
-            )}
-          </p>
         </div>
-      </div>
+      )}
     </div>
   )
 }

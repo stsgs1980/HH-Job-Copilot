@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,7 +9,7 @@ import { Logo } from '@/components/shared'
 import { SpotlightCard } from '@/components/neuro/spotlight-card'
 import {
   FileText, MapPin, Building2, Sparkles, ArrowRight, ArrowLeft, Check,
-  Globe, Users,
+  Globe, Users, Loader2,
 } from 'lucide-react'
 
 const steps = [
@@ -22,6 +22,7 @@ const steps = [
 export default function OnboardingPage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
+  const [saving, setSaving] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     resume: '',
@@ -38,21 +39,61 @@ export default function OnboardingPage() {
 
   const next = () => step < 4 && setStep(step + 1)
   const prev = () => step > 1 && setStep(step - 1)
-  const finish = () => router.push('/dashboard')
+
+  /** Save profile data to DB */
+  const saveProfile = useCallback(async () => {
+    setSaving(true)
+    try {
+      const preferences = JSON.stringify({
+        salaryMin: formData.salaryMin ? parseInt(formData.salaryMin.replace(/\s/g, ''), 10) : null,
+        salaryMax: formData.salaryMax ? parseInt(formData.salaryMax.replace(/\s/g, ''), 10) : null,
+        location: formData.location,
+        format: formData.format,
+      })
+
+      await fetch('/api/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name || undefined,
+          resumeText: formData.resume || undefined,
+          preferences,
+          userId: 'mock-user-001',
+        }),
+      })
+    } catch (error) {
+      console.error('Failed to save profile:', error)
+    }
+    setSaving(false)
+  }, [formData])
+
+  const finish = useCallback(async () => {
+    await saveProfile()
+    router.push('/dashboard')
+  }, [saveProfile, router])
+
+  const handleHHConnect = useCallback(async () => {
+    try {
+      // Try HH OAuth redirect
+      const res = await fetch('/api/hh/oauth', { method: 'GET' })
+      if (res.redirected) {
+        window.location.href = res.url
+        return
+      }
+      // Fallback: just mark as connected locally
+      update('hhConnected', true)
+    } catch {
+      update('hhConnected', true)
+    }
+  }, [])
 
   return (
     <div className="h-screen flex flex-col items-center justify-center p-4 gradient-mesh-deep relative overflow-hidden">
-      {/* NEURO: Mesh blobs */}
+      {/* Mesh blobs */}
       <div className="mesh-blob mesh-blob-1 top-[10%] left-[10%]" />
       <div className="mesh-blob mesh-blob-2 bottom-[20%] right-[10%]" />
       <div className="mesh-blob mesh-blob-3 top-[50%] left-[50%]" />
-
-      {/* NEURO: Dot pattern */}
       <div className="dot-pattern bottom-10 right-10 opacity-20" />
-
-      {/* NEURO: Floating elements */}
-      <div className="absolute top-1/4 right-1/4 w-2 h-2 rounded-full bg-cyan/15 animate-float" aria-hidden="true" />
-      <div className="absolute bottom-1/3 left-1/4 w-3 h-3 rounded-full bg-purple/10 animate-float" style={{ animationDelay: '3s' }} aria-hidden="true" />
 
       <div className="relative z-10 w-full max-w-2xl">
         {/* Header */}
@@ -61,7 +102,7 @@ export default function OnboardingPage() {
           <p className="text-muted-foreground text-sm mt-2">Настройка за 2 минуты</p>
         </div>
 
-        {/* Progress — NEURO glass style */}
+        {/* Progress */}
         <div className="flex items-center justify-center gap-2 mb-8" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={4}>
           {steps.map((s, i) => (
             <div key={s.id} className="flex items-center">
@@ -83,7 +124,7 @@ export default function OnboardingPage() {
           ))}
         </div>
 
-        {/* Step Content — NEURO glass-elevated card */}
+        {/* Step Content */}
         <SpotlightCard tilt maxTilt={2} className="p-0 glass-card-elevated">
           <Card className="bg-transparent border-0 shadow-none">
             <CardHeader className="text-center">
@@ -113,7 +154,7 @@ export default function OnboardingPage() {
                       className="w-full min-h-[120px] rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground">Позже вы сможете загрузить полное резюме из файла</p>
+                  <p className="text-xs text-muted-foreground">Эти данные будут сохранены и использованы AI для подбора вакансий</p>
                 </div>
               )}
 
@@ -171,8 +212,8 @@ export default function OnboardingPage() {
                     </p>
                     <Button
                       size="lg"
-                      className="gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 sweep-btn"
-                      onClick={() => update('hhConnected', true)}
+                      className="gradient-bg text-white border-0 hover:opacity-90 sweep-btn"
+                      onClick={handleHHConnect}
                     >
                       {formData.hhConnected ? (
                         <><Check className="mr-2 w-4 h-4" /> Подключено</>
@@ -181,7 +222,7 @@ export default function OnboardingPage() {
                       )}
                     </Button>
                     {!formData.hhConnected && (
-                      <p className="text-xs text-muted-foreground">Можно пропустить и подключить позже</p>
+                      <p className="text-xs text-muted-foreground">Можно пропустить и подключить позже в настройках</p>
                     )}
                   </div>
                 </div>
@@ -228,8 +269,9 @@ export default function OnboardingPage() {
                     Далее <ArrowRight className="w-4 h-4" />
                   </Button>
                 ) : (
-                  <Button onClick={finish} className="gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 sweep-btn gap-1.5">
-                    Начать работу <Sparkles className="w-4 h-4" />
+                  <Button onClick={finish} disabled={saving} className="gradient-bg text-white border-0 hover:opacity-90 sweep-btn gap-1.5">
+                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                    Начать работу
                   </Button>
                 )}
               </div>
