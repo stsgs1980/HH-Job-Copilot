@@ -1,7 +1,6 @@
 'use client'
 
 import { useDashboardMode } from '@/contexts/dashboard-mode-context'
-import { useChatContext } from '@/contexts/chat-context'
 import { ChatView } from '@/components/dashboard/chat-view'
 import { VacancySearch } from '@/components/dashboard/vacancy-search'
 import { ApplicationTracker } from '@/components/dashboard/application-tracker'
