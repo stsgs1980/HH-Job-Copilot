@@ -1,16 +1,18 @@
 // ============================================================
 // HH Job Copilot — Prisma Schema
-// Стек: SQLite (dev) → PostgreSQL (prod)
+// Стек: PostgreSQL (Neon serverless)
 // Монетизация: Starter $0 / Pro $19/mo / Ultra $49/mo
 // ============================================================
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ---- Enums ----
