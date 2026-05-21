@@ -45,13 +45,16 @@ interface PricingProps {
 
 export function Pricing({ onNavigate }: PricingProps) {
   return (
-    <section id="pricing" className="py-24 sm:py-32" aria-labelledby="pricing-heading">
+    <section id="pricing" className="py-24 sm:py-32 relative" aria-labelledby="pricing-heading">
+      {/* NEURO: Section divider at top */}
+      <div className="absolute top-0 left-0 right-0 section-divider" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <RevealOnScroll className="text-center mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-cyan mb-4">
-            <span className="w-6 h-px bg-cyan" />
+            <span className="w-8 h-px bg-gradient-to-r from-transparent to-cyan" />
             Тарифы
-            <span className="w-6 h-px bg-cyan" />
+            <span className="w-8 h-px bg-gradient-to-l from-transparent to-cyan" />
           </div>
           <h2 id="pricing-heading" className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
             Выберите <span className="gradient-text">свой план</span>
@@ -63,8 +66,10 @@ export function Pricing({ onNavigate }: PricingProps) {
             <RevealOnScroll key={i} delay={i * 0.1} direction={i === 0 ? 'left' : i === 2 ? 'right' : 'up'}>
               <TiltCard maxTilt={p.popular ? 6 : 3} glareIntensity={p.popular ? 0.12 : 0.05}>
                 <SpotlightCard
-                  spotlightColor={p.popular ? 'rgba(34,211,238,0.10)' : 'rgba(34,211,238,0.04)'}
-                  className={`p-8 flex flex-col h-full ${p.popular ? 'gradient-border-animated shadow-xl shadow-cyan/5' : ''}`}
+                  spotlightColor={p.popular ? 'rgba(34,211,238,0.12)' : 'rgba(34,211,238,0.04)'}
+                  animatedBorder={p.popular}
+                  tilt={false}
+                  className={`p-8 flex flex-col h-full glass-card ${p.popular ? 'shadow-xl shadow-cyan/8' : ''}`}
                 >
                   {p.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
@@ -94,7 +99,7 @@ export function Pricing({ onNavigate }: PricingProps) {
                     <Button
                       className={`w-full ${
                         p.popular
-                          ? 'gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 sweep-btn'
+                          ? 'gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 sweep-btn shadow-lg shadow-cyan/20'
                           : ''
                       }`}
                       variant={p.popular ? 'default' : 'outline'}

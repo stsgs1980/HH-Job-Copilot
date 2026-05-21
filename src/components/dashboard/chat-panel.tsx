@@ -13,9 +13,11 @@ const chatList: ChatItem[] = [
 
 interface ChatPanelProps {
   onClose: () => void
+  chats?: ChatItem[]
+  isLoading?: boolean
 }
 
-export function ChatPanel({ onClose }: ChatPanelProps) {
+export function ChatPanel({ onClose, chats: _chats, isLoading: _isLoading }: ChatPanelProps) {
   return (
     <aside className="hidden lg:flex flex-col w-[340px] border-l border-border/50 bg-background/80 backdrop-blur-xl shrink-0">
       <div className="px-4 py-3 border-b border-border/50 flex items-center justify-between">

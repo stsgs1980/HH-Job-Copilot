@@ -7,15 +7,18 @@ interface TiltCardProps {
   children: ReactNode
   className?: string
   maxTilt?: number
-  /** Glare effect intensity (0-1, default: 0.08) */
+  /** Glare effect intensity (0-1, default: 0.10) */
   glareIntensity?: number
+  /** Enable scale on hover (default: true) */
+  scaleOnHover?: boolean
 }
 
 export function TiltCard({
   children,
   className = '',
   maxTilt = 6,
-  glareIntensity = 0.08,
+  glareIntensity = 0.10,
+  scaleOnHover = true,
 }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
 
@@ -27,13 +30,14 @@ export function TiltCard({
     const y = (e.clientY - rect.top) / rect.height
     const tiltX = (y - 0.5) * -maxTilt
     const tiltY = (x - 0.5) * maxTilt
+    const scale = scaleOnHover ? ' scale3d(1.02, 1.02, 1.02)' : ''
 
-    card.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px)`
+    card.style.transform = `perspective(800px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px)${scale}`
 
-    // Move glare
+    // Move glare — larger, softer
     const glare = card.querySelector('[data-glare]') as HTMLElement
     if (glare) {
-      glare.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(255,255,255,${glareIntensity}), transparent 60%)`
+      glare.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(34,211,238,${glareIntensity * 0.3}), rgba(167,139,250,${glareIntensity * 0.15}), transparent 60%)`
     }
   }
 
@@ -59,7 +63,7 @@ export function TiltCard({
       )}
       style={{ transformStyle: 'preserve-3d' }}
     >
-      {/* NEURO: Glare overlay */}
+      {/* NEURO: Glare overlay — cyan/purple tinted */}
       <div
         data-glare
         className="pointer-events-none absolute inset-0 z-20 rounded-2xl transition-opacity duration-300"

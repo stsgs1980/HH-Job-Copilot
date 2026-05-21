@@ -16,23 +16,35 @@ const features: FeatureCard[] = [
 ]
 
 const spotlightColors = [
-  'rgba(34,211,238,0.08)',
-  'rgba(52,211,153,0.08)',
-  'rgba(167,139,250,0.08)',
-  'rgba(34,211,238,0.08)',
-  'rgba(52,211,153,0.08)',
-  'rgba(167,139,250,0.08)',
+  'rgba(34,211,238,0.10)',
+  'rgba(52,211,153,0.10)',
+  'rgba(167,139,250,0.10)',
+  'rgba(34,211,238,0.10)',
+  'rgba(52,211,153,0.10)',
+  'rgba(167,139,250,0.10)',
+]
+
+const iconBgs = [
+  'bg-cyan/10 border border-cyan/15',
+  'bg-emerald/10 border border-emerald/15',
+  'bg-purple/10 border border-purple/15',
+  'bg-cyan/10 border border-cyan/15',
+  'bg-emerald/10 border border-emerald/15',
+  'bg-purple/10 border border-purple/15',
 ]
 
 export function Features() {
   return (
-    <section id="features" className="py-24 sm:py-32" aria-labelledby="features-heading">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="features" className="py-24 sm:py-32 relative" aria-labelledby="features-heading">
+      {/* NEURO: Subtle background mesh */}
+      <div className="absolute inset-0 gradient-mesh opacity-40 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <RevealOnScroll className="text-center mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-cyan mb-4">
-            <span className="w-6 h-px bg-cyan" />
+            <span className="w-8 h-px bg-gradient-to-r from-transparent to-cyan" />
             Возможности
-            <span className="w-6 h-px bg-cyan" />
+            <span className="w-8 h-px bg-gradient-to-l from-transparent to-cyan" />
           </div>
           <h2 id="features-heading" className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
             Всё что нужно для <span className="gradient-text">быстрого поиска</span>
@@ -49,16 +61,10 @@ export function Features() {
                 spotlightColor={spotlightColors[i]}
                 tilt
                 maxTilt={4}
-                className="p-8 h-full hover-lift"
+                className="p-8 h-full hover-lift glass-card"
               >
                 <CardHeader className="p-0 mb-4">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
-                    f.accent === 'text-cyan'
-                      ? 'bg-cyan/10 border border-cyan/15'
-                      : f.accent === 'text-emerald'
-                      ? 'bg-emerald/10 border border-emerald/15'
-                      : 'bg-purple/10 border border-purple/15'
-                  }`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${iconBgs[i]}`}>
                     <f.icon className={`w-5 h-5 ${f.accent}`} />
                   </div>
                   <CardTitle className="text-lg font-bold">{f.title}</CardTitle>

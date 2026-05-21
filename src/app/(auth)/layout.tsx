@@ -13,7 +13,7 @@ export default function AuthLayout({
       <div className="mesh-blob mesh-blob-2 bottom-[10%] right-[5%]" />
       <div className="mesh-blob mesh-blob-3 top-[40%] left-[45%]" />
 
-      {/* NEURO: Dot pattern */}
+      {/* NEURO: Dot pattern — dual-layer */}
       <div className="dot-pattern top-[20%] right-[8%]" />
 
       {/* Left decorative panel */}
@@ -25,8 +25,9 @@ export default function AuthLayout({
         <div className="dot-pattern top-[30%] right-[10%]" />
 
         {/* NEURO: Floating elements */}
-        <div className="absolute top-1/3 right-1/4 w-2 h-2 rounded-full bg-cyan/20 animate-float" />
-        <div className="absolute bottom-1/3 left-1/4 w-3 h-3 rounded-full bg-purple/15 animate-float" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-1/3 right-1/4 w-2 h-2 rounded-full bg-cyan/25 animate-float" />
+        <div className="absolute bottom-1/3 left-1/4 w-3 h-3 rounded-full bg-purple/20 animate-float" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-[60%] right-[15%] w-2 h-2 rounded-full bg-emerald/15 animate-float" style={{ animationDelay: '5s' }} />
 
         <div className="relative z-10 p-16 max-w-lg" style={{
           animation: 'fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) both',
@@ -35,11 +36,14 @@ export default function AuthLayout({
             <div className="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center font-black text-lg text-white"
               style={{
                 transform: 'rotateY(-8deg) rotateX(4deg)',
-                boxShadow: '0 8px 30px rgba(34,211,238,0.40), 0 4px 20px rgba(167,139,250,0.25)',
+                boxShadow: '0 8px 30px rgba(34,211,238,0.45), 0 4px 20px rgba(167,139,250,0.25)',
                 animation: 'fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.1s both',
               }}
             >
-              HC
+              <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6" aria-hidden="true">
+                <path d="M12 2L21 7.5V16.5L12 22L3 16.5V7.5L12 2Z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
+                <path d="M12 8V12M9 10.5H15M12 12L9 14M12 12L15 14" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
+              </svg>
             </div>
             <span className="text-2xl font-extrabold tracking-tight" style={{ animation: 'fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.15s both' }}>
               HH <span className="gradient-text">Copilot</span>
@@ -54,14 +58,14 @@ export default function AuthLayout({
             Автоматизируйте поиск на HH.ru, получайте AI-подсказки на собеседованиях и получайте офферы быстрее, чем когда-либо
           </p>
 
-          {/* Testimonial — elevated glass card */}
+          {/* Testimonial — elevated glass card with gradient accent */}
           <div className="glass-card-elevated p-7 relative overflow-hidden" style={{ animation: 'fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.4s both' }}>
             <div className="absolute top-0 left-0 w-0.5 h-full gradient-bg" />
             <p className="text-sm text-muted-foreground leading-relaxed italic mb-4">
               С HH Copilot я нашла работу за 2 недели вместо 3 месяцев. AI-подсказки на собеседовании — это просто магия!
             </p>
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center text-xs font-bold text-white">
+              <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center text-xs font-bold text-white shadow-sm shadow-cyan/20">
                 АК
               </div>
               <div>
@@ -75,7 +79,7 @@ export default function AuthLayout({
 
       {/* Right form panel */}
       <div className="flex-1 flex items-center justify-center p-8 sm:p-12 relative">
-        {/* Left border gradient */}
+        {/* Left border gradient line */}
         <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-cyan/20 to-transparent" />
 
         <div className="relative z-10 w-full max-w-md" style={{ animation: 'fadeInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) 0.2s both' }}>

@@ -12,28 +12,43 @@ interface HeroProps {
 export function Hero({ onNavigate }: HeroProps) {
   return (
     <section className="relative overflow-hidden gradient-mesh-deep" aria-label="Главный баннер">
-      {/* NEURO: Mesh gradient blobs — larger, organic */}
+      {/* NEURO: Mesh gradient blobs — larger, richer color */}
       <div className="mesh-blob mesh-blob-1 top-[5%] left-[5%]" />
       <div className="mesh-blob mesh-blob-2 bottom-[10%] right-[5%]" />
       <div className="mesh-blob mesh-blob-3 top-[40%] left-[45%]" />
 
-      {/* NEURO: Dot pattern — larger, more visible */}
+      {/* NEURO: Dot pattern — dual-layer organic dots */}
       <div className="dot-pattern top-32 right-16" />
       <div className="dot-pattern bottom-20 left-20 opacity-30" />
 
-      {/* NEURO: Additional floating element */}
+      {/* NEURO: Floating decorative elements */}
       <div
-        className="absolute top-1/4 left-3/4 w-3 h-3 rounded-full bg-cyan/20 animate-float hidden lg:block"
+        className="absolute top-1/4 left-3/4 w-3 h-3 rounded-full bg-cyan/25 animate-float hidden lg:block"
         aria-hidden="true"
       />
       <div
-        className="absolute bottom-1/3 left-1/4 w-2 h-2 rounded-full bg-purple/20 animate-float hidden lg:block"
+        className="absolute bottom-1/3 left-1/4 w-2 h-2 rounded-full bg-purple/25 animate-float hidden lg:block"
         style={{ animationDelay: '2s' }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute top-[60%] right-[20%] w-2 h-2 rounded-full bg-emerald/20 animate-float hidden lg:block"
+        style={{ animationDelay: '4s' }}
+        aria-hidden="true"
+      />
+
+      {/* NEURO: Gradient orb in background */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full opacity-[0.04] pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse, rgba(34,211,238,0.5), rgba(167,139,250,0.3), transparent 70%)',
+          filter: 'blur(60px)',
+        }}
         aria-hidden="true"
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-36 text-center">
-        {/* Badge */}
+        {/* Badge — animated border glow */}
         <RevealOnScroll delay={0.1}>
           <Badge variant="secondary" className="mb-8 gap-1.5 px-4 py-1.5 glass-card text-cyan animate-border-glow">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse-dot" />
@@ -41,7 +56,7 @@ export function Hero({ onNavigate }: HeroProps) {
           </Badge>
         </RevealOnScroll>
 
-        {/* Heading */}
+        {/* Heading — gradient text animation */}
         <RevealOnScroll delay={0.2}>
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05]">
             Найди работу
@@ -57,7 +72,7 @@ export function Hero({ onNavigate }: HeroProps) {
           </p>
         </RevealOnScroll>
 
-        {/* CTAs */}
+        {/* CTAs — premium buttons with shadow */}
         <RevealOnScroll delay={0.4}>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <GradientButton size="lg" onClick={onNavigate}>
@@ -69,16 +84,16 @@ export function Hero({ onNavigate }: HeroProps) {
           </div>
         </RevealOnScroll>
 
-        {/* Stats with CountUp */}
+        {/* Stats with CountUp — glass cards with hover glow */}
         <RevealOnScroll delay={0.5}>
-          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 max-w-3xl mx-auto">
             {[
               { target: 12847, label: 'пользователей', accent: 'gradient-text' },
               { target: 340, suffix: ' тыс.', label: 'откликов отправлено', accent: 'gradient-text' },
               { target: 89, suffix: '%', label: 'получают оффер', accent: 'text-emerald' },
               { target: 4.9, decimals: 1, label: 'рейтинг', accent: 'gradient-text' },
             ].map((stat, i) => (
-              <div key={i} className="text-center glass-card p-4 hover-glow">
+              <div key={i} className="text-center glass-card p-4 sm:p-5 hover-glow stat-card">
                 <div className={`text-3xl sm:text-4xl font-extrabold tracking-tight ${stat.accent}`}>
                   <CountUp
                     target={stat.target}
@@ -86,7 +101,7 @@ export function Hero({ onNavigate }: HeroProps) {
                     decimals={stat.decimals || 0}
                   />
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground mt-1 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -97,7 +112,7 @@ export function Hero({ onNavigate }: HeroProps) {
           <div className="mt-10 flex flex-col items-center gap-3">
             <div className="flex -space-x-2">
               {['АК', 'МП', 'ОС', 'ДВ', 'ЕН'].map((initials, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-background gradient-bg flex items-center justify-center text-[10px] font-bold text-white">
+                <div key={i} className="w-8 h-8 rounded-full border-2 border-background gradient-bg flex items-center justify-center text-[10px] font-bold text-white shadow-sm shadow-cyan/20">
                   {initials}
                 </div>
               ))}
@@ -108,10 +123,10 @@ export function Hero({ onNavigate }: HeroProps) {
           </div>
         </RevealOnScroll>
 
-        {/* Scroll indicator */}
-        <div className="mt-16 flex flex-col items-center gap-2 text-muted-foreground text-xs font-medium">
-          <div className="w-px h-10 bg-gradient-to-b from-cyan/60 to-transparent animate-pulse-dot" />
-          листай вниз
+        {/* Scroll indicator — NEURO animated gradient line */}
+        <div className="mt-16 scroll-indicator">
+          <div className="scroll-indicator-line" />
+          <span>листай вниз</span>
         </div>
       </div>
     </section>

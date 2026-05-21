@@ -8,10 +8,10 @@ const weekChart = [40, 65, 45, 80, 55, 92, 70]
 const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
 const analyticsStats: StatItem[] = [
-  { v: '47', l: 'Отклики', c: 'text-cyan' },
-  { v: '8', l: 'Приглашения', c: 'text-emerald-400' },
-  { v: '17%', l: 'Конверсия', c: 'text-emerald' },
-  { v: '89%', l: 'Совпадение', c: 'text-orange-400' },
+  { value: '47', label: 'Отклики', color: 'text-cyan' },
+  { value: '8', label: 'Приглашения', color: 'text-emerald-400' },
+  { value: '17%', label: 'Конверсия', color: 'text-emerald' },
+  { value: '89%', label: 'Совпадение', color: 'text-orange-400' },
 ]
 
 export function AnalyticsInline() {
@@ -45,8 +45,8 @@ export function AnalyticsInline() {
           <div className="grid grid-cols-4 gap-2">
             {analyticsStats.map((s, i) => (
               <div key={i} className="bg-muted rounded-lg p-2 text-center hover-glow cursor-default">
-                <div className={`text-sm font-bold tabular-nums ${s.c}`}>{s.v}</div>
-                <div className="text-[9px] text-muted-foreground">{s.l}</div>
+                <div className={`text-sm font-bold tabular-nums ${s.color}`}>{s.value}</div>
+                <div className="text-[9px] text-muted-foreground">{s.label}</div>
               </div>
             ))}
           </div>

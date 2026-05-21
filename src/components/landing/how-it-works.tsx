@@ -13,15 +13,18 @@ const steps: StepItem[] = [
 export function HowItWorks() {
   return (
     <section id="how" className="py-24 sm:py-32 relative" aria-labelledby="how-heading">
-      {/* NEURO: Subtle background gradient */}
+      {/* NEURO: Background gradient mesh */}
       <div className="absolute inset-0 gradient-mesh opacity-50 pointer-events-none" />
+
+      {/* NEURO: Section divider at top */}
+      <div className="absolute top-0 left-0 right-0 section-divider" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <RevealOnScroll className="text-center mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-cyan mb-4">
-            <span className="w-6 h-px bg-cyan" />
+            <span className="w-8 h-px bg-gradient-to-r from-transparent to-cyan" />
             Как это работает
-            <span className="w-6 h-px bg-cyan" />
+            <span className="w-8 h-px bg-gradient-to-l from-transparent to-cyan" />
           </div>
           <h2 id="how-heading" className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
             Три шага к <span className="gradient-text">новой работе</span>
@@ -31,18 +34,26 @@ export function HowItWorks() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {steps.map((s, i) => (
             <RevealOnScroll key={i} delay={i * 0.15} direction={i === 0 ? 'left' : i === 2 ? 'right' : 'up'}>
-              <div className="relative text-center glass-card p-8 hover-glow">
-                <div className="text-5xl font-extrabold gradient-text opacity-15 mb-3">{s.step}</div>
-                <div className="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-4 sweep-btn shadow-lg shadow-cyan/20 animate-float" style={{ animationDelay: `${i * 0.5}s` }}>
+              <div className="relative text-center glass-card p-8 hover-glow group">
+                {/* Large step number — gradient background */}
+                <div className="text-6xl font-extrabold gradient-text opacity-10 mb-3 select-none">{s.step}</div>
+
+                {/* Icon in gradient box — floating animation */}
+                <div
+                  className="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-4 sweep-btn shadow-lg shadow-cyan/25 animate-float group-hover:shadow-cyan/40 transition-shadow"
+                  style={{ animationDelay: `${i * 0.5}s` }}
+                >
                   <s.icon className="w-7 h-7 text-white" />
                 </div>
+
                 <h3 className="text-xl font-bold mb-2">{s.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
-                {/* NEURO: Connector line between steps */}
+
+                {/* NEURO: Connector line between steps — gradient line */}
                 {i < 2 && (
                   <div className="hidden md:block absolute top-1/2 -right-4 w-8" aria-hidden="true">
-                    <div className="h-px bg-gradient-to-r from-cyan/30 to-purple/30" />
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-purple/40" />
+                    <div className="h-px bg-gradient-to-r from-cyan/40 to-purple/30" />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-purple/50" />
                   </div>
                 )}
               </div>
