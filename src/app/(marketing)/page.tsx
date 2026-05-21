@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Hero, Features, HowItWorks, Pricing } from '@/components/landing'
+import { Marquee, RevealOnScroll } from '@/components/neuro'
 
 export default function MarketingPage() {
   const router = useRouter()
@@ -13,37 +14,20 @@ export default function MarketingPage() {
     <>
       <Hero onNavigate={goToLogin} />
 
-      {/* Stats */}
-      <section className="py-16 sm:py-20" aria-label="Статистика">
-        <div className="max-w-5xl mx-auto px-4 flex flex-wrap justify-center gap-16">
-          {[
-            { value: '12 847', label: 'пользователей', accent: 'gradient-text' },
-            { value: '340 тыс.', label: 'откликов отправлено', accent: 'gradient-text' },
-            { value: '89%', label: 'получают оффер', accent: 'text-emerald' },
-            { value: '4.9', label: 'рейтинг в AppStore', accent: 'gradient-text' },
-          ].map((stat, i) => (
-            <div key={i} className="text-center">
-              <div className={`text-4xl sm:text-5xl font-black tracking-tight ${stat.accent}`}>
-                {stat.value}
-              </div>
-              <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* Marquee */}
-      <section className="py-10 border-y border-border/50 overflow-hidden" aria-hidden="true">
-        <div className="flex animate-marquee w-max">
-          {[...Array(2)].map((_, dup) => (
-            ['HH.ru', 'Сбербанк', 'Яндекс', 'Тинькофф', 'ВК', 'Ozon', 'МТС', 'Газпром', 'Росатом', 'Альфа-Банк'].map((name, i) => (
-              <div key={`${dup}-${i}`} className="flex items-center gap-3 px-10 text-lg font-bold text-muted-foreground/40 whitespace-nowrap">
+      <section className="py-10 border-y border-border/50" aria-hidden="true">
+        <Marquee
+          items={['HH.ru', 'Сбербанк', 'Яндекс', 'Тинькофф', 'ВК', 'Ozon', 'МТС', 'Газпром', 'Росатом', 'Альфа-Банк'].map(name => ({
+            key: name,
+            content: (
+              <div className="flex items-center gap-3 text-lg font-bold text-muted-foreground/40 whitespace-nowrap">
                 {name}
                 <span className="w-1 h-1 rounded-full bg-cyan" />
               </div>
-            ))
-          ))}
-        </div>
+            ),
+          }))}
+          speed={30}
+        />
       </section>
 
       <Features />
@@ -51,10 +35,10 @@ export default function MarketingPage() {
       <Pricing onNavigate={goToLogin} />
 
       {/* CTA */}
-      <section className="py-24 sm:py-32 text-center relative" aria-label="Призыв к действию">
+      <RevealOnScroll className="py-24 sm:py-32 text-center relative">
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-transparent via-cyan/5 to-transparent pointer-events-none" />
         <div className="relative z-10 max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
             Готовы найти <span className="gradient-text">идеальную работу</span>?
           </h2>
           <p className="text-lg text-muted-foreground mb-10 font-light">
@@ -64,7 +48,7 @@ export default function MarketingPage() {
             Начать бесплатно <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
         </div>
-      </section>
+      </RevealOnScroll>
     </>
   )
 }
