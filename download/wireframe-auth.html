@@ -10,18 +10,35 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #0B0B0F;
-  --surface: #16161A;
-  --accent: #C8A97E;
-  --accent-hover: #9A8468;
-  --accent-dim: #6B5F52;
-  --accent-deep: #3D3832;
-  --text: #EDEDEF;
-  --secondary: #72727E;
-  --dim: #55555E;
-  --border: rgba(255,255,255,0.08);
+  --bg: #0a0a0c;
+  --surface: #111115;
+  --tertiary: #18181c;
+  --accent: #E8443A;
+  --accent-light: #FF6B5E;
+  --accent-dim: rgba(232,68,58,0.15);
+  --accent-deep: rgba(232,68,58,0.08);
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.12);
+  --text: #f0f0f2;
+  --secondary: #8a8a9a;
+  --dim: #55556a;
+  --border: rgba(255,255,255,0.06);
   --glass: rgba(255,255,255,0.02);
   --glass-hover: rgba(255,255,255,0.05);
+}
+
+/* Light theme overrides */
+body.light {
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --tertiary: #eaeaee;
+  --accent-deep: rgba(232,68,58,0.06);
+  --text: #1a1a2e;
+  --secondary: #6a6a80;
+  --dim: #9999aa;
+  --border: rgba(0,0,0,0.06);
+  --glass: rgba(0,0,0,0.02);
+  --glass-hover: rgba(0,0,0,0.04);
 }
 
 body {
@@ -53,7 +70,7 @@ body::before {
   min-height: 100vh;
 }
 
-/* ═══ LEFT — DECORATIVE ═══ */
+/* LEFT - DECORATIVE */
 .auth-left {
   flex: 1;
   position: relative;
@@ -69,12 +86,12 @@ body::before {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(200,169,126,0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(107,95,82,0.08) 0%, transparent 40%),
-    radial-gradient(ellipse at 60% 80%, rgba(61,56,50,0.1) 0%, transparent 40%);
+    radial-gradient(ellipse at 20% 50%, rgba(232,68,58,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(255,107,94,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 60% 80%, rgba(74,222,128,0.04) 0%, transparent 40%);
 }
 
-/* Mesh gradient overlays */
+/* Mesh gradient blobs */
 .mesh-blob {
   position: absolute;
   border-radius: 50%;
@@ -85,21 +102,21 @@ body::before {
 .mesh-blob-1 {
   width: 400px; height: 400px;
   top: 10%; left: 10%;
-  background: rgba(200,169,126,0.15);
+  background: rgba(232,68,58,0.12);
   animation: float 8s ease-in-out infinite;
 }
 
 .mesh-blob-2 {
   width: 300px; height: 300px;
   bottom: 20%; right: 10%;
-  background: rgba(154,132,104,0.12);
+  background: rgba(74,222,128,0.08);
   animation: float 10s ease-in-out infinite reverse;
 }
 
 .mesh-blob-3 {
   width: 250px; height: 250px;
   top: 50%; left: 50%;
-  background: rgba(61,56,50,0.15);
+  background: rgba(255,107,94,0.08);
   animation: float 12s ease-in-out infinite;
 }
 
@@ -113,7 +130,7 @@ body::before {
 .auth-left .dot-pattern {
   position: absolute;
   width: 300px; height: 300px;
-  background-image: radial-gradient(circle, rgba(200,169,126,0.08) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(232,68,58,0.06) 1px, transparent 1px);
   background-size: 24px 24px;
   top: 30%;
   right: 10%;
@@ -139,16 +156,16 @@ body::before {
 .logo-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
   font-size: 20px;
-  color: var(--bg);
+  color: #fff;
   transform: rotateY(-8deg) rotateX(4deg);
-  box-shadow: 0 6px 30px rgba(200,169,126,0.35);
+  box-shadow: 0 6px 30px rgba(232,68,58,0.35);
 }
 
 .logo-text {
@@ -168,7 +185,7 @@ body::before {
 }
 
 .auth-left-content h1 .gradient-text {
-  background: linear-gradient(135deg, var(--accent), #E8D5B7);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light), var(--green));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -182,7 +199,7 @@ body::before {
   margin-bottom: 40px;
 }
 
-/* Testimonial card on left */
+/* Testimonial card */
 .testimonial-card {
   background: var(--glass);
   border: 1px solid var(--border);
@@ -238,7 +255,7 @@ body::before {
   color: var(--dim);
 }
 
-/* ═══ RIGHT — FORM ═══ */
+/* RIGHT - FORM */
 .auth-right {
   flex: 1;
   display: flex;
@@ -259,6 +276,35 @@ body::before {
 .auth-form-wrapper {
   width: 100%;
   max-width: 420px;
+}
+
+/* Theme toggle */
+.theme-toggle {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  color: var(--secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.3s, color 0.3s;
+  z-index: 10;
+}
+
+.theme-toggle:hover {
+  border-color: rgba(232,68,58,0.25);
+  color: var(--accent);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Tab switcher */
@@ -287,9 +333,9 @@ body::before {
 }
 
 .auth-tab.active {
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
-  box-shadow: 0 4px 16px rgba(200,169,126,0.25);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(232,68,58,0.25);
 }
 
 .auth-tab:not(.active):hover {
@@ -331,8 +377,8 @@ body::before {
 .form-input::placeholder { color: var(--dim); }
 
 .form-input:focus {
-  border-color: rgba(200,169,126,0.4);
-  box-shadow: 0 0 0 3px rgba(200,169,126,0.08);
+  border-color: rgba(232,68,58,0.4);
+  box-shadow: 0 0 0 3px rgba(232,68,58,0.08);
 }
 
 .form-row {
@@ -364,12 +410,12 @@ body::before {
   transition: color 0.3s;
 }
 
-.form-link:hover { color: #E8D5B7; }
+.form-link:hover { color: var(--accent-light); }
 
 .btn-submit {
   padding: 16px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
   border: none;
   border-radius: 14px;
   font-family: 'Manrope', sans-serif;
@@ -384,7 +430,7 @@ body::before {
 
 .btn-submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(200,169,126,0.35);
+  box-shadow: 0 12px 40px rgba(232,68,58,0.4);
 }
 
 .btn-submit::after {
@@ -440,12 +486,13 @@ body::before {
 }
 
 .btn-social:hover {
-  border-color: rgba(200,169,126,0.3);
+  border-color: rgba(232,68,58,0.25);
   background: var(--glass-hover);
 }
 
-.btn-social .icon {
-  font-size: 18px;
+.btn-social svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* Footer text */
@@ -462,7 +509,7 @@ body::before {
   font-weight: 500;
 }
 
-.auth-footer a:hover { color: #E8D5B7; }
+.auth-footer a:hover { color: var(--accent-light); }
 
 /* Cursor glow */
 .cursor-glow {
@@ -472,7 +519,7 @@ body::before {
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(circle, rgba(200,169,126,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(232,68,58,0.05) 0%, transparent 70%);
   transform: translate(-50%, -50%);
   transition: left 0.3s ease-out, top 0.3s ease-out;
 }
@@ -496,9 +543,30 @@ body::before {
   animation: fadeInUp 0.6s ease-out both;
 }
 
-.auth-form-wrapper > :nth-child(1) { animation-delay: 0.2s; }
-.auth-form-wrapper > :nth-child(2) { animation-delay: 0.3s; }
-.auth-form-wrapper > :nth-child(3) { animation-delay: 0.35s; }
+.auth-form-wrapper > :nth-child(2) { animation-delay: 0.2s; }
+.auth-form-wrapper > :nth-child(3) { animation-delay: 0.3s; }
+.auth-form-wrapper > :nth-child(4) { animation-delay: 0.35s; }
+
+/* Light theme - auth left */
+body.light .auth-left::before {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(232,68,58,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(255,107,94,0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 60% 80%, rgba(74,222,128,0.03) 0%, transparent 40%);
+}
+
+body.light .mesh-blob-1 { background: rgba(232,68,58,0.06); }
+body.light .mesh-blob-2 { background: rgba(74,222,128,0.05); }
+body.light .mesh-blob-3 { background: rgba(255,107,94,0.04); }
+
+body.light .testimonial-card {
+  background: rgba(0,0,0,0.02);
+  border-color: rgba(0,0,0,0.06);
+}
+
+body.light .auth-right::before {
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.06), transparent);
+}
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -506,8 +574,8 @@ body::before {
   .auth-right {
     flex: 1;
     background:
-      radial-gradient(ellipse at 20% 50%, rgba(200,169,126,0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(107,95,82,0.05) 0%, transparent 40%);
+      radial-gradient(ellipse at 20% 50%, rgba(232,68,58,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(74,222,128,0.03) 0%, transparent 40%);
   }
 }
 
@@ -551,6 +619,12 @@ body::before {
 
   <!-- Right form -->
   <div class="auth-right">
+    <!-- Theme toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Переключить тему">
+      <svg id="moonIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg id="sunIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+
     <div class="auth-form-wrapper">
       <div class="auth-tabs">
         <button class="auth-tab active" onclick="switchTab('login', this)">Вход</button>
@@ -577,10 +651,12 @@ body::before {
         <div class="form-divider">или</div>
         <div class="social-buttons">
           <button type="button" class="btn-social">
-            <span class="icon">&#9679;</span> HH.ru
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            HH.ru
           </button>
           <button type="button" class="btn-social">
-            <span class="icon">&#9679;</span> Google
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.43z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+            Google
           </button>
         </div>
       </form>
@@ -610,10 +686,12 @@ body::before {
         <div class="form-divider">или</div>
         <div class="social-buttons">
           <button type="button" class="btn-social">
-            <span class="icon">&#9679;</span> HH.ru
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            HH.ru
           </button>
           <button type="button" class="btn-social">
-            <span class="icon">&#9679;</span> Google
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.43z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+            Google
           </button>
         </div>
       </form>
@@ -637,7 +715,7 @@ document.addEventListener('mousemove', (e) => {
 function switchTab(tab, btn) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  
+
   if (tab === 'login') {
     document.getElementById('loginForm').style.display = 'flex';
     document.getElementById('registerForm').style.display = 'none';
@@ -646,6 +724,18 @@ function switchTab(tab, btn) {
     document.getElementById('registerForm').style.display = 'flex';
   }
 }
+
+// Theme toggle
+const themeToggle = document.getElementById('themeToggle');
+const moonIcon = document.getElementById('moonIcon');
+const sunIcon = document.getElementById('sunIcon');
+
+themeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  moonIcon.style.display = isLight ? 'none' : 'block';
+  sunIcon.style.display = isLight ? 'block' : 'none';
+});
 </script>
 
 </body>

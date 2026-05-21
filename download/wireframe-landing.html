@@ -10,16 +10,19 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #0B0B0F;
-  --surface: #16161A;
-  --accent: #C8A97E;
-  --accent-hover: #9A8468;
-  --accent-dim: #6B5F52;
-  --accent-deep: #3D3832;
-  --text: #EDEDEF;
-  --secondary: #72727E;
-  --dim: #55555E;
-  --border: rgba(255,255,255,0.08);
+  --bg: #0a0a0c;
+  --surface: #111115;
+  --tertiary: #18181c;
+  --accent: #E8443A;
+  --accent-light: #FF6B5E;
+  --accent-dim: rgba(232,68,58,0.15);
+  --accent-deep: rgba(232,68,58,0.08);
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.12);
+  --text: #f0f0f2;
+  --secondary: #8a8a9a;
+  --dim: #55556a;
+  --border: rgba(255,255,255,0.06);
   --glass: rgba(255,255,255,0.02);
   --glass-hover: rgba(255,255,255,0.05);
 }
@@ -34,7 +37,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ═══ NOISE OVERLAY ═══ */
+/* NOISE OVERLAY */
 body::before {
   content: '';
   position: fixed;
@@ -47,7 +50,7 @@ body::before {
   background-size: 256px 256px;
 }
 
-/* ═══ CURSOR GLOW ═══ */
+/* CURSOR GLOW */
 .cursor-glow {
   position: fixed;
   width: 600px;
@@ -55,12 +58,12 @@ body::before {
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(circle, rgba(200,169,126,0.07) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(232,68,58,0.06) 0%, transparent 70%);
   transform: translate(-50%, -50%);
   transition: left 0.3s ease-out, top 0.3s ease-out;
 }
 
-/* ═══ NAVBAR ═══ */
+/* NAVBAR */
 .navbar {
   position: fixed;
   top: 0;
@@ -69,7 +72,7 @@ body::before {
   z-index: 100;
   padding: 20px 40px;
   backdrop-filter: blur(24px);
-  background: rgba(11,11,15,0.7);
+  background: rgba(10,10,12,0.75);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -87,16 +90,16 @@ body::before {
 .nav-logo-icon {
   width: 38px;
   height: 38px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 900;
-  font-size: 18px;
-  color: var(--bg);
+  font-size: 16px;
+  color: #fff;
   transform: rotateY(-8deg) rotateX(4deg);
-  box-shadow: 0 4px 20px rgba(200,169,126,0.3);
+  box-shadow: 0 4px 20px rgba(232,68,58,0.35);
 }
 
 .nav-logo-text {
@@ -128,8 +131,8 @@ body::before {
 
 .nav-cta {
   padding: 10px 24px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
   border: none;
   border-radius: 10px;
   font-family: 'Manrope', sans-serif;
@@ -143,7 +146,7 @@ body::before {
 
 .nav-cta:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 30px rgba(200,169,126,0.3);
+  box-shadow: 0 8px 30px rgba(232,68,58,0.35);
 }
 
 .nav-cta::after {
@@ -166,7 +169,7 @@ body::before {
   cursor: pointer;
 }
 
-/* ═══ HERO ═══ */
+/* HERO */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -187,7 +190,7 @@ body::before {
   transform: translateX(-50%);
   width: 1000px;
   height: 1000px;
-  background: radial-gradient(ellipse, rgba(200,169,126,0.12) 0%, rgba(107,95,82,0.05) 40%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(232,68,58,0.1) 0%, rgba(255,107,94,0.04) 40%, transparent 70%);
   pointer-events: none;
 }
 
@@ -196,12 +199,12 @@ body::before {
   align-items: center;
   gap: 8px;
   padding: 8px 20px;
-  background: var(--glass);
-  border: 1px solid var(--border);
+  background: var(--accent-deep);
+  border: 1px solid rgba(232,68,58,0.15);
   border-radius: 100px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-light);
   margin-bottom: 32px;
   backdrop-filter: blur(12px);
   animation: fadeInDown 0.8s ease-out;
@@ -211,7 +214,7 @@ body::before {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--green);
   animation: pulse-dot 2s infinite;
 }
 
@@ -231,7 +234,7 @@ body::before {
 }
 
 .hero h1 .gradient-text {
-  background: linear-gradient(135deg, var(--accent), #E8D5B7, var(--accent-hover));
+  background: linear-gradient(135deg, var(--accent), var(--accent-light), var(--green));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -256,8 +259,8 @@ body::before {
 
 .btn-primary {
   padding: 16px 36px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
   border: none;
   border-radius: 14px;
   font-family: 'Manrope', sans-serif;
@@ -271,7 +274,7 @@ body::before {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(200,169,126,0.35);
+  box-shadow: 0 12px 40px rgba(232,68,58,0.4);
 }
 
 .btn-primary::after {
@@ -301,7 +304,7 @@ body::before {
 
 .btn-secondary:hover {
   background: var(--glass-hover);
-  border-color: rgba(200,169,126,0.3);
+  border-color: rgba(232,68,58,0.25);
 }
 
 .hero-scroll {
@@ -329,7 +332,7 @@ body::before {
   50% { opacity: 0.3; transform: scaleY(0.6); }
 }
 
-/* ═══ STATS ═══ */
+/* STATS */
 .stats-section {
   padding: 80px 40px;
   display: flex;
@@ -346,7 +349,14 @@ body::before {
   font-size: 48px;
   font-weight: 900;
   letter-spacing: -1px;
-  background: linear-gradient(135deg, var(--accent), #E8D5B7);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-number.green-stat {
+  background: linear-gradient(135deg, var(--green), #86efac);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -359,7 +369,7 @@ body::before {
   margin-top: 4px;
 }
 
-/* ═══ MARQUEE ═══ */
+/* MARQUEE */
 .marquee-section {
   padding: 40px 0;
   overflow: hidden;
@@ -396,7 +406,7 @@ body::before {
   100% { transform: translateX(-50%); }
 }
 
-/* ═══ FEATURES ═══ */
+/* FEATURES */
 .features-section {
   padding: 120px 40px;
   max-width: 1200px;
@@ -430,6 +440,13 @@ body::before {
   max-width: 600px;
 }
 
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent-light), var(--green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -452,7 +469,7 @@ body::before {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(200,169,126,0.06) 0%, transparent 60%);
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(232,68,58,0.06) 0%, transparent 60%);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s;
@@ -461,7 +478,7 @@ body::before {
 .feature-card:hover::before { opacity: 1; }
 
 .feature-card:hover {
-  border-color: rgba(200,169,126,0.2);
+  border-color: rgba(232,68,58,0.2);
   transform: translateY(-4px) rotateX(2deg);
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
@@ -470,13 +487,27 @@ body::before {
   width: 48px;
   height: 48px;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(200,169,126,0.15), rgba(200,169,126,0.05));
+  background: linear-gradient(135deg, var(--accent-dim), var(--accent-deep));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
   margin-bottom: 24px;
-  border: 1px solid rgba(200,169,126,0.15);
+  border: 1px solid rgba(232,68,58,0.15);
+}
+
+.feature-icon svg {
+  width: 22px;
+  height: 22px;
+  color: var(--accent);
+}
+
+.feature-icon.green-icon {
+  background: linear-gradient(135deg, var(--green-dim), rgba(74,222,128,0.04));
+  border: 1px solid rgba(74,222,128,0.15);
+}
+
+.feature-icon.green-icon svg {
+  color: var(--green);
 }
 
 .feature-card h3 {
@@ -493,7 +524,7 @@ body::before {
   line-height: 1.7;
 }
 
-/* ═══ HOW IT WORKS ═══ */
+/* HOW IT WORKS */
 .how-section {
   padding: 120px 40px;
   max-width: 1200px;
@@ -516,15 +547,15 @@ body::before {
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
   font-weight: 900;
   font-size: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 20px;
-  box-shadow: 0 8px 30px rgba(200,169,126,0.25);
+  box-shadow: 0 8px 30px rgba(232,68,58,0.3);
 }
 
 .how-step h3 {
@@ -551,7 +582,7 @@ body::before {
 
 .how-step:last-child::after { display: none; }
 
-/* ═══ PRICING ═══ */
+/* PRICING */
 .pricing-section {
   padding: 120px 40px;
   max-width: 1200px;
@@ -577,12 +608,12 @@ body::before {
 
 .pricing-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(200,169,126,0.2);
+  border-color: rgba(232,68,58,0.2);
 }
 
 .pricing-card.featured {
-  border-color: rgba(200,169,126,0.3);
-  background: rgba(200,169,126,0.03);
+  border-color: rgba(232,68,58,0.25);
+  background: rgba(232,68,58,0.03);
 }
 
 .pricing-card.featured::before {
@@ -592,8 +623,8 @@ body::before {
   left: 50%;
   transform: translateX(-50%);
   padding: 4px 16px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
   font-size: 12px;
   font-weight: 700;
   border-radius: 100px;
@@ -648,8 +679,9 @@ body::before {
 .pricing-features li:last-child { border-bottom: none; }
 
 .pricing-features li .check {
-  color: var(--accent);
+  color: var(--green);
   font-weight: 700;
+  font-size: 16px;
 }
 
 .pricing-btn {
@@ -666,12 +698,12 @@ body::before {
 .pricing-btn:hover { transform: translateY(-1px); }
 
 .pricing-btn.filled {
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
   border: none;
 }
 
-.pricing-btn.filled:hover { box-shadow: 0 8px 30px rgba(200,169,126,0.3); }
+.pricing-btn.filled:hover { box-shadow: 0 8px 30px rgba(232,68,58,0.35); }
 
 .pricing-btn.outline {
   background: transparent;
@@ -679,9 +711,9 @@ body::before {
   border: 1px solid var(--border);
 }
 
-.pricing-btn.outline:hover { border-color: rgba(200,169,126,0.3); }
+.pricing-btn.outline:hover { border-color: rgba(232,68,58,0.3); }
 
-/* ═══ CTA ═══ */
+/* CTA */
 .cta-section {
   padding: 120px 40px;
   text-align: center;
@@ -694,7 +726,7 @@ body::before {
   bottom: 0; left: 50%;
   transform: translateX(-50%);
   width: 800px; height: 400px;
-  background: radial-gradient(ellipse, rgba(200,169,126,0.1) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(232,68,58,0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -706,7 +738,7 @@ body::before {
 }
 
 .cta-section h2 .gradient-text {
-  background: linear-gradient(135deg, var(--accent), #E8D5B7);
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -719,17 +751,17 @@ body::before {
   font-weight: 300;
 }
 
-/* ═══ DOT PATTERN ═══ */
+/* DOT PATTERN */
 .dot-pattern {
   position: absolute;
   width: 200px; height: 200px;
-  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(232,68,58,0.06) 1px, transparent 1px);
   background-size: 20px 20px;
   opacity: 0.5;
   pointer-events: none;
 }
 
-/* ═══ FOOTER ═══ */
+/* FOOTER */
 .footer {
   padding: 60px 40px 32px;
   border-top: 1px solid var(--border);
@@ -795,16 +827,20 @@ body::before {
   justify-content: center;
   color: var(--secondary);
   text-decoration: none;
-  font-size: 14px;
   transition: border-color 0.3s, color 0.3s;
 }
 
 .footer-social a:hover {
-  border-color: rgba(200,169,126,0.3);
+  border-color: rgba(232,68,58,0.3);
   color: var(--accent);
 }
 
-/* ═══ ANIMATIONS ═══ */
+.footer-social a svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ANIMATIONS */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -826,7 +862,7 @@ body::before {
   transform: translateY(0);
 }
 
-/* ═══ RESPONSIVE ═══ */
+/* RESPONSIVE */
 @media (max-width: 1024px) {
   .features-grid { grid-template-columns: repeat(2, 1fr); }
   .pricing-grid { grid-template-columns: repeat(2, 1fr); }
@@ -907,7 +943,7 @@ body::before {
     <div class="stat-label">тыс. откликов отправлено</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number" data-target="89">0</div>
+    <div class="stat-number green-stat" data-target="89">0</div>
     <div class="stat-label">% получают оффер</div>
   </div>
   <div class="stat-item">
@@ -951,32 +987,44 @@ body::before {
   </div>
   <div class="features-grid">
     <div class="feature-card reveal" style="transition-delay: 0.05s">
-      <div class="feature-icon">&#9889;</div>
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </div>
       <h3>Авто-отклики</h3>
       <p>ИИ анализирует вакансии и автоматически отправляет персонализированные отклики. Экономьте до 5 часов в день на рутине</p>
     </div>
     <div class="feature-card reveal" style="transition-delay: 0.1s">
-      <div class="feature-icon">&#127908;</div>
+      <div class="feature-icon green-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
       <h3>AI-подсказки</h3>
       <p>Получайте подсказки в реальном времени во время собеседования. Whisper распознаёт речь, а GPT генерирует идеальные ответы</p>
     </div>
     <div class="feature-card reveal" style="transition-delay: 0.15s">
-      <div class="feature-icon">&#128270;</div>
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
       <h3>Умный поиск</h3>
       <p>Алгоритм подбирает вакансии по вашему профилю, навыкам и предпочтениям. Забудьте про неактуальные предложения</p>
     </div>
     <div class="feature-card reveal" style="transition-delay: 0.2s">
-      <div class="feature-icon">&#128202;</div>
+      <div class="feature-icon green-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+      </div>
       <h3>Аналитика</h3>
       <p>Отслеживайте конверсию откликов, узнавайте почему вас не приглашают и получайте рекомендации по улучшению профиля</p>
     </div>
     <div class="feature-card reveal" style="transition-delay: 0.25s">
-      <div class="feature-icon">&#128274;</div>
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
       <h3>Безопасность</h3>
       <p>Данные хранятся на серверах в РФ. Шифрование AES-256, двухфакторная аутентификация и соответствие 152-ФЗ</p>
     </div>
     <div class="feature-card reveal" style="transition-delay: 0.3s">
-      <div class="feature-icon">&#9881;</div>
+      <div class="feature-icon green-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
       <h3>Интеграции</h3>
       <p>Работает с HH.ru Chatik API, Telegram, Google Calendar. Настраивайте автосообщения и напоминания о звонках</p>
     </div>
@@ -1108,9 +1156,15 @@ body::before {
   <div class="footer-bottom">
     <span>&copy; 2026 HH Job Copilot. Все права защищены.</span>
     <div class="footer-social">
-      <a href="#">&#1161;</a>
-      <a href="#">&#9993;</a>
-      <a href="#">&#9741;</a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </a>
+      <a href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </a>
     </div>
   </div>
 </footer>
