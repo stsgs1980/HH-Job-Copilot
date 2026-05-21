@@ -12,7 +12,7 @@ export function Logo({ size = 'default' }: { size?: 'sm' | 'default' | 'lg' }) {
 
   return (
     <div className="flex items-center gap-2">
-      <div className={`${s.box} gradient-bg flex items-center justify-center`}>
+      <div className={`${s.box} gradient-bg flex items-center justify-center zap-pulse`}>
         <Zap className={`${s.icon} text-white`} />
       </div>
       {size !== 'sm' && <span className={`font-bold ${s.text}`}>HH Job Copilot</span>}

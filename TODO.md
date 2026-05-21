@@ -1,53 +1,56 @@
 # HH Job Copilot — TODO
 
-> Статус: MVP прототип (Landing + Auth + Dashboard)  
-> Стек: Next.js 16 + TypeScript + Tailwind CSS 4 + shadcn/ui + Prisma + z-ai-sdk  
+> Статус: v0.2.0 — Route groups + Prisma + API routes + Design polish
+> Стек: Next.js 16 + TypeScript + Tailwind CSS 4 + shadcn/ui + Prisma + z-ai-sdk
 > Монетизация: Starter $0 / Pro $19/mo / Ultra $49/mo
 
 ---
 
 ## Phase 1: Фундамент (КРИТИЧНО)
 
-- [ ] **Anti-monolith рефакторинг** — page.tsx (700 строк) → модульная структура
-  - [ ] Route groups: `(marketing)/`, `(auth)/`, `(app)/`
-  - [ ] Компоненты: `components/landing/`, `components/auth/`, `components/dashboard/`, `components/shared/`
+- [x] **Anti-monolith рефакторинг** — page.tsx → модульная структура
+  - [x] Route groups: `(marketing)/`, `(auth)/`, `(app)/`
+  - [x] Компоненты: `components/landing/`, `components/auth/`, `components/dashboard/`, `components/shared/`
+  - [x] Библиотеки: `lib/hh-api.ts`, `lib/ai.ts`, `lib/db.ts`
+  - [x] Типы: `types/index.ts`
   - [ ] Хуки: `hooks/use-hh-chat.ts`, `hooks/use-interview.ts`, `hooks/use-analytics.ts`
-  - [ ] Библиотеки: `lib/hh-api.ts`, `lib/ai.ts`, `lib/prisma.ts`
-  - [ ] Типы: `types/index.ts`
 
-- [ ] **Prisma схема + миграция**
-  - [ ] User (id, email, name, hhToken, plan, streakDays)
-  - [ ] Chat (id, userId, hhChatId, employerName, unreadCount, aiRepliesOn)
-  - [ ] Message (id, chatId, role, content, sentVia)
-  - [ ] Application (id, userId, vacancyId, company, matchScore, status, coverLetter)
-  - [ ] Interview (id, userId, company, position, transcript, aiHints, duration)
-  - [ ] Enums: Plan, Role, SentVia, AppStatus
+- [x] **Prisma схема + миграция**
+  - [x] User (id, email, name, hhToken, plan, streakDays, Stripe fields)
+  - [x] Chat (id, userId, hhChatId, employerName, unreadCount, aiRepliesOn, humanizeMode)
+  - [x] Message (id, chatId, role, content, sentVia, aiRawContent, aiHumanized)
+  - [x] Application (id, userId, vacancyId, company, matchScore, status, coverLetter)
+  - [x] Interview (id, userId, company, position, transcript, aiHints, duration)
+  - [x] AIMessage (id, userId, role, content, source, tokens, model)
+  - [x] Enums: Plan, MessageRole, SentVia, AppStatus, InterviewStatus
 
 ## Phase 2: Интеграция HH.ru
 
-- [ ] **HH.ru OAuth авторизация**
-  - [ ] `/api/auth/hh` — redirect to HH.ru OAuth
-  - [ ] `/api/auth/hh/callback` — обработка callback, сохранение токена
-  - [ ] Playwright для первоначального логина → cookies (hhtoken, hhuid, _xsrf)
-
-- [ ] **Chatik API — чат с HR**
-  - [ ] GET `/chatik/api/chats` — список чатов
-  - [ ] GET `/chatik/api/chat_data?id=X` — сообщения чата
-  - [ ] POST `/chatik/api/send` — отправить сообщение
-  - [ ] POST `/chatik/api/mark_read` — пометить прочитанным
-  - [ ] Polling каждые 5с / WebSocket
+- [x] **HH.ru API proxy routes**
+  - [x] `GET /api/hh/oauth` — redirect to HH.ru OAuth
+  - [x] `GET /api/hh/oauth/callback` — обработка callback, сохранение токена
+  - [x] `POST /api/hh/cookie-login` — manual Chatik cookies login
+  - [x] `GET /api/hh/chats` — список чатов (proxy to Chatik API)
+  - [x] `GET /api/hh/chats/[chatId]` — сообщения чата
+  - [x] `POST /api/hh/chats/[chatId]` — отправить сообщение / mark read
+  - [ ] Playwright для автоматического логина → cookies (hhtoken, hhuid, _xsrf)
+  - [ ] Polling каждые 5с / WebSocket для новых сообщений
+  - [ ] Real auth (NextAuth session) вместо mock userId
 
 ## Phase 3: AI фичи
 
-- [ ] **LLM чат-ассистент** (z-ai-sdk)
-  - [ ] Системный промпт: карьерный ассистент для соискателя
-  - [ ] Контекст: резюме + история чатов + вакансия
-  - [ ] Prompt-engineering skill для оптимизации промптов
+- [x] **AI API routes**
+  - [x] `POST /api/ai/chat` — LLM чат-ассистент (z-ai-sdk)
+  - [x] `POST /api/ai/humanize` — Humanizer для Chatik ответов
+  - [x] `POST /api/ai/hr-reply` — Генерация + humanize + автосенд HR ответов
+  - [x] `POST /api/ai/cover-letter` — AI сопроводительные письма
+  - [x] `POST /api/ai/interview-hint` — Подсказки на интервью в реальном времени
 
-- [ ] **Humanizer** (АВТО для всех HH.ru чатов)
-  - [ ] LLM с инструкцией "перепиши как живой человек"
-  - [ ] Varied sentence length, occasional typos, natural flow
-  - [ ] Автовключение для всех Chatik API ответов
+- [ ] **AI фронтенд интеграция**
+  - [ ] Подключить чат-инпут к `/api/ai/chat`
+  - [ ] Streaming ответы (SSE) для реального времени
+  - [ ] Auto-Humanizer toggle в настройках чата
+  - [ ] Prompt-engineering skill для оптимизации промптов
 
 - [ ] **ASR — интервью-ассистент**
   - [ ] Whisper/z-ai для транскрипции речи в реальном времени
@@ -80,13 +83,16 @@
 
 ## Phase 5: Дизайн полировка
 
-- [ ] Glassmorphism карточки с backdrop-blur
-- [ ] Микро-анимации (fade-in при скролле, hover glow)
-- [ ] Gradient mesh фон (tryusercue.com стиль)
-- [ ] Streak counter с анимацией (thita.ai стиль)
-- [ ] Skeleton loading states
-- [ ] Smooth page transitions
-- [ ] SVG логотип: молния + щит (Zap + Shield)
+- [x] Glassmorphism карточки с backdrop-blur (`.glass-card`)
+- [x] Микро-анимации (fade-in-up при скролле, hover glow, stagger)
+- [x] Gradient mesh фон (tryusercue.com стиль)
+- [x] Streak counter с анимацией (thita.ai стиль)
+- [x] Gradient border на популярных карточках
+- [x] Shimmer loading states (`.shimmer`)
+- [x] Smooth page transitions (`.page-transition`)
+- [x] Zap pulse на логотипе
+- [ ] Skeleton loading для API данных
+- [ ] SVG логотип: молния + щит (Zap + Shield) — заменить текстовый
 
 ## Phase 6: Продакшен
 
@@ -97,6 +103,7 @@
 - [ ] E2E тесты (Playwright)
 - [ ] CI/CD: GitHub Actions → Vercel
 - [ ] Домен: hhjobcopilot.ru / hhcopilot.com
+- [ ] `.env.example` — документированный файл окружения
 
 ---
 
@@ -110,3 +117,8 @@
 - [x] ThemeToggle компонент (hydration-safe, useSyncExternalStore)
 - [x] Адаптивный дизайн (mobile-first)
 - [x] Custom color system (oklch, cyan/purple gradient)
+- [x] Anti-monolith refactoring → Next.js route groups
+- [x] Prisma схема (7 моделей, 6 enum)
+- [x] HH.ru Chatik API proxy (6 endpoints)
+- [x] AI API routes (5 endpoints: chat, humanize, hr-reply, cover-letter, interview-hint)
+- [x] Design polish: glassmorphism, gradient mesh, hover-glow, fade-in-up, streak-glow, gradient-border, shimmer, page-transition

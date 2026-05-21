@@ -24,7 +24,7 @@ export function ChatPanel({ onClose }: ChatPanelProps) {
       </div>
       <div className="flex-1 overflow-y-auto p-3 space-y-1">
         {chatList.map((c, i) => (
-          <div key={i} className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors ${c.unread ? 'bg-muted/30' : ''}`}>
+          <div key={i} className={`flex items-center gap-3 p-2.5 rounded-lg hover:bg-muted/50 cursor-pointer transition-all duration-200 hover:translate-x-0.5 ${c.unread ? 'bg-muted/30' : ''}`}>
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${c.color}`}>
               {c.name.charAt(0)}
             </div>
@@ -49,7 +49,7 @@ export function ChatPanel({ onClose }: ChatPanelProps) {
             <p className="text-xs font-semibold">Сергей Т.</p>
             <p className="text-[10px] text-muted-foreground">Pro тариф</p>
           </div>
-          <div className="flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded">
+          <div className="flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded streak-glow">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             <span className="text-[10px] font-medium text-emerald-400">7 дней streak</span>
           </div>

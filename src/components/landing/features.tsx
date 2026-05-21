@@ -23,7 +23,7 @@ export function Features() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((f, i) => (
-            <Card key={i} className="group border-border/50 hover:border-cyan/30 transition-all duration-300 hover:shadow-lg hover:shadow-cyan/5">
+            <Card key={i} className={`group border-border/50 hover-glow fade-in-up stagger-${i + 1}`}>
               <CardHeader>
                 <div className={`w-10 h-10 rounded-lg bg-muted flex items-center justify-center mb-2 ${f.accent}`}>
                   <f.icon className="w-5 h-5" />

@@ -26,8 +26,8 @@ export function Pricing({ onNavigate }: PricingProps) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {tiers.map((p, i) => (
-            <Card key={i} className={`relative flex flex-col ${p.popular ? 'border-cyan/50 shadow-lg shadow-cyan/5 scale-105' : 'border-border/50'}`}>
-              {p.popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><Badge className="gradient-bg text-white border-0 px-3">Популярный</Badge></div>}
+            <Card key={i} className={`relative flex flex-col hover-glow ${p.popular ? 'gradient-border glass-card scale-105 shadow-lg' : 'border-border/50'}`}>
+              {p.popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10"><Badge className="gradient-bg text-white border-0 px-3">Популярный</Badge></div>}
               <CardHeader className="text-center pb-2">
                 <CardTitle className="text-xl">{p.name}</CardTitle>
                 <CardDescription>{p.desc}</CardDescription>
@@ -47,7 +47,7 @@ export function Pricing({ onNavigate }: PricingProps) {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className={`w-full ${p.popular ? 'gradient-bg text-white border-0 hover:opacity-90' : ''}`} variant={p.popular ? 'default' : 'outline'} onClick={onNavigate}>
+                <Button className={`w-full ${p.popular ? 'gradient-bg gradient-shimmer text-white border-0 hover:opacity-90' : ''}`} variant={p.popular ? 'default' : 'outline'} onClick={onNavigate}>
                   {p.cta}
                 </Button>
               </CardFooter>

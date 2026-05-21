@@ -1,6 +1,6 @@
 'use client'
 
-import { Zap, MessageSquare, ChevronRight, Building2, Check } from 'lucide-react'
+import { Zap, MessageSquare, ChevronRight, Building2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { StatItem } from '@/types'
@@ -26,12 +26,12 @@ export function AIDigest() {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
-        <div className="bg-card border border-border rounded-2xl rounded-tl-sm p-4 space-y-3">
+        <div className="glass-card rounded-2xl rounded-tl-sm p-4 space-y-3">
           <p className="text-sm">Доброе утро, Сергей! Вот ваш дайджест за сегодня:</p>
           {/* Inline Stats */}
           <div className="grid grid-cols-4 gap-2">
             {digestStats.map((s, i) => (
-              <div key={i} className="bg-muted rounded-lg p-2.5 text-center">
+              <div key={i} className="bg-muted rounded-lg p-2.5 text-center hover-glow cursor-default">
                 <div className={`text-lg font-bold tabular-nums ${s.color}`}>{s.value}</div>
                 <div className="text-[10px] text-muted-foreground">{s.label}</div>
               </div>
@@ -50,7 +50,7 @@ export function AIDigest() {
               </div>
             ))}
             <div className="flex gap-2 pt-1">
-              <Button size="sm" className="h-7 text-xs gradient-bg text-white border-0 hover:opacity-90 gap-1"><Zap className="w-3 h-3" /> AI-ответ всем</Button>
+              <Button size="sm" className="h-7 text-xs gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 gap-1"><Zap className="w-3 h-3" /> AI-ответ всем</Button>
               <Button size="sm" variant="secondary" className="h-7 text-xs">Ответить вручную</Button>
             </div>
           </div>

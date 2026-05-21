@@ -1,8 +1,8 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// ============================================================
+// HH Job Copilot — Prisma Schema
+// Стек: SQLite (dev) → PostgreSQL (prod)
+// Монетизация: Starter $0 / Pro $19/mo / Ultra $49/mo
+// ============================================================
 
 generator client {
   provider = "prisma-client-js"
@@ -13,20 +13,218 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// ---- Enums ----
+
+enum Plan {
+  STARTER
+  PRO
+  ULTRA
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum MessageRole {
+  USER
+  EMPLOYER
+  AI
+}
+
+enum SentVia {
+  MANUAL
+  AI
+  HUMANIZED_AI
+}
+
+enum AppStatus {
+  PENDING
+  VIEWED
+  INVITED
+  REJECTED
+  DISCARDED
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// ---- Models ----
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+
+  // HH.ru integration
+  hhToken       String?             // Encrypted OAuth access token
+  hhRefreshToken String?            // Encrypted OAuth refresh token
+  hhTokenExpiresAt DateTime?        // Token expiration
+  hhCookies     String?             // Encrypted Chatik cookies JSON
+
+  // Subscription
+  plan          Plan      @default(STARTER)
+  stripeCustomerId String?  @unique
+  stripePriceId String?
+  stripeCurrentPeriodEnd DateTime?
+
+  // Profile
+  resumeText    String?             // Parsed resume text for AI context
+  preferences   String?             // JSON: salary, location, format, etc.
+
+  // Stats
+  streakDays    Int       @default(0)
+  lastActiveAt  DateTime  @default(now())
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  chats         Chat[]
+  applications  Application[]
+  interviews    Interview[]
+  aiMessages    AIMessage[]
+
+  @@map("users")
+}
+
+model Chat {
+  id            String    @id @default(cuid())
+  userId        String
+  hhChatId      String?             // HH.ru Chatik chat ID
+
+  employerName  String
+  vacancyTitle  String?
+  companyLogo   String?
+
+  lastMessage   String?
+  lastMessageAt DateTime?
+  unreadCount   Int       @default(0)
+
+  // AI auto-reply settings
+  aiRepliesOn   Boolean   @default(false)
+  humanizeMode  Boolean   @default(true)   // Auto-humanize AI responses
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages      Message[]
+
+  @@index([userId])
+  @@index([hhChatId])
+  @@map("chats")
+}
+
+model Message {
+  id            String    @id @default(cuid())
+  chatId        String
+  role          MessageRole
+  content       String
+  sentVia       SentVia   @default(MANUAL)
+
+  // AI metadata
+  aiRawContent  String?             // Original AI response before humanization
+  aiHumanized   Boolean   @default(false)
+
+  createdAt     DateTime  @default(now())
+
+  // Relations
+  chat          Chat      @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@index([chatId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+model Application {
+  id            String    @id @default(cuid())
+  userId        String
+  vacancyId     String?             // HH.ru vacancy ID
+  vacancyUrl    String?
+
+  title         String
+  company       String
+  location      String?
+  salary        String?
+  matchScore    Int?                // AI match score 0-100
+
+  status        AppStatus @default(PENDING)
+
+  // Cover letter
+  coverLetter   String?             // AI-generated cover letter text
+  coverLetterEdited Boolean @default(false)  // User modified the AI letter
+
+  // Response tracking
+  viewedAt      DateTime?
+  invitedAt     DateTime?
+  rejectedAt    DateTime?
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("applications")
+}
+
+model Interview {
+  id            String    @id @default(cuid())
+  userId        String
+
+  company       String
+  position      String
+  scheduledAt   DateTime?
+  duration      Int?                // Duration in minutes
+
+  status        InterviewStatus @default(SCHEDULED)
+
+  // AI features
+  transcript    String?             // Full interview transcript (ASR)
+  aiHints       String?             // JSON array of AI hints given during interview
+  aiSummary     String?             // Post-interview AI summary & feedback
+
+  // Context for AI
+  vacancyId     String?
+  vacancyTitle  String?
+  resumeContext String?             // Relevant resume section for this interview
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("interviews")
+}
+
+model AIMessage {
+  id            String    @id @default(cuid())
+  userId        String
+
+  role          String              // 'system' | 'user' | 'assistant'
+  content       String
+
+  // Context metadata
+  source        String?             // 'chat' | 'interview' | 'search' | 'general'
+  chatId        String?             // If related to a specific chat
+  interviewId   String?             // If related to a specific interview
+
+  tokens        Int?                // Token count for rate limiting
+  model         String?             // LLM model used
+
+  createdAt     DateTime  @default(now())
+
+  // Relations
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("ai_messages")
 }

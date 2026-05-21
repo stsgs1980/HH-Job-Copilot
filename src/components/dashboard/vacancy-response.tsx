@@ -19,7 +19,7 @@ export function VacancyResponse() {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
-        <div className="bg-card border border-border rounded-2xl rounded-tl-sm p-4 space-y-3">
+        <div className="glass-card rounded-2xl rounded-tl-sm p-4 space-y-3">
           <p className="text-sm">Готово! Ответ отправлен Елене через Chatik API:</p>
           <div className="bg-muted rounded-lg p-3 border-l-2 border-cyan">
             <p className="text-sm italic text-muted-foreground">&ldquo;Здравствуйте, Елена! Спасибо за приглашение. С удовольствием прохожу собеседование завтра в 14:00. Подскажите, какой формат — Zoom или Google Meet?&rdquo;</p>
@@ -46,7 +46,7 @@ export function VacancyResponse() {
               </div>
             ))}
             <div className="flex gap-2 pt-1">
-              <Button size="sm" className="h-7 text-xs gradient-bg text-white border-0 hover:opacity-90 gap-1"><Zap className="w-3 h-3" /> Массовый отклик</Button>
+              <Button size="sm" className="h-7 text-xs gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 gap-1"><Zap className="w-3 h-3" /> Массовый отклик</Button>
               <Button size="sm" variant="outline" className="h-7 text-xs gap-1"><Layers className="w-3 h-3" /> AI-сопоставление</Button>
             </div>
           </div>

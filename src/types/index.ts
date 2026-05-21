@@ -2,9 +2,6 @@
 // HH Job Copilot — Shared Types
 // ============================================================
 
-/** Main app views (SPA router) */
-export type View = 'landing' | 'auth' | 'dashboard'
-
 /** SaaS subscription plans */
 export type Plan = 'STARTER' | 'PRO' | 'ULTRA'
 

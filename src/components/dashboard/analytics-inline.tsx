@@ -22,7 +22,7 @@ export function AnalyticsInline() {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
-        <div className="bg-card border border-border rounded-2xl rounded-tl-sm p-4 space-y-3">
+        <div className="glass-card rounded-2xl rounded-tl-sm p-4 space-y-3">
           <p className="text-sm">Вот ваша аналитика за неделю:</p>
           <div className="bg-muted/50 rounded-xl p-3 space-y-2">
             <div className="flex items-center justify-between">
@@ -44,7 +44,7 @@ export function AnalyticsInline() {
           </div>
           <div className="grid grid-cols-4 gap-2">
             {analyticsStats.map((s, i) => (
-              <div key={i} className="bg-muted rounded-lg p-2 text-center">
+              <div key={i} className="bg-muted rounded-lg p-2 text-center hover-glow cursor-default">
                 <div className={`text-sm font-bold tabular-nums ${s.c}`}>{s.v}</div>
                 <div className="text-[9px] text-muted-foreground">{s.l}</div>
               </div>

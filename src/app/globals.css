@@ -179,3 +179,158 @@
 .animate-wave {
   animation: wave 1.2s ease-in-out infinite;
 }
+
+/* ===== Design Polish: Glassmorphism, Gradient Mesh, Micro-animations ===== */
+
+/* Glassmorphism card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+}
+
+:root .glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Gradient mesh background for hero sections */
+.gradient-mesh {
+  background:
+    radial-gradient(at 20% 20%, oklch(0.75 0.18 195 / 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 20%, oklch(0.65 0.25 295 / 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, oklch(0.75 0.18 195 / 0.08) 0px, transparent 50%);
+}
+
+/* Subtle hover glow effect on cards */
+.hover-glow {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 20px oklch(0.75 0.18 195 / 0.15), 0 0 40px oklch(0.65 0.25 295 / 0.08);
+  border-color: oklch(0.75 0.18 195 / 0.25);
+}
+
+/* Fade in from bottom animation (for scroll reveal) */
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger children animation delays */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Streak counter glow pulse */
+.streak-glow {
+  animation: streakGlow 2s ease-in-out infinite;
+}
+
+@keyframes streakGlow {
+  0%, 100% { box-shadow: 0 0 8px oklch(0.65 0.22 150 / 0.3); }
+  50% { box-shadow: 0 0 16px oklch(0.65 0.22 150 / 0.6); }
+}
+
+/* Gradient border animation */
+.gradient-border {
+  position: relative;
+  border: none !important;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, oklch(0.75 0.18 195), oklch(0.65 0.25 295));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+/* Shimmer loading effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    oklch(0.97 0 0 / 0) 0%,
+    oklch(0.97 0 0 / 0.5) 50%,
+    oklch(0.97 0 0 / 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .shimmer {
+  background: linear-gradient(
+    90deg,
+    oklch(0.269 0 0 / 0) 0%,
+    oklch(0.269 0 0 / 0.5) 50%,
+    oklch(0.269 0 0 / 0) 100%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Smooth page transition */
+.page-transition {
+  animation: pageIn 0.3s ease-out;
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Gradient button shimmer animation */
+.gradient-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.gradient-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    oklch(1 0 0 / 0.2) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  pointer-events: none;
+}
+
+/* Zap icon hover pulse */
+.zap-pulse {
+  transition: transform 0.3s ease;
+}
+.zap-pulse:hover {
+  animation: zapPulse 0.6s ease-in-out;
+}
+
+@keyframes zapPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
