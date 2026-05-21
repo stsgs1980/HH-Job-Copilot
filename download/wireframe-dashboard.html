@@ -1,688 +1,1613 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HH Job Copilot — Dashboard Wireframe</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HH Job Copilot — Дашборд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+:root {
+  --bg: #0a0a0c;
+  --surface: #111115;
+  --tertiary: #18181c;
+  --accent: #E8443A;
+  --accent-light: #FF6B5E;
+  --accent-dim: rgba(232,68,58,0.15);
+  --accent-deep: rgba(232,68,58,0.08);
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.12);
+  --green-deep: rgba(74,222,128,0.06);
+  --text: #f0f0f2;
+  --secondary: #8a8a9a;
+  --dim: #55556a;
+  --border: rgba(255,255,255,0.06);
+  --glass: rgba(255,255,255,0.02);
+  --glass-hover: rgba(255,255,255,0.05);
+}
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        accent: '#E8443A',
-                        'accent-light': '#FF6B5E',
-                        'bg-primary': '#0a0a0c',
-                        'bg-secondary': '#111115',
-                        'bg-tertiary': '#18181c',
-                    },
-                    fontFamily: {
-                        sans: ['Manrope', 'sans-serif'],
-                    },
-                },
-            },
-        }
-    </script>
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
-    <style>
-        :root {
-            --accent: #E8443A;
-            --bg: #0a0a0c;
-            --bg-secondary: #111115;
-            --glass-bg: rgba(52, 52, 57, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.05);
-        }
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Manrope', sans-serif;
-            background: var(--bg);
-            color: #fff;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
+/* LAYOUT */
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
 
-        .noise-overlay {
-            position: fixed; inset: 0;
-            pointer-events: none; z-index: 9998;
-            opacity: 0.03; mix-blend-mode: overlay;
-        }
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  flex-shrink: 0;
+  position: relative;
+}
 
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-        }
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  padding: 0 8px;
+  perspective: 600px;
+}
 
-        .sidebar-link {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 16px; border-radius: 12px;
-            font-size: 13px; font-weight: 500;
-            color: rgba(255,255,255,0.35);
-            transition: all 0.25s ease;
-            cursor: pointer;
-        }
-        .sidebar-link:hover {
-            color: rgba(255,255,255,0.7);
-            background: rgba(255,255,255,0.03);
-        }
-        .sidebar-link.active {
-            color: #fff;
-            background: rgba(232,68,58,0.08);
-            border: 1px solid rgba(232,68,58,0.12);
-        }
-        .sidebar-link.active svg { color: var(--accent); }
+.sidebar-logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 13px;
+  color: #fff;
+  transform: rotateY(-8deg) rotateX(4deg);
+  box-shadow: 0 4px 16px rgba(232,68,58,0.3);
+}
 
-        .tab-btn {
-            padding: 8px 20px; border-radius: 10px;
-            font-size: 13px; font-weight: 600;
-            color: rgba(255,255,255,0.35);
-            background: transparent; border: none;
-            cursor: pointer; transition: all 0.25s ease;
-        }
-        .tab-btn:hover { color: rgba(255,255,255,0.6); }
-        .tab-btn.active {
-            color: #fff;
-            background: rgba(232,68,58,0.1);
-            border: 1px solid rgba(232,68,58,0.12);
-        }
+.sidebar-logo-text {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
 
-        .stat-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 16px;
-            padding: 20px 24px;
-        }
+.sidebar-logo-text span { color: var(--accent); }
 
-        .chat-bubble {
-            max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 16px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-        .chat-bubble-them {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-bottom-left-radius: 4px;
-            color: rgba(255,255,255,0.6);
-        }
-        .chat-bubble-me {
-            background: rgba(232,68,58,0.1);
-            border: 1px solid rgba(232,68,58,0.12);
-            border-bottom-right-radius: 4px;
-            color: rgba(255,255,255,0.7);
-        }
-        .chat-bubble-ai {
-            background: rgba(232,68,58,0.06);
-            border: 1px solid rgba(232,68,58,0.1);
-            border-bottom-left-radius: 4px;
-            color: rgba(232,68,58,0.7);
-        }
+/* Sidebar nav */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
 
-        .vacancy-row {
-            padding: 14px 18px;
-            border: 1px solid rgba(255,255,255,0.03);
-            border-radius: 14px;
-            transition: all 0.25s ease;
-        }
-        .vacancy-row:hover {
-            background: rgba(255,255,255,0.02);
-            border-color: rgba(255,255,255,0.06);
-        }
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dim);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+}
 
-        .interview-wave {
-            display: flex; align-items: center; gap: 3px; height: 20px;
-        }
-        .interview-wave span {
-            width: 2px; background: var(--accent); border-radius: 1px;
-            animation: wave 1.2s ease-in-out infinite;
-        }
-        .interview-wave span:nth-child(1) { height: 8px; animation-delay: 0s; }
-        .interview-wave span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
-        .interview-wave span:nth-child(3) { height: 6px; animation-delay: 0.2s; }
-        .interview-wave span:nth-child(4) { height: 18px; animation-delay: 0.3s; }
-        .interview-wave span:nth-child(5) { height: 10px; animation-delay: 0.4s; }
-        .interview-wave span:nth-child(6) { height: 4px; animation-delay: 0.5s; }
-        .interview-wave span:nth-child(7) { height: 12px; animation-delay: 0.6s; }
-        @keyframes wave {
-            0%, 100% { transform: scaleY(1); }
-            50% { transform: scaleY(0.3); }
-        }
+.sidebar-link:hover {
+  color: var(--secondary);
+  background: var(--glass-hover);
+}
 
-        .hint-card {
-            background: rgba(232,68,58,0.05);
-            border: 1px solid rgba(232,68,58,0.1);
-            border-radius: 14px;
-            padding: 14px 18px;
-        }
+.sidebar-link.active {
+  color: var(--text);
+  background: var(--accent-deep);
+  border-color: rgba(232,68,58,0.12);
+}
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+.sidebar-link.active svg { color: var(--accent); }
 
-        @media (prefers-reduced-motion: reduce) {
-            .interview-wave span { animation: none !important; }
-        }
-    </style>
+.sidebar-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 12px 0;
+}
+
+/* Sidebar user */
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 8px 0;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.sidebar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.sidebar-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-plan {
+  font-size: 10px;
+  color: var(--green);
+  font-weight: 500;
+}
+
+.sidebar-logout {
+  color: var(--dim);
+  transition: color 0.3s;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.sidebar-logout:hover { color: var(--accent); }
+.sidebar-logout svg { width: 16px; height: 16px; }
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* Top bar */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,10,12,0.8);
+  backdrop-filter: blur(24px);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topbar-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--dim);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger svg { width: 20px; height: 20px; }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 11px;
+  color: var(--dim);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.notif-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.notif-btn:hover {
+  color: var(--secondary);
+  border-color: rgba(232,68,58,0.2);
+}
+
+.notif-btn svg { width: 16px; height: 16px; }
+
+/* PANELS */
+.panel { padding: 24px 32px; max-width: 900px; margin: 0 auto; display: none; }
+.panel.active { display: block; }
+
+/* GLASS CARD */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* STAT CARDS */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.stat-value.accent { color: var(--accent); }
+.stat-value.green { color: var(--green); }
+
+.stat-sub {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.stat-sub.green-sub { color: var(--green); }
+.stat-sub.accent-sub { color: var(--accent); }
+
+/* CHAT */
+.chat-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--glass-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--dim);
+}
+
+.chat-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.chat-status {
+  font-size: 11px;
+  color: var(--dim);
+}
+
+.chat-online {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-online-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.chat-online-text {
+  font-size: 10px;
+  color: var(--dim);
+}
+
+/* Messages */
+.chat-messages {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 320px;
+}
+
+.msg-row {
+  display: flex;
+  gap: 12px;
+}
+
+.msg-row.me { justify-content: flex-end; }
+
+.msg-avatar-sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--glass-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--dim);
+  flex-shrink: 0;
+}
+
+.msg-avatar-sm.ai {
+  background: var(--accent-dim);
+}
+
+.msg-avatar-sm.ai svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+
+.msg-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.msg-bubble.them {
+  background: var(--glass-hover);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+  color: var(--secondary);
+}
+
+.msg-bubble.me {
+  background: var(--accent-deep);
+  border: 1px solid rgba(232,68,58,0.12);
+  border-bottom-right-radius: 4px;
+  color: var(--secondary);
+}
+
+.msg-bubble.ai {
+  background: var(--accent-deep);
+  border: 1px solid rgba(232,68,58,0.1);
+  border-bottom-left-radius: 4px;
+}
+
+.ai-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+
+.ai-text {
+  font-size: 13px;
+  color: var(--secondary);
+  line-height: 1.6;
+}
+
+/* Chat input */
+.chat-input-row {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-input {
+  flex: 1;
+  background: var(--glass-hover);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.chat-input::placeholder { color: var(--dim); }
+.chat-input:focus { border-color: rgba(232,68,58,0.3); }
+
+.chat-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(232,68,58,0.15);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.chat-send:hover { background: rgba(232,68,58,0.2); }
+.chat-send svg { width: 16px; height: 16px; }
+
+/* VACANCIES */
+.vacancies-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.vacancies-title-sm {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--dim);
+  margin-bottom: 4px;
+}
+
+.vacancies-title-lg {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.btn-accent {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.btn-accent:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(232,68,58,0.3);
+}
+
+.btn-accent::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s;
+}
+
+.btn-accent:hover::after { left: 100%; }
+
+/* Filters */
+.filters-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--glass);
+  color: var(--dim);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.filter-tag.active {
+  background: var(--accent-deep);
+  border-color: rgba(232,68,58,0.2);
+  color: var(--accent);
+}
+
+.filter-tag:hover:not(.active) {
+  border-color: rgba(255,255,255,0.1);
+  color: var(--secondary);
+}
+
+/* Vacancy rows */
+.vacancy-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.vacancy-row {
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.25s ease;
+}
+
+.vacancy-row:hover {
+  background: var(--glass-hover);
+  border-color: rgba(255,255,255,0.08);
+}
+
+.vacancy-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--glass-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--dim);
+  flex-shrink: 0;
+}
+
+.vacancy-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.vacancy-name {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vacancy-meta {
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.vacancy-salary {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.vacancy-salary-val {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.vacancy-salary-cur {
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.vacancy-match {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.vacancy-match.high {
+  background: var(--green-dim);
+  color: var(--green);
+}
+
+.vacancy-match.medium {
+  background: rgba(250,204,21,0.1);
+  color: #facc15;
+}
+
+.vacancy-check {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* INTERVIEW */
+.interview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.interview-title-sm {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--dim);
+  margin-bottom: 4px;
+}
+
+.interview-title-lg {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.interview-badges {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.recording-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.15);
+  border-radius: 10px;
+}
+
+.wave-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+}
+
+.wave-bars span {
+  width: 2px;
+  background: #f87171;
+  border-radius: 1px;
+  animation: wave 1.2s ease-in-out infinite;
+}
+
+.wave-bars span:nth-child(1) { height: 6px; animation-delay: 0s; }
+.wave-bars span:nth-child(2) { height: 12px; animation-delay: 0.1s; }
+.wave-bars span:nth-child(3) { height: 5px; animation-delay: 0.2s; }
+.wave-bars span:nth-child(4) { height: 14px; animation-delay: 0.3s; }
+.wave-bars span:nth-child(5) { height: 8px; animation-delay: 0.4s; }
+.wave-bars span:nth-child(6) { height: 4px; animation-delay: 0.5s; }
+.wave-bars span:nth-child(7) { height: 10px; animation-delay: 0.6s; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.3); }
+}
+
+.recording-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #f87171;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.time-badge {
+  padding: 6px 14px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 11px;
+  color: var(--dim);
+  font-family: 'Manrope', monospace;
+}
+
+/* Interview grid */
+.interview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Transcript */
+.transcript-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.transcript-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dim);
+}
+
+.transcript-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.transcript-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-dot 2s infinite;
+}
+
+.transcript-status-text {
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.transcript-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.transcript-speaker {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--dim);
+  margin-bottom: 4px;
+}
+
+.transcript-text {
+  font-size: 13px;
+  color: var(--secondary);
+  line-height: 1.7;
+}
+
+.transcript-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+/* AI Hints */
+.hints-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hints-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+.hint-card {
+  background: var(--accent-deep);
+  border: 1px solid rgba(232,68,58,0.1);
+  border-radius: 16px;
+  padding: 16px 20px;
+}
+
+.hint-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.hint-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--accent-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hint-icon svg { width: 12px; height: 12px; color: var(--accent); }
+
+.hint-type {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+.hint-text {
+  font-size: 12px;
+  color: var(--secondary);
+  line-height: 1.7;
+}
+
+.hint-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.hint-tag {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--glass-hover);
+  font-size: 10px;
+  color: var(--dim);
+}
+
+/* TTS controls */
+.tts-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+}
+
+.tts-play {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(232,68,58,0.12);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.tts-play:hover { background: rgba(232,68,58,0.2); }
+.tts-play svg { width: 14px; height: 14px; }
+
+.tts-progress {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--glass-hover);
+  position: relative;
+}
+
+.tts-progress-fill {
+  height: 100%;
+  width: 33%;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.4;
+}
+
+.tts-label {
+  font-size: 10px;
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+/* ANALYTICS */
+.analytics-header {
+  margin-bottom: 32px;
+}
+
+.analytics-title-sm {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--dim);
+  margin-bottom: 4px;
+}
+
+.analytics-title-lg {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* Chart */
+.chart-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dim);
+}
+
+.chart-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.chart-tab {
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--dim);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.chart-tab.active {
+  color: var(--text);
+  background: var(--accent-deep);
+  border: 1px solid rgba(232,68,58,0.12);
+}
+
+.chart-tab:hover:not(.active) { color: var(--secondary); }
+
+.chart-body {
+  padding: 24px;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 160px;
+}
+
+.chart-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.chart-bar {
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+  background: var(--accent-dim);
+  transition: background 0.3s;
+}
+
+.chart-bar:hover { background: rgba(232,68,58,0.25); }
+
+.chart-bar-label {
+  font-size: 9px;
+  color: var(--dim);
+}
+
+/* Activity */
+.activity-body {
+  padding: 0;
+}
+
+.activity-row {
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-row:last-child { border-bottom: none; }
+
+.activity-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activity-icon.green { background: var(--green-dim); }
+.activity-icon.green svg { color: var(--green); width: 16px; height: 16px; }
+.activity-icon.blue { background: rgba(96,165,250,0.1); }
+.activity-icon.blue svg { color: #60a5fa; width: 16px; height: 16px; }
+.activity-icon.accent { background: var(--accent-dim); }
+.activity-icon.accent svg { color: var(--accent); width: 16px; height: 16px; }
+
+.activity-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.activity-time {
+  font-size: 10px;
+  color: var(--dim);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .interview-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .hamburger { display: block; }
+  .topbar { padding: 12px 16px; }
+  .panel { padding: 16px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .interview-grid { grid-template-columns: 1fr; }
+  .status-badge { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-bars span { animation: none !important; }
+  .status-dot { animation: none !important; }
+}
+</style>
 </head>
 <body>
 
-    <svg style="position:absolute;width:0;height:0;" aria-hidden="true">
-        <filter id="noiseFilter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/>
-            <feColorMatrix type="saturate" values="0"/>
-        </filter>
-    </svg>
-    <div class="noise-overlay" style="filter:url(#noiseFilter);" aria-hidden="true"></div>
-
-    <div class="flex min-h-screen">
-        <!-- SIDEBAR -->
-        <aside class="w-[240px] border-r border-white/[0.04] bg-bg-secondary/50 flex flex-col p-5 flex-shrink-0 hidden lg:flex">
-            <!-- Logo -->
-            <div class="flex items-center gap-3 mb-8 px-2">
-                <div class="w-8 h-8 rounded-lg bg-accent/10 border border-accent/15 flex items-center justify-center">
-                    <svg class="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                </div>
-                <span class="text-white font-bold text-sm tracking-tight">HH Copilot</span>
-            </div>
-
-            <!-- Nav links -->
-            <nav class="flex flex-col gap-1 flex-1">
-                <div class="sidebar-link active" onclick="switchPanel('chat')">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                    Chat
-                </div>
-                <div class="sidebar-link" onclick="switchPanel('vacancies')">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-                    Vacancies
-                </div>
-                <div class="sidebar-link" onclick="switchPanel('interview')">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
-                    Interview
-                </div>
-                <div class="sidebar-link" onclick="switchPanel('analytics')">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-                    Analytics
-                </div>
-
-                <div class="h-px bg-white/[0.04] my-3"></div>
-
-                <div class="sidebar-link">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-                    Settings
-                </div>
-            </nav>
-
-            <!-- User -->
-            <div class="flex items-center gap-3 px-2 pt-4 border-t border-white/[0.04]">
-                <div class="w-8 h-8 rounded-full bg-accent/15 flex items-center justify-center text-xs font-bold text-accent">A</div>
-                <div class="flex-1 min-w-0">
-                    <div class="text-xs font-semibold text-white truncate">Alex Ivanov</div>
-                    <div class="text-[10px] text-white/20">Pro plan</div>
-                </div>
-                <a href="/wireframe-auth.html" class="text-white/15 hover:text-white/40 transition-colors">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                </a>
-            </div>
-        </aside>
-
-        <!-- MAIN CONTENT -->
-        <main class="flex-1 min-h-screen overflow-y-auto">
-            <!-- Top bar -->
-            <div class="sticky top-0 z-50 border-b border-white/[0.04] bg-bg-primary/80 backdrop-blur-xl px-6 md:px-8 py-4 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <!-- Mobile hamburger -->
-                    <button class="lg:hidden text-white/40" aria-label="Menu">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                    </button>
-                    <h1 class="text-sm font-bold text-white" id="panel-title">Chat</h1>
-                </div>
-                <div class="flex items-center gap-3">
-                    <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.04]">
-                        <div class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
-                        <span class="text-[11px] text-white/30">Connected to HH.ru</span>
-                    </div>
-                    <button class="w-8 h-8 rounded-lg bg-white/[0.03] border border-white/[0.04] flex items-center justify-center text-white/30 hover:text-white/60 transition-colors">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- ========= CHAT PANEL ========= -->
-            <div id="panel-chat" class="p-6 md:p-8 max-w-4xl mx-auto">
-                <!-- Stats row -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="stat-card">
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Unread</div>
-                        <div class="text-2xl font-black text-white">12</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Replies today</div>
-                        <div class="text-2xl font-black text-white">5</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">AI drafted</div>
-                        <div class="text-2xl font-black text-accent">8</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Pending</div>
-                        <div class="text-2xl font-black text-white">3</div>
-                    </div>
-                </div>
-
-                <!-- Chat conversation -->
-                <div class="glass !rounded-2xl overflow-hidden">
-                    <!-- Chat header -->
-                    <div class="px-6 py-4 border-b border-white/[0.04] flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-full bg-white/[0.06] flex items-center justify-center text-xs font-bold text-white/40">YA</div>
-                            <div>
-                                <div class="text-sm font-semibold text-white">Yandex — Senior Frontend</div>
-                                <div class="text-[11px] text-white/20">HR Manager — Online</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-green-400"></div>
-                            <span class="text-[10px] text-white/20">Active</span>
-                        </div>
-                    </div>
-
-                    <!-- Messages -->
-                    <div class="p-6 space-y-4 min-h-[300px]">
-                        <div class="flex gap-3">
-                            <div class="w-7 h-7 rounded-full bg-white/[0.06] flex-shrink-0 flex items-center justify-center text-[9px] font-bold text-white/30">YA</div>
-                            <div class="chat-bubble chat-bubble-them">
-                                Hi Alex! We saw your profile and are very interested. Would you like to schedule a technical interview this week?
-                            </div>
-                        </div>
-                        <div class="flex gap-3 justify-end">
-                            <div class="chat-bubble chat-bubble-me">
-                                Hi! Yes, I would love to. I am available Wednesday or Thursday after 2pm.
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="w-7 h-7 rounded-full bg-accent/10 flex-shrink-0 flex items-center justify-center">
-                                <svg class="w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
-                            </div>
-                            <div class="chat-bubble chat-bubble-ai">
-                                <div class="text-[10px] font-bold tracking-wider uppercase text-accent/50 mb-1.5">AI Suggestion</div>
-                                Great reply! Consider also mentioning your experience with microservices architecture — the job description specifically asks for it. You could add: "I also have 3+ years of experience with microservices, which I noticed is part of your stack."
-                            </div>
-                        </div>
-                        <div class="flex gap-3">
-                            <div class="w-7 h-7 rounded-full bg-white/[0.06] flex-shrink-0 flex items-center justify-center text-[9px] font-bold text-white/30">YA</div>
-                            <div class="chat-bubble chat-bubble-them">
-                                Thursday at 3pm works perfectly! I will send a calendar invite. Do you need any prep materials?
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Input -->
-                    <div class="px-6 py-4 border-t border-white/[0.04] flex items-center gap-3">
-                        <input type="text" class="flex-1 bg-white/[0.03] border border-white/[0.05] rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 outline-none focus:border-accent/20" placeholder="Type a message...">
-                        <button class="w-10 h-10 rounded-xl bg-accent/10 border border-accent/15 flex items-center justify-center text-accent hover:bg-accent/20 transition-colors">
-                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========= VACANCIES PANEL ========= -->
-            <div id="panel-vacancies" class="p-6 md:p-8 max-w-4xl mx-auto hidden">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Auto-apply</div>
-                        <div class="text-lg font-bold text-white">47 matches found</div>
-                    </div>
-                    <button class="btn-accent !py-2.5 !px-6 !text-xs !rounded-xl">Apply to all</button>
-                </div>
-
-                <!-- Filters -->
-                <div class="flex gap-2 mb-6 flex-wrap">
-                    <div class="px-3 py-1.5 rounded-lg bg-accent/10 border border-accent/15 text-[11px] font-semibold text-accent">Frontend</div>
-                    <div class="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.05] text-[11px] font-medium text-white/30">200k+ salary</div>
-                    <div class="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.05] text-[11px] font-medium text-white/30">Remote</div>
-                    <div class="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.05] text-[11px] font-medium text-white/30">Moscow</div>
-                </div>
-
-                <!-- Vacancy list -->
-                <div class="space-y-3">
-                    <div class="vacancy-row flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center text-[10px] font-bold text-white/25">YX</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-sm font-semibold text-white truncate">Senior Frontend Developer</div>
-                            <div class="text-xs text-white/25">Yandex — Moscow — Remote</div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <div class="text-sm font-bold text-white">250-350k</div>
-                            <div class="text-[10px] text-white/15">RUB/mo</div>
-                        </div>
-                        <div class="flex items-center gap-2 flex-shrink-0">
-                            <div class="px-2 py-0.5 rounded bg-green-400/10 text-[9px] font-bold text-green-400/70 uppercase">95% match</div>
-                        </div>
-                        <input type="checkbox" checked class="w-4 h-4 rounded accent-accent">
-                    </div>
-
-                    <div class="vacancy-row flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center text-[10px] font-bold text-white/25">VK</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-sm font-semibold text-white truncate">Lead React Developer</div>
-                            <div class="text-xs text-white/25">VK Group — St. Petersburg — Hybrid</div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <div class="text-sm font-bold text-white">280-380k</div>
-                            <div class="text-[10px] text-white/15">RUB/mo</div>
-                        </div>
-                        <div class="flex items-center gap-2 flex-shrink-0">
-                            <div class="px-2 py-0.5 rounded bg-green-400/10 text-[9px] font-bold text-green-400/70 uppercase">91% match</div>
-                        </div>
-                        <input type="checkbox" checked class="w-4 h-4 rounded accent-accent">
-                    </div>
-
-                    <div class="vacancy-row flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center text-[10px] font-bold text-white/25">TB</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-sm font-semibold text-white truncate">Fullstack TypeScript</div>
-                            <div class="text-xs text-white/25">T-Bank — Moscow — Office</div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <div class="text-sm font-bold text-white">300-400k</div>
-                            <div class="text-[10px] text-white/15">RUB/mo</div>
-                        </div>
-                        <div class="flex items-center gap-2 flex-shrink-0">
-                            <div class="px-2 py-0.5 rounded bg-yellow-400/10 text-[9px] font-bold text-yellow-400/70 uppercase">78% match</div>
-                        </div>
-                        <input type="checkbox" class="w-4 h-4 rounded accent-accent">
-                    </div>
-
-                    <div class="vacancy-row flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center text-[10px] font-bold text-white/25">AV</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-sm font-semibold text-white truncate">Frontend Engineer (React+Node)</div>
-                            <div class="text-xs text-white/25">Avito — Moscow — Remote</div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <div class="text-sm font-bold text-white">220-320k</div>
-                            <div class="text-[10px] text-white/15">RUB/mo</div>
-                        </div>
-                        <div class="flex items-center gap-2 flex-shrink-0">
-                            <div class="px-2 py-0.5 rounded bg-yellow-400/10 text-[9px] font-bold text-yellow-400/70 uppercase">82% match</div>
-                        </div>
-                        <input type="checkbox" class="w-4 h-4 rounded accent-accent">
-                    </div>
-
-                    <div class="vacancy-row flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center text-[10px] font-bold text-white/25">OZ</div>
-                        <div class="flex-1 min-w-0">
-                            <div class="text-sm font-semibold text-white truncate">Senior UI Engineer</div>
-                            <div class="text-xs text-white/25">Ozon — Moscow — Hybrid</div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <div class="text-sm font-bold text-white">200-280k</div>
-                            <div class="text-[10px] text-white/15">RUB/mo</div>
-                        </div>
-                        <div class="flex items-center gap-2 flex-shrink-0">
-                            <div class="px-2 py-0.5 rounded bg-green-400/10 text-[9px] font-bold text-green-400/70 uppercase">88% match</div>
-                        </div>
-                        <input type="checkbox" checked class="w-4 h-4 rounded accent-accent">
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========= INTERVIEW PANEL ========= -->
-            <div id="panel-interview" class="p-6 md:p-8 max-w-5xl mx-auto hidden">
-                <!-- Interview header -->
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Live interview</div>
-                        <div class="text-lg font-bold text-white">Yandex — Technical Round</div>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-400/10 border border-red-400/15">
-                            <div class="interview-wave">
-                                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                            </div>
-                            <span class="text-[11px] font-semibold text-red-400/80 uppercase">Recording</span>
-                        </div>
-                        <div class="px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.04] text-[11px] text-white/25">12:34</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Left: Transcript -->
-                    <div class="glass !rounded-2xl overflow-hidden">
-                        <div class="px-5 py-3.5 border-b border-white/[0.04] flex items-center justify-between">
-                            <span class="text-xs font-semibold text-white/40">Live transcript</span>
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></div>
-                                <span class="text-[10px] text-white/20">ASR active</span>
-                            </div>
-                        </div>
-                        <div class="p-5 space-y-3 max-h-[400px] overflow-y-auto">
-                            <div class="text-xs text-white/20 mb-2">Interviewer:</div>
-                            <div class="text-sm text-white/50 leading-relaxed">
-                                "Can you walk me through how you would design a real-time collaboration system, like a shared document editor?"
-                            </div>
-                            <div class="h-px bg-white/[0.03] my-3"></div>
-                            <div class="text-xs text-white/20 mb-2">You:</div>
-                            <div class="text-sm text-white/50 leading-relaxed">
-                                "Sure. First, I would use Operational Transformation or CRDTs for conflict resolution. WebSocket connections for real-time sync, with a presence system to show active cursors..."
-                            </div>
-                            <div class="h-px bg-white/[0.03] my-3"></div>
-                            <div class="text-xs text-white/20 mb-2">Interviewer:</div>
-                            <div class="text-sm text-white/50 leading-relaxed">
-                                "How would you handle offline support and reconnection?"
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right: AI Hints -->
-                    <div class="space-y-4">
-                        <div class="text-xs font-semibold text-accent/50 uppercase tracking-wider">AI Hints</div>
-
-                        <div class="hint-card">
-                            <div class="flex items-center gap-2 mb-2">
-                                <div class="w-5 h-5 rounded-md bg-accent/10 flex items-center justify-center">
-                                    <svg class="w-3 h-3 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                                </div>
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-accent/50">Suggested answer</span>
-                            </div>
-                            <p class="text-xs text-white/40 leading-relaxed">
-                                For offline support, mention: 1) Local-first architecture with IndexedDB persistence, 2) Queue pending operations, 3) Use vector clocks for conflict detection on reconnect, 4) CRDT merge strategy for seamless sync. Reference: Figma's multiplayer approach.
-                            </p>
-                        </div>
-
-                        <div class="hint-card">
-                            <div class="flex items-center gap-2 mb-2">
-                                <div class="w-5 h-5 rounded-md bg-accent/10 flex items-center justify-center">
-                                    <svg class="w-3 h-3 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 014 4v1a4 4 0 01-8 0V6a4 4 0 014-4z"/><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/></svg>
-                                </div>
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-accent/50">Behavioral tip</span>
-                            </div>
-                            <p class="text-xs text-white/40 leading-relaxed">
-                                Interviewer seems to value system design depth. Draw on whiteboard if possible. Show trade-off awareness — mention consistency vs availability. Reference your experience with WebSocket at scale.
-                            </p>
-                        </div>
-
-                        <div class="hint-card">
-                            <div class="flex items-center gap-2 mb-2">
-                                <div class="w-5 h-5 rounded-md bg-accent/10 flex items-center justify-center">
-                                    <svg class="w-3 h-3 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                                </div>
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-accent/50">Key topics to mention</span>
-                            </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="px-2 py-0.5 rounded bg-white/[0.04] text-[10px] text-white/30">CRDTs</span>
-                                <span class="px-2 py-0.5 rounded bg-white/[0.04] text-[10px] text-white/30">WebSocket</span>
-                                <span class="px-2 py-0.5 rounded bg-white/[0.04] text-[10px] text-white/30">IndexedDB</span>
-                                <span class="px-2 py-0.5 rounded bg-white/[0.04] text-[10px] text-white/30">Vector Clocks</span>
-                                <span class="px-2 py-0.5 rounded bg-white/[0.04] text-[10px] text-white/30">Presence</span>
-                                <span class="px-2 py-0.5 rounded bg-white/[0.04] text-[10px] text-white/30">Conflict Resolution</span>
-                            </div>
-                        </div>
-
-                        <!-- TTS Controls -->
-                        <div class="glass !rounded-xl p-4 flex items-center gap-4">
-                            <button class="w-8 h-8 rounded-lg bg-accent/10 border border-accent/12 flex items-center justify-center text-accent hover:bg-accent/20 transition-colors">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                            </button>
-                            <div class="flex-1 h-1 rounded-full bg-white/[0.06]">
-                                <div class="h-full w-1/3 rounded-full bg-accent/40"></div>
-                            </div>
-                            <span class="text-[10px] text-white/15 font-mono">TTS hint</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========= ANALYTICS PANEL ========= -->
-            <div id="panel-analytics" class="p-6 md:p-8 max-w-4xl mx-auto hidden">
-                <div class="mb-8">
-                    <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Analytics</div>
-                    <div class="text-lg font-bold text-white">Your job search performance</div>
-                </div>
-
-                <!-- Stat cards -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    <div class="stat-card">
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Applied</div>
-                        <div class="text-2xl font-black text-white">156</div>
-                        <div class="text-[10px] text-green-400/60 font-semibold">+23 this week</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Response rate</div>
-                        <div class="text-2xl font-black text-white">87%</div>
-                        <div class="text-[10px] text-green-400/60 font-semibold">+12% vs avg</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Interviews</div>
-                        <div class="text-2xl font-black text-white">14</div>
-                        <div class="text-[10px] text-accent/60 font-semibold">3 upcoming</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-[10px] text-white/20 uppercase tracking-wider font-semibold mb-1">Offers</div>
-                        <div class="text-2xl font-black text-accent">2</div>
-                        <div class="text-[10px] text-green-400/60 font-semibold">Negotiating</div>
-                    </div>
-                </div>
-
-                <!-- Chart placeholder -->
-                <div class="glass !rounded-2xl overflow-hidden mb-6">
-                    <div class="px-5 py-3.5 border-b border-white/[0.04] flex items-center justify-between">
-                        <span class="text-xs font-semibold text-white/40">Application funnel</span>
-                        <div class="flex gap-2">
-                            <button class="tab-btn active text-[10px] !py-1 !px-3">Week</button>
-                            <button class="tab-btn text-[10px] !py-1 !px-3">Month</button>
-                            <button class="tab-btn text-[10px] !py-1 !px-3">All</button>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <!-- Visual chart (CSS-only bars) -->
-                        <div class="flex items-end gap-3 h-40">
-                            <div class="flex-1 flex flex-col items-center gap-1">
-                                <div class="w-full rounded-t-md bg-accent/20" style="height: 100%"></div>
-                                <span class="text-[9px] text-white/15">Mon</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-1">
-                                <div class="w-full rounded-t-md bg-accent/25" style="height: 75%"></div>
-                                <span class="text-[9px] text-white/15">Tue</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-1">
-                                <div class="w-full rounded-t-md bg-accent/30" style="height: 90%"></div>
-                                <span class="text-[9px] text-white/15">Wed</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-1">
-                                <div class="w-full rounded-t-md bg-accent/40" style="height: 55%"></div>
-                                <span class="text-[9px] text-white/15">Thu</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-1">
-                                <div class="w-full rounded-t-md bg-accent/35" style="height: 65%"></div>
-                                <span class="text-[9px] text-white/15">Fri</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-1">
-                                <div class="w-full rounded-t-md bg-accent/15" style="height: 30%"></div>
-                                <span class="text-[9px] text-white/15">Sat</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-1">
-                                <div class="w-full rounded-t-md bg-accent/10" style="height: 20%"></div>
-                                <span class="text-[9px] text-white/15">Sun</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent activity -->
-                <div class="glass !rounded-2xl overflow-hidden">
-                    <div class="px-5 py-3.5 border-b border-white/[0.04]">
-                        <span class="text-xs font-semibold text-white/40">Recent activity</span>
-                    </div>
-                    <div class="divide-y divide-white/[0.03]">
-                        <div class="px-5 py-3.5 flex items-center gap-4">
-                            <div class="w-8 h-8 rounded-lg bg-green-400/10 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-green-400/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-xs font-semibold text-white/60">Offer received from Yandex</div>
-                                <div class="text-[10px] text-white/15">2 hours ago</div>
-                            </div>
-                        </div>
-                        <div class="px-5 py-3.5 flex items-center gap-4">
-                            <div class="w-8 h-8 rounded-lg bg-blue-400/10 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-blue-400/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-xs font-semibold text-white/60">New message from VK HR</div>
-                                <div class="text-[10px] text-white/15">5 hours ago</div>
-                            </div>
-                        </div>
-                        <div class="px-5 py-3.5 flex items-center gap-4">
-                            <div class="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-accent/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
-                            </div>
-                            <div class="flex-1">
-                                <div class="text-xs font-semibold text-white/60">Applied to 12 vacancies</div>
-                                <div class="text-[10px] text-white/15">Yesterday</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+<div class="dashboard">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">HC</div>
+      <div class="sidebar-logo-text">HH <span>Copilot</span></div>
     </div>
 
-    <script>
-    (function() {
-        'use strict';
+    <nav class="sidebar-nav">
+      <div class="sidebar-link active" onclick="switchPanel('chat')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Чат
+      </div>
+      <div class="sidebar-link" onclick="switchPanel('vacancies')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Вакансии
+      </div>
+      <div class="sidebar-link" onclick="switchPanel('interview')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        Собеседование
+      </div>
+      <div class="sidebar-link" onclick="switchPanel('analytics')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        Аналитика
+      </div>
 
-        // Panel switching
-        const panels = ['chat', 'vacancies', 'interview', 'analytics'];
-        const titles = { chat: 'Chat', vacancies: 'Vacancies', interview: 'Interview', analytics: 'Analytics' };
+      <div class="sidebar-divider"></div>
 
-        window.switchPanel = function(name) {
-            panels.forEach(p => {
-                const panel = document.getElementById('panel-' + p);
-                if (panel) panel.classList.toggle('hidden', p !== name);
-            });
+      <div class="sidebar-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Настройки
+      </div>
+    </nav>
 
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                const text = link.textContent.trim().toLowerCase();
-                if (panels.includes(text)) {
-                    link.classList.toggle('active', text === name);
-                }
-            });
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">А</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Алексей Иванов</div>
+        <div class="sidebar-user-plan">Pro план</div>
+      </div>
+      <a href="wireframe-auth.html" class="sidebar-logout" title="Выйти">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </a>
+    </div>
+  </aside>
 
-            document.getElementById('panel-title').textContent = titles[name] || name;
-        };
-    })();
-    </script>
+  <!-- MAIN -->
+  <main class="main">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" aria-label="Меню">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-title" id="panelTitle">Чат</div>
+      </div>
+      <div class="topbar-right">
+        <div class="status-badge">
+          <div class="status-dot"></div>
+          Подключено к HH.ru
+        </div>
+        <button class="notif-btn" title="Уведомления">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- CHAT PANEL -->
+    <div class="panel active" id="panel-chat">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Непрочитанных</div>
+          <div class="stat-value">12</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ответов сегодня</div>
+          <div class="stat-value">5</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">AI-черновиков</div>
+          <div class="stat-value accent">8</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ожидает ответа</div>
+          <div class="stat-value">3</div>
+        </div>
+      </div>
+
+      <!-- Chat -->
+      <div class="glass-card">
+        <div class="chat-header">
+          <div class="chat-header-left">
+            <div class="chat-avatar">ЯН</div>
+            <div>
+              <div class="chat-name">Яндекс — Senior Frontend</div>
+              <div class="chat-status">HR-менеджер — Онлайн</div>
+            </div>
+          </div>
+          <div class="chat-online">
+            <div class="chat-online-dot"></div>
+            <div class="chat-online-text">Активен</div>
+          </div>
+        </div>
+
+        <div class="chat-messages">
+          <div class="msg-row">
+            <div class="msg-avatar-sm">ЯН</div>
+            <div class="msg-bubble them">Здравствуйте, Алексей! Мы ознакомились с вашим профилем и очень заинтересованы. Хотели бы назначить техническое собеседование на этой неделе?</div>
+          </div>
+          <div class="msg-row me">
+            <div class="msg-bubble me">Здравствуйте! Да, с удовольствием. Я свободен в среду или четверг после 14:00.</div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-avatar-sm ai">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+            </div>
+            <div class="msg-bubble ai">
+              <div class="ai-label">Подсказка AI</div>
+              <div class="ai-text">Отличный ответ! Рекомендую также упомянуть опыт с микросервисной архитектурой — в описании вакансии это указано как ключевое требование. Можно добавить: «Также имею 3+ года опыта работы с микросервисами, что заметил в вашем стеке.»</div>
+            </div>
+          </div>
+          <div class="msg-row">
+            <div class="msg-avatar-sm">ЯН</div>
+            <div class="msg-bubble them">Четверг в 15:00 отлично подходит! Отправлю приглашение в календаре. Нужно ли вам прислать материалы для подготовки?</div>
+          </div>
+        </div>
+
+        <div class="chat-input-row">
+          <input type="text" class="chat-input" placeholder="Напишите сообщение...">
+          <button class="chat-send">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VACANCIES PANEL -->
+    <div class="panel" id="panel-vacancies">
+      <div class="vacancies-header">
+        <div>
+          <div class="vacancies-title-sm">Авто-отклики</div>
+          <div class="vacancies-title-lg">Найдено 47 совпадений</div>
+        </div>
+        <button class="btn-accent">Откликнуться на все</button>
+      </div>
+
+      <div class="filters-row">
+        <div class="filter-tag active">Frontend</div>
+        <div class="filter-tag">от 200к</div>
+        <div class="filter-tag">Удалёнка</div>
+        <div class="filter-tag">Москва</div>
+      </div>
+
+      <div class="vacancy-list">
+        <div class="vacancy-row">
+          <div class="vacancy-icon">ЯН</div>
+          <div class="vacancy-info">
+            <div class="vacancy-name">Senior Frontend Developer</div>
+            <div class="vacancy-meta">Яндекс — Москва — Удалёнка</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-val">250-350к</div>
+            <div class="vacancy-salary-cur">руб/мес</div>
+          </div>
+          <div class="vacancy-match high">95%</div>
+          <input type="checkbox" checked class="vacancy-check">
+        </div>
+
+        <div class="vacancy-row">
+          <div class="vacancy-icon">ВК</div>
+          <div class="vacancy-info">
+            <div class="vacancy-name">Lead React Developer</div>
+            <div class="vacancy-meta">VK Group — Санкт-Петербург — Гибрид</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-val">280-380к</div>
+            <div class="vacancy-salary-cur">руб/мес</div>
+          </div>
+          <div class="vacancy-match high">91%</div>
+          <input type="checkbox" checked class="vacancy-check">
+        </div>
+
+        <div class="vacancy-row">
+          <div class="vacancy-icon">ТБ</div>
+          <div class="vacancy-info">
+            <div class="vacancy-name">Fullstack TypeScript</div>
+            <div class="vacancy-meta">Т-Банк — Москва — Офис</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-val">300-400к</div>
+            <div class="vacancy-salary-cur">руб/мес</div>
+          </div>
+          <div class="vacancy-match medium">78%</div>
+          <input type="checkbox" class="vacancy-check">
+        </div>
+
+        <div class="vacancy-row">
+          <div class="vacancy-icon">АВ</div>
+          <div class="vacancy-info">
+            <div class="vacancy-name">Frontend Engineer (React+Node)</div>
+            <div class="vacancy-meta">Авито — Москва — Удалёнка</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-val">220-320к</div>
+            <div class="vacancy-salary-cur">руб/мес</div>
+          </div>
+          <div class="vacancy-match medium">82%</div>
+          <input type="checkbox" class="vacancy-check">
+        </div>
+
+        <div class="vacancy-row">
+          <div class="vacancy-icon">ОЗ</div>
+          <div class="vacancy-info">
+            <div class="vacancy-name">Senior UI Engineer</div>
+            <div class="vacancy-meta">Ozon — Москва — Гибрид</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-val">200-280к</div>
+            <div class="vacancy-salary-cur">руб/мес</div>
+          </div>
+          <div class="vacancy-match high">88%</div>
+          <input type="checkbox" checked class="vacancy-check">
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERVIEW PANEL -->
+    <div class="panel" id="panel-interview">
+      <div class="interview-header">
+        <div>
+          <div class="interview-title-sm">Живое собеседование</div>
+          <div class="interview-title-lg">Яндекс — Технический раунд</div>
+        </div>
+        <div class="interview-badges">
+          <div class="recording-badge">
+            <div class="wave-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="recording-text">Запись</div>
+          </div>
+          <div class="time-badge">12:34</div>
+        </div>
+      </div>
+
+      <div class="interview-grid">
+        <!-- Transcript -->
+        <div class="glass-card">
+          <div class="transcript-header">
+            <div class="transcript-title">Транскрипция</div>
+            <div class="transcript-status">
+              <div class="transcript-dot"></div>
+              <div class="transcript-status-text">ASR активно</div>
+            </div>
+          </div>
+          <div class="transcript-body">
+            <div class="transcript-speaker">Интервьюер:</div>
+            <div class="transcript-text">«Расскажите, как бы вы спроектировали систему совместного редактирования документов в реальном времени?»</div>
+            <div class="transcript-divider"></div>
+            <div class="transcript-speaker">Вы:</div>
+            <div class="transcript-text">«Конечно. Сначала я бы использовал Operational Transformation или CRDT для разрешения конфликтов. WebSocket-соединения для синхронизации, система присутствия для отображения активных курсоров...»</div>
+            <div class="transcript-divider"></div>
+            <div class="transcript-speaker">Интервьюер:</div>
+            <div class="transcript-text">«Как бы вы обеспечили офлайн-поддержку и переподключение?»</div>
+          </div>
+        </div>
+
+        <!-- AI Hints -->
+        <div class="hints-col">
+          <div class="hints-label">Подсказки AI</div>
+
+          <div class="hint-card">
+            <div class="hint-header">
+              <div class="hint-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <div class="hint-type">Предлагаемый ответ</div>
+            </div>
+            <div class="hint-text">Для офлайн-поддержки упомяните: 1) Local-first архитектура с IndexedDB, 2) Очередь ожидающих операций, 3) Векторные часы для обнаружения конфликтов, 4) Стратегия слияния CRDT. Подход Figma к multiplayer.</div>
+          </div>
+
+          <div class="hint-card">
+            <div class="hint-header">
+              <div class="hint-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 014 4v1a4 4 0 01-8 0V6a4 4 0 014-4z"/><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/></svg>
+              </div>
+              <div class="hint-type">Поведенческий совет</div>
+            </div>
+            <div class="hint-text">Интервьюер ценит глубину системного дизайна. Показывайте осознание trade-offs — упомяните консистентность vs доступность. Ссылайтесь на ваш опыт с WebSocket в масштабе.</div>
+          </div>
+
+          <div class="hint-card">
+            <div class="hint-header">
+              <div class="hint-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="hint-type">Ключевые темы</div>
+            </div>
+            <div class="hint-tags">
+              <span class="hint-tag">CRDT</span>
+              <span class="hint-tag">WebSocket</span>
+              <span class="hint-tag">IndexedDB</span>
+              <span class="hint-tag">Vector Clocks</span>
+              <span class="hint-tag">Presence</span>
+              <span class="hint-tag">Conflict Resolution</span>
+            </div>
+          </div>
+
+          <!-- TTS -->
+          <div class="tts-bar">
+            <button class="tts-play">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <div class="tts-progress">
+              <div class="tts-progress-fill"></div>
+            </div>
+            <div class="tts-label">Озвучить подсказку</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS PANEL -->
+    <div class="panel" id="panel-analytics">
+      <div class="analytics-header">
+        <div class="analytics-title-sm">Аналитика</div>
+        <div class="analytics-title-lg">Эффективность вашего поиска</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Откликов</div>
+          <div class="stat-value">156</div>
+          <div class="stat-sub green-sub">+23 за неделю</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Конверсия ответов</div>
+          <div class="stat-value">87%</div>
+          <div class="stat-sub green-sub">+12% к среднему</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Собеседований</div>
+          <div class="stat-value">14</div>
+          <div class="stat-sub accent-sub">3 предстоящих</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Офферов</div>
+          <div class="stat-value accent">2</div>
+          <div class="stat-sub green-sub">Переговоры</div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="glass-card" style="margin-bottom: 24px;">
+        <div class="chart-header">
+          <div class="chart-title">Воронка откликов</div>
+          <div class="chart-tabs">
+            <button class="chart-tab active">Неделя</button>
+            <button class="chart-tab">Месяц</button>
+            <button class="chart-tab">Всё время</button>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="chart-bars">
+            <div class="chart-bar-col">
+              <div class="chart-bar" style="height: 100%"></div>
+              <div class="chart-bar-label">Пн</div>
+            </div>
+            <div class="chart-bar-col">
+              <div class="chart-bar" style="height: 75%"></div>
+              <div class="chart-bar-label">Вт</div>
+            </div>
+            <div class="chart-bar-col">
+              <div class="chart-bar" style="height: 90%"></div>
+              <div class="chart-bar-label">Ср</div>
+            </div>
+            <div class="chart-bar-col">
+              <div class="chart-bar" style="height: 55%"></div>
+              <div class="chart-bar-label">Чт</div>
+            </div>
+            <div class="chart-bar-col">
+              <div class="chart-bar" style="height: 65%"></div>
+              <div class="chart-bar-label">Пт</div>
+            </div>
+            <div class="chart-bar-col">
+              <div class="chart-bar" style="height: 30%"></div>
+              <div class="chart-bar-label">Сб</div>
+            </div>
+            <div class="chart-bar-col">
+              <div class="chart-bar" style="height: 20%"></div>
+              <div class="chart-bar-label">Вс</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity -->
+      <div class="glass-card">
+        <div class="chart-header">
+          <div class="chart-title">Последняя активность</div>
+        </div>
+        <div class="activity-body">
+          <div class="activity-row">
+            <div class="activity-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <div class="activity-text">Получен оффер от Яндекса</div>
+              <div class="activity-time">2 часа назад</div>
+            </div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-icon blue">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            </div>
+            <div>
+              <div class="activity-text">Новое сообщение от HR Тинькофф</div>
+              <div class="activity-time">4 часа назад</div>
+            </div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-icon accent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </div>
+            <div>
+              <div class="activity-text">AI сгенерировал 5 откликов</div>
+              <div class="activity-time">6 часов назад</div>
+            </div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-icon green">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <div class="activity-text">Приглашение на собеседование в VK</div>
+              <div class="activity-time">вчера</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Panel switching
+function switchPanel(name) {
+  // Update sidebar
+  document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  // Update panels
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+
+  // Update title
+  const titles = { chat: 'Чат', vacancies: 'Вакансии', interview: 'Собеседование', analytics: 'Аналитика' };
+  document.getElementById('panelTitle').textContent = titles[name] || name;
+}
+</script>
+
 </body>
 </html>
