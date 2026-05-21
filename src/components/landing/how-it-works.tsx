@@ -1,21 +1,27 @@
 'use client'
 
-import { Building2, Settings, Award, ChevronRight } from 'lucide-react'
+import { Building2, Settings, Award } from 'lucide-react'
 import type { StepItem } from '@/types'
 
 const steps: StepItem[] = [
-  { step: '01', icon: Building2, title: 'Подключи HH.ru', desc: 'Авторизуйся через HH.ru — мы безопасно получим доступ к твоим вакансиям и чатам.' },
-  { step: '02', icon: Settings, title: 'Настрой AI', desc: 'Загрузи резюме, укажи предпочтения. AI обучится на твоём опыте и стиле общения.' },
-  { step: '03', icon: Award, title: 'Получай офферы', desc: 'AI откликается, отвечает в чатах и подсказывает на интервью. Ты только подтверждаешь.' },
+  { step: '01', icon: Building2, title: 'Подключите HH.ru', desc: 'Авторизуйтесь через HH.ru за 30 секунд. Мы безопасно получим доступ к вашему профилю и вакансиям.' },
+  { step: '02', icon: Settings, title: 'Настройте фильтры', desc: 'Укажите желаемую зарплату, город, формат работы и ключевые навыки. ИИ учтёт все предпочтения.' },
+  { step: '03', icon: Award, title: 'Получите оффер', desc: 'На собеседовании включите AI-подсказки и отвечайте уверенно. 89% пользователей получают оффер.' },
 ]
 
 export function HowItWorks() {
   return (
-    <section id="how" className="py-20 sm:py-28 bg-muted/30">
+    <section id="how" className="py-24 sm:py-32 bg-muted/30" aria-labelledby="how-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight mb-4">Как это работает</h2>
-          <p className="text-lg text-muted-foreground leading-relaxed">Три простых шага до работы мечты</p>
+          <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-cyan mb-4">
+            <span className="w-6 h-px bg-cyan" />
+            Как это работает
+            <span className="w-6 h-px bg-cyan" />
+          </div>
+          <h2 id="how-heading" className="text-3xl sm:text-5xl font-black tracking-tight mb-4">
+            Четыре шага к <span className="gradient-text">новой работе</span>
+          </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {steps.map((s, i) => (
@@ -26,7 +32,6 @@ export function HowItWorks() {
               </div>
               <h3 className="text-xl font-bold mb-2">{s.title}</h3>
               <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
-              {i < 2 && <ChevronRight className="hidden md:block absolute top-1/2 -right-4 w-8 h-8 text-muted-foreground/30" />}
             </div>
           ))}
         </div>

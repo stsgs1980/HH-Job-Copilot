@@ -12,14 +12,55 @@ export default function MarketingPage() {
   return (
     <>
       <Hero onNavigate={goToLogin} />
+
+      {/* Stats */}
+      <section className="py-16 sm:py-20" aria-label="Статистика">
+        <div className="max-w-5xl mx-auto px-4 flex flex-wrap justify-center gap-16">
+          {[
+            { value: '12 847', label: 'пользователей', accent: 'gradient-text' },
+            { value: '340 тыс.', label: 'откликов отправлено', accent: 'gradient-text' },
+            { value: '89%', label: 'получают оффер', accent: 'text-emerald' },
+            { value: '4.9', label: 'рейтинг в AppStore', accent: 'gradient-text' },
+          ].map((stat, i) => (
+            <div key={i} className="text-center">
+              <div className={`text-4xl sm:text-5xl font-black tracking-tight ${stat.accent}`}>
+                {stat.value}
+              </div>
+              <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Marquee */}
+      <section className="py-10 border-y border-border/50 overflow-hidden" aria-hidden="true">
+        <div className="flex animate-marquee w-max">
+          {[...Array(2)].map((_, dup) => (
+            ['HH.ru', 'Сбербанк', 'Яндекс', 'Тинькофф', 'ВК', 'Ozon', 'МТС', 'Газпром', 'Росатом', 'Альфа-Банк'].map((name, i) => (
+              <div key={`${dup}-${i}`} className="flex items-center gap-3 px-10 text-lg font-bold text-muted-foreground/40 whitespace-nowrap">
+                {name}
+                <span className="w-1 h-1 rounded-full bg-cyan" />
+              </div>
+            ))
+          ))}
+        </div>
+      </section>
+
       <Features />
       <HowItWorks />
       <Pricing onNavigate={goToLogin} />
-      <section className="py-20 sm:py-28">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-6">Готов найти работу быстрее?</h2>
-          <p className="text-lg text-muted-foreground mb-8">Присоединяйся к 5,000+ специалистов, которые уже используют AI-копилот</p>
-          <Button size="lg" className="gradient-bg text-white border-0 hover:opacity-90 text-base px-10 h-12" onClick={goToLogin}>
+
+      {/* CTA */}
+      <section className="py-24 sm:py-32 text-center relative" aria-label="Призыв к действию">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-transparent via-cyan/5 to-transparent pointer-events-none" />
+        <div className="relative z-10 max-w-4xl mx-auto px-4">
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight mb-4">
+            Готовы найти <span className="gradient-text">идеальную работу</span>?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-10 font-light">
+            Присоединяйтесь к 12 000+ пользователям, которые уже нашли работу быстрее
+          </p>
+          <Button size="lg" className="gradient-bg text-white border-0 hover:opacity-90 sweep-btn text-base px-10 h-12" onClick={goToLogin}>
             Начать бесплатно <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
         </div>

@@ -41,23 +41,26 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-screen flex flex-col bg-background relative overflow-hidden">
-      <div className="ambient-glow w-[500px] h-[500px] bg-coral -top-48 -right-48" />
-      <div className="ambient-glow w-[350px] h-[350px] bg-green-accent -bottom-32 -left-32" style={{ animationDelay: '-12s' }} />
+      {/* NEURO: Ambient glow */}
+      <div className="ambient-glow w-[500px] h-[500px] bg-cyan -top-48 -right-48" aria-hidden="true" />
+      <div className="ambient-glow w-[350px] h-[350px] bg-purple -bottom-32 -left-32" style={{ animationDelay: '-12s' }} aria-hidden="true" />
 
       {/* Top Bar */}
-      <header className="relative z-50 glass-card rounded-none shrink-0">
+      <header className="relative z-50 glass-card rounded-none shrink-0" role="banner">
         <div className="px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Link href="/">
+            <Link href="/" aria-label="HH Job Copilot — главная">
               <Logo size="sm" />
             </Link>
             <span className="font-bold text-sm hidden sm:inline">HH Job Copilot</span>
-            <nav className="hidden md:flex gap-1 bg-muted rounded-lg p-1">
+            <nav className="hidden md:flex gap-1 bg-muted rounded-xl p-1" role="tablist" aria-label="Режимы дашборда">
               {modes.map(m => (
                 <button
                   key={m.id}
+                  role="tab"
+                  aria-selected={activeMode === m.id}
                   onClick={() => setActiveMode(m.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     activeMode === m.id ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -68,12 +71,21 @@ function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="hidden lg:flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md"><Zap className="w-3 h-3 text-coral" /><span className="font-semibold tabular-nums">47</span> откликов</span>
-              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md"><Check className="w-3 h-3 text-emerald-400" /><span className="font-semibold tabular-nums">8</span> приглашений</span>
-              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md"><MessageSquare className="w-3 h-3 text-green-accent" /><span className="font-semibold tabular-nums">5</span> чатов</span>
+              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-lg">
+                <Zap className="w-3 h-3 text-cyan" />
+                <span className="font-semibold tabular-nums">47</span> откликов
+              </span>
+              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-lg">
+                <Check className="w-3 h-3 text-emerald" />
+                <span className="font-semibold tabular-nums">8</span> приглашений
+              </span>
+              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-lg">
+                <MessageSquare className="w-3 h-3 text-purple" />
+                <span className="font-semibold tabular-nums">5</span> чатов
+              </span>
             </div>
             <ThemeToggle size="icon" className="h-8 w-8" />
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.push('/')}>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.push('/')} aria-label="Выйти">
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
@@ -89,13 +101,12 @@ function AppShell({ children }: { children: React.ReactNode }) {
       <div className="relative z-50 glass-card rounded-none shrink-0">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center gap-2 bg-muted rounded-xl px-4 py-2">
-            {/* Send / Stop button */}
             {chat.isLoading ? (
-              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-red-400 hover:text-red-300" onClick={chat.stopStreaming}>
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-red-400 hover:text-red-300" onClick={chat.stopStreaming} aria-label="Остановить">
                 <Square className="w-4 h-4" />
               </Button>
             ) : (
-              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={chat.handleSubmit} disabled={!chat.inputValue.trim()}>
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={chat.handleSubmit} disabled={!chat.inputValue.trim()} aria-label="Отправить">
                 <Send className="w-4 h-4" />
               </Button>
             )}
@@ -105,11 +116,11 @@ function AppShell({ children }: { children: React.ReactNode }) {
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chat.handleSubmit() } }}
               placeholder={chat.isRecording ? 'Слушаю...' : 'Спросите что угодно или дайте команду...'}
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              aria-label="Ввод сообщения"
             />
             <div className="flex items-center gap-1">
-              {/* Mic / ASR button */}
               {chat.isRecording ? (
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-300" onClick={chat.stopRecording}>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-300" onClick={chat.stopRecording} aria-label="Остановить запись">
                   <MicOff className="w-4 h-4" />
                 </Button>
               ) : (
@@ -119,20 +130,21 @@ function AppShell({ children }: { children: React.ReactNode }) {
                   className="h-8 w-8"
                   onClick={asrEnabled ? chat.startRecording : undefined}
                   title={asrEnabled ? 'Голосовой ввод' : 'Скоро'}
+                  aria-label={asrEnabled ? 'Голосовой ввод' : 'Голосовой ввод скоро'}
                 >
-                  <Mic className={`w-4 h-4 ${asrEnabled ? 'text-green-accent' : 'text-muted-foreground'}`} />
+                  <Mic className={`w-4 h-4 ${asrEnabled ? 'text-emerald' : 'text-muted-foreground'}`} />
                   {chat.isRecording && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-400 animate-pulse-dot" />}
                 </Button>
               )}
-              {/* Vacancy shortcut button */}
               <Button
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
                 onClick={() => { chat.setInputValue('Найди вакансии по '); }}
                 title="Поиск вакансий"
+                aria-label="Поиск вакансий"
               >
-                <Briefcase className="w-4 h-4 text-coral" />
+                <Briefcase className="w-4 h-4 text-cyan" />
               </Button>
             </div>
           </div>

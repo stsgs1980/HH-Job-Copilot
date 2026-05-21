@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button'
 import type { StatItem } from '@/types'
 
 const digestStats: StatItem[] = [
-  { value: '47', label: 'Отклики', color: 'text-coral' },
+  { value: '47', label: 'Отклики', color: 'text-cyan' },
   { value: '8', label: 'Приглашения', color: 'text-emerald-400' },
-  { value: '5', label: 'Чаты', color: 'text-green-accent' },
+  { value: '5', label: 'Чаты', color: 'text-emerald' },
   { value: '2', label: 'Интервью', color: 'text-orange-400' },
 ]
 
@@ -25,7 +25,7 @@ export function AIDigest() {
         <Zap className="w-4 h-4 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-coral mb-1">HH Job Copilot</p>
+        <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
         <div className="glass-card rounded-2xl rounded-tl-sm p-4 space-y-3">
           <p className="text-sm">Доброе утро, Сергей! Вот ваш дайджест за сегодня:</p>
           {/* Inline Stats */}
@@ -40,8 +40,8 @@ export function AIDigest() {
           {/* Chat messages card */}
           <div className="bg-muted/50 rounded-xl p-3 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold flex items-center gap-1.5"><MessageSquare className="w-4 h-4 text-coral" /> 3 новых сообщения</span>
-              <span className="text-xs text-coral cursor-pointer flex items-center gap-1">Ответить всем <ChevronRight className="w-3 h-3" /></span>
+              <span className="text-sm font-semibold flex items-center gap-1.5"><MessageSquare className="w-4 h-4 text-cyan" /> 3 новых сообщения</span>
+              <span className="text-xs text-cyan cursor-pointer flex items-center gap-1">Ответить всем <ChevronRight className="w-3 h-3" /></span>
             </div>
             {newMessages.map((msg, i) => (
               <div key={i} className="flex items-center gap-2 text-xs py-1.5 border-b border-border/50 last:border-0">
@@ -57,7 +57,7 @@ export function AIDigest() {
         </div>
         <div className="flex items-center gap-2 mt-1.5">
           <span className="text-[10px] text-muted-foreground">09:00</span>
-          <Badge variant="secondary" className="text-[10px] h-4 gap-1 bg-coral/10 text-coral border-0"><Zap className="w-2.5 h-2.5" /> Chatik API</Badge>
+          <Badge variant="secondary" className="text-[10px] h-4 gap-1 bg-cyan/10 text-cyan border-0"><Zap className="w-2.5 h-2.5" /> Chatik API</Badge>
         </div>
       </div>
     </div>

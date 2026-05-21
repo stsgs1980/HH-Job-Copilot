@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 
 interface AmbientGlowProps {
-  color: 'cyan' | 'purple'
+  color: 'cyan' | 'purple' | 'emerald'
   size?: 'sm' | 'md' | 'lg'
   position: string
   delay?: number
@@ -11,11 +11,18 @@ interface AmbientGlowProps {
 
 const sizeMap = { sm: 'w-[250px] h-[250px]', md: 'w-[350px] h-[350px]', lg: 'w-[500px] h-[500px]' }
 
+const colorMap = {
+  cyan: 'bg-cyan',
+  purple: 'bg-purple',
+  emerald: 'bg-emerald',
+}
+
 export function AmbientGlow({ color, size = 'md', position, delay }: AmbientGlowProps) {
   return (
     <div
-      className={cn('ambient-glow', sizeMap[size], `bg-${color}`, position)}
+      className={cn('ambient-glow', sizeMap[size], colorMap[color], position)}
       style={delay ? { animationDelay: `${delay}s` } : undefined}
+      aria-hidden="true"
     />
   )
 }

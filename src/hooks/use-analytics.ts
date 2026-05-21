@@ -11,9 +11,9 @@ export interface AnalyticsData {
 
 const MOCK_ANALYTICS: AnalyticsData = {
   stats: [
-    { value: '47', label: 'Отклики', color: 'text-coral' },
+    { value: '47', label: 'Отклики', color: 'text-cyan' },
     { value: '8', label: 'Приглашения', color: 'text-emerald-400' },
-    { value: '17%', label: 'Конверсия', color: 'text-green-accent' },
+    { value: '17%', label: 'Конверсия', color: 'text-emerald' },
     { value: '89%', label: 'Совпадение', color: 'text-orange-400' },
   ],
   weekChart: [40, 65, 45, 80, 55, 92, 70],

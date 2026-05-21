@@ -111,11 +111,11 @@ export function InterviewLive() {
         <Zap className="w-4 h-4 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-coral mb-1">HH Job Copilot</p>
+        <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
         <div className="glass-card rounded-2xl rounded-tl-sm p-4 space-y-3">
           <p className="text-sm">Интервью-режим активирован! Микрофон включён, ASR готов.</p>
           <div className="rounded-xl gradient-border bg-gradient-to-br from-cyan/5 to-purple/5 overflow-hidden">
-            <div className="flex items-center gap-2 px-3 py-2 border-b border-coral/10">
+            <div className="flex items-center gap-2 px-3 py-2 border-b border-cyan/10">
               <span className="flex items-center gap-1.5 text-xs font-semibold text-red-400 streak-glow rounded px-1.5 py-0.5">
                 <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse-dot" /> LIVE
               </span>
@@ -126,7 +126,7 @@ export function InterviewLive() {
             <div className="p-3 space-y-2">
               {/* Interviewer question */}
               <p className="text-sm">
-                <span className="font-semibold text-green-accent">Интервьюер:</span>{' '}
+                <span className="font-semibold text-emerald">Интервьюер:</span>{' '}
                 {MOCK_INTERVIEW.interviewerQuestion}
               </p>
 
@@ -146,9 +146,9 @@ export function InterviewLive() {
                       title={isSpeaking ? 'Остановить озвучку' : 'Озвучить подсказку'}
                     >
                       {isSpeaking ? (
-                        <VolumeX className="w-3 h-3 text-green-accent" />
+                        <VolumeX className="w-3 h-3 text-emerald" />
                       ) : (
-                        <Volume2 className="w-3 h-3 text-green-accent/60 hover:text-green-accent" />
+                        <Volume2 className="w-3 h-3 text-emerald/60 hover:text-emerald" />
                       )}
                     </Button>
                   )}
@@ -165,21 +165,21 @@ export function InterviewLive() {
 
               {/* User speech / transcript */}
               <p className="text-sm flex items-center gap-2">
-                <span className="font-semibold text-coral">Вы:</span>{' '}
+                <span className="font-semibold text-cyan">Вы:</span>{' '}
                 <span className="flex-1">{displayUserText}</span>
                 {asrEnabled && isRecording && (
                   <span className="flex items-end gap-0.5 h-4">
                     {[0, 0.15, 0.3, 0.45, 0.6].map((d, i) => (
                       <span
                         key={i}
-                        className="w-0.5 bg-green-accent rounded-full animate-wave"
+                        className="w-0.5 bg-emerald rounded-full animate-wave"
                         style={{ animationDelay: `${d}s`, height: `${0.5 + i * 0.2}rem` }}
                       />
                     ))}
                   </span>
                 )}
                 {asrEnabled && isTranscribing && (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-green-accent" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald" />
                 )}
               </p>
             </div>
@@ -200,22 +200,22 @@ export function InterviewLive() {
                 isRecording
                   ? 'bg-red-500/10 text-red-400'
                   : isTranscribing
-                    ? 'bg-green-accent/10 text-green-accent'
-                    : 'bg-green-accent/10 text-green-accent'
+                    ? 'bg-emerald/10 text-emerald'
+                    : 'bg-emerald/10 text-emerald'
               }`}
             >
               <Mic className="w-2.5 h-2.5" />
               {isRecording ? 'Recording' : isTranscribing ? 'Transcribing' : 'ASR Ready'}
             </Badge>
           ) : (
-            <Badge variant="secondary" className="text-[10px] h-4 gap-1 bg-green-accent/10 text-green-accent border-0">
+            <Badge variant="secondary" className="text-[10px] h-4 gap-1 bg-emerald/10 text-emerald border-0">
               <Mic className="w-2.5 h-2.5" /> ASR Active
             </Badge>
           )}
 
           {/* TTS status badge */}
           {ttsEnabled && isSpeaking && (
-            <Badge variant="secondary" className="text-[10px] h-4 gap-1 bg-coral/10 text-coral border-0">
+            <Badge variant="secondary" className="text-[10px] h-4 gap-1 bg-cyan/10 text-cyan border-0">
               <Volume2 className="w-2.5 h-2.5" /> Speaking
             </Badge>
           )}
@@ -228,7 +228,7 @@ export function InterviewLive() {
               className={`h-6 w-6 rounded-full ${
                 isRecording
                   ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30 hover:text-red-400'
-                  : 'bg-green-accent/10 text-green-accent hover:bg-green-accent/20 hover:text-green-accent'
+                  : 'bg-emerald/10 text-emerald hover:bg-emerald/20 hover:text-emerald'
               }`}
               onClick={isRecording ? handleMicStop : handleMicToggle}
               disabled={isTranscribing}

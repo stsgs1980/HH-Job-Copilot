@@ -9,6 +9,8 @@ interface GradientButtonProps {
   className?: string
   onClick?: () => void
   variant?: 'primary' | 'outline'
+  type?: 'button' | 'submit'
+  disabled?: boolean
 }
 
 export function GradientButton({
@@ -17,12 +19,16 @@ export function GradientButton({
   className,
   onClick,
   variant = 'primary',
+  type = 'button',
+  disabled = false,
 }: GradientButtonProps) {
   if (variant === 'outline') {
     return (
       <Button
         size={size}
         variant="outline"
+        type={type}
+        disabled={disabled}
         className={cn('text-base', size === 'lg' && 'px-8 h-12', className)}
         onClick={onClick}
       >
@@ -34,8 +40,10 @@ export function GradientButton({
   return (
     <Button
       size={size}
+      type={type}
+      disabled={disabled}
       className={cn(
-        'gradient-bg text-white border-0 hover:opacity-90',
+        'gradient-bg text-white border-0 hover:opacity-90 sweep-btn',
         size === 'lg' && 'text-base px-8 h-12',
         className,
       )}

@@ -10,14 +10,13 @@ import { Badge } from '@/components/ui/badge'
 import type { ChatMessage } from '@/hooks/use-ai-chat'
 
 export default function DashboardPage() {
-  const [showPanel, setShowPanel] = useState(true)
   const chat = useChatContext()
   const hhChat = useHHChat()
   const hhChatikEnabled = useFeatureFlag('hhChatik')
 
   return (
     <>
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto" id="main-content">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-6">
           <div className="text-center pt-4 pb-2">
             <h2 className="text-2xl sm:text-3xl font-bold gradient-text">HH Job Copilot</h2>
@@ -37,9 +36,9 @@ export default function DashboardPage() {
                     <Zap className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-coral mb-1">HH Job Copilot</p>
+                    <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
                     <div className="glass-card rounded-2xl rounded-tl-sm p-4">
-                      <p className="text-sm">{chat.streamingText}<span className="inline-block w-1.5 h-4 bg-coral animate-pulse ml-0.5 align-middle" /></p>
+                      <p className="text-sm">{chat.streamingText}<span className="inline-block w-1.5 h-4 bg-cyan animate-pulse ml-0.5 align-middle" /></p>
                     </div>
                   </div>
                 </div>
@@ -51,13 +50,13 @@ export default function DashboardPage() {
                     <Zap className="w-4 h-4 text-white animate-pulse" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-coral mb-1">HH Job Copilot</p>
+                    <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
                     <div className="glass-card rounded-2xl rounded-tl-sm p-4">
                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
                         <div className="flex gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-coral animate-bounce" style={{ animationDelay: '0ms' }} />
-                          <span className="w-1.5 h-1.5 rounded-full bg-coral animate-bounce" style={{ animationDelay: '150ms' }} />
-                          <span className="w-1.5 h-1.5 rounded-full bg-coral animate-bounce" style={{ animationDelay: '300ms' }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-bounce" style={{ animationDelay: '0ms' }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-purple animate-bounce" style={{ animationDelay: '150ms' }} />
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-bounce" style={{ animationDelay: '300ms' }} />
                         </div>
                         Думаю...
                       </div>
@@ -70,7 +69,7 @@ export default function DashboardPage() {
 
           {/* Error state */}
           {chat.error && (
-            <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
+            <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400" role="alert">
               Ошибка: {chat.error}
             </div>
           )}
@@ -99,8 +98,7 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      {showPanel && hhChat.isLoading && <SkeletonChatPanel />}
-      {showPanel && !hhChat.isLoading && <ChatPanel onClose={() => setShowPanel(false)} chats={hhChat.chats} isLoading={hhChat.isLoading} />}
+      {hhChatikEnabled && !hhChat.isLoading && <ChatPanel onClose={() => {}} chats={hhChat.chats} isLoading={hhChat.isLoading} />}
     </>
   )
 }
@@ -126,7 +124,7 @@ function ChatMessageBubble({ message }: { message: ChatMessage }) {
         <Zap className="w-4 h-4 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-coral mb-1">HH Job Copilot</p>
+        <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
         <div className="glass-card rounded-2xl rounded-tl-sm p-4">
           <p className="text-sm whitespace-pre-wrap">{message.content}</p>
         </div>
@@ -134,7 +132,7 @@ function ChatMessageBubble({ message }: { message: ChatMessage }) {
           <span className="text-[10px] text-muted-foreground">
             {new Date(message.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
           </span>
-          <Badge variant="secondary" className="text-[10px] h-4 gap-1 bg-coral/10 text-coral border-0">
+          <Badge variant="secondary" className="text-[10px] h-4 gap-1 bg-cyan/10 text-cyan border-0">
             <Zap className="w-2.5 h-2.5" /> AI
           </Badge>
         </div>

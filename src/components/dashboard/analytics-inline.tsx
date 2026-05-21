@@ -8,9 +8,9 @@ const weekChart = [40, 65, 45, 80, 55, 92, 70]
 const weekDays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
 const analyticsStats: StatItem[] = [
-  { v: '47', l: 'Отклики', c: 'text-coral' },
+  { v: '47', l: 'Отклики', c: 'text-cyan' },
   { v: '8', l: 'Приглашения', c: 'text-emerald-400' },
-  { v: '17%', l: 'Конверсия', c: 'text-green-accent' },
+  { v: '17%', l: 'Конверсия', c: 'text-emerald' },
   { v: '89%', l: 'Совпадение', c: 'text-orange-400' },
 ]
 
@@ -21,13 +21,13 @@ export function AnalyticsInline() {
         <BarChart3 className="w-4 h-4 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-coral mb-1">HH Job Copilot</p>
+        <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
         <div className="glass-card rounded-2xl rounded-tl-sm p-4 space-y-3">
           <p className="text-sm">Вот ваша аналитика за неделю:</p>
           <div className="bg-muted/50 rounded-xl p-3 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold flex items-center gap-1.5"><BarChart3 className="w-4 h-4 text-coral" /> Отклики за неделю</span>
-              <span className="text-xs text-coral cursor-pointer">Подробнее</span>
+              <span className="text-sm font-semibold flex items-center gap-1.5"><BarChart3 className="w-4 h-4 text-cyan" /> Отклики за неделю</span>
+              <span className="text-xs text-cyan cursor-pointer">Подробнее</span>
             </div>
             <div className="flex items-end gap-1 h-20 px-1">
               {weekChart.map((h, i) => (

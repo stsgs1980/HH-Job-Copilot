@@ -27,9 +27,9 @@ function getDayOfWeek(date: Date): number {
 function getDefaultResponse(): AnalyticsResponse {
   return {
     stats: [
-      { value: '0', label: 'Отклики', color: 'text-coral' },
+      { value: '0', label: 'Отклики', color: 'text-cyan' },
       { value: '0', label: 'Приглашения', color: 'text-emerald-400' },
-      { value: '0%', label: 'Конверсия', color: 'text-green-accent' },
+      { value: '0%', label: 'Конверсия', color: 'text-emerald' },
       { value: '0%', label: 'Совпадение', color: 'text-orange-400' },
     ],
     weekChart: [0, 0, 0, 0, 0, 0, 0],
@@ -111,9 +111,9 @@ export async function GET(request: NextRequest) {
 
     // Build the stats array
     const stats: AnalyticsStats[] = [
-      { value: String(totalApplications), label: 'Отклики', color: 'text-coral' },
+      { value: String(totalApplications), label: 'Отклики', color: 'text-cyan' },
       { value: String(invitedCount), label: 'Приглашения', color: 'text-emerald-400' },
-      { value: `${conversionRate}%`, label: 'Конверсия', color: 'text-green-accent' },
+      { value: `${conversionRate}%`, label: 'Конверсия', color: 'text-emerald' },
       { value: `${avgMatchScore}%`, label: 'Совпадение', color: 'text-orange-400' },
     ]
 
