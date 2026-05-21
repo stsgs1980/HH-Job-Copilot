@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HH Job Copilot — Дашборд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0A0A10;
+  --surface: #12121A;
+  --surface2: #1A1A24;
+  --cyan: #22D3EE;
+  --cyan-light: #67E8F9;
+  --purple: #A78BFA;
+  --purple-light: #C4B5FD;
+  --emerald: #34D399;
+  --accent: #22D3EE;
+  --accent2: #A78BFA;
+  --text: #F0F0F5;
+  --secondary: #8888A0;
+  --dim: #55556A;
+  --border: rgba(255,255,255,0.06);
+  --glass: rgba(255,255,255,0.025);
+  --glass-hover: rgba(255,255,255,0.05);
+  --gradient: linear-gradient(135deg, #22D3EE, #A78BFA);
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--bg);
+  color: #fff;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Cursor glow */
+.cursor-glow {
+  position: fixed;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  pointer-events: none; z-index: 1;
+  background: radial-gradient(circle, rgba(34,211,238,0.04) 0%, rgba(167,139,250,0.02) 40%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: left 0.3s ease-out, top 0.3s ease-out;
+}
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+/* Layout */
+.dash-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ═══ SIDEBAR ═══ */
+.sidebar {
+  width: 240px;
+  border-right: 1px solid var(--border);
+  background: rgba(18,18,26,0.6);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  padding: 0 8px;
+  perspective: 600px;
+}
+
+.sidebar-logo-icon {
+  width: 32px; height: 32px;
+  background: var(--gradient);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 13px;
+  color: var(--bg);
+  transform: rotateY(-6deg);
+  box-shadow: 0 4px 16px rgba(34,211,238,0.25), 0 4px 16px rgba(167,139,250,0.15);
+}
+
+.sidebar-logo-text {
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: -0.3px;
+}
+
+.sidebar-logo-text span {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.35);
+  cursor: pointer;
+  transition: all 0.25s;
+  border: 1px solid transparent;
+}
+
+.sidebar-link:hover {
+  color: rgba(255,255,255,0.7);
+  background: rgba(255,255,255,0.03);
+}
+
+.sidebar-link.active {
+  color: #fff;
+  background: rgba(34,211,238,0.06);
+  border-color: rgba(34,211,238,0.1);
+}
+
+.sidebar-link.active svg { color: var(--cyan); }
+
+.sidebar-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 12px 0;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 8px 0;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.sidebar-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--bg);
+}
+
+.sidebar-user-info { flex: 1; min-width: 0; }
+
+.sidebar-user-name {
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-user-plan {
+  font-size: 10px;
+  color: var(--dim);
+}
+
+.sidebar-logout {
+  color: rgba(255,255,255,0.15);
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.sidebar-logout:hover { color: rgba(255,255,255,0.4); }
+
+/* ═══ MAIN ═══ */
+.main {
+  flex: 1;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* Top bar */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,10,16,0.8);
+  backdrop-filter: blur(20px);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--dim);
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--emerald);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.topbar-btn {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.topbar-btn:hover { color: rgba(255,255,255,0.6); }
+
+.mobile-menu {
+  display: none;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+}
+
+/* ═══ PANELS ═══ */
+.panel {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.panel-hidden { display: none; }
+
+/* Stat cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+
+.stat-value.accent { color: var(--cyan); }
+.stat-value.green { color: var(--emerald); }
+.stat-value.purple { color: var(--purple); }
+
+.stat-change {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.stat-change.positive { color: var(--emerald); }
+
+/* ═══ CHAT ═══ */
+.chat-card {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-header-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chat-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.4);
+}
+
+.chat-name { font-size: 14px; font-weight: 700; }
+.chat-status { font-size: 11px; color: rgba(255,255,255,0.2); }
+
+.chat-online {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-online-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--emerald);
+}
+
+.chat-online-text { font-size: 10px; color: rgba(255,255,255,0.2); }
+
+/* Messages */
+.chat-messages {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 300px;
+}
+
+.chat-msg {
+  display: flex;
+  gap: 10px;
+  max-width: 85%;
+}
+
+.chat-msg.me { margin-left: auto; flex-direction: row-reverse; }
+
+.msg-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.msg-avatar.them { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.3); }
+.msg-avatar.ai { background: rgba(34,211,238,0.1); }
+
+.msg-bubble {
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.msg-bubble.them {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-bottom-left-radius: 4px;
+  color: rgba(255,255,255,0.6);
+}
+
+.msg-bubble.me {
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.12);
+  border-bottom-right-radius: 4px;
+  color: rgba(255,255,255,0.7);
+}
+
+.msg-bubble.ai {
+  background: rgba(167,139,250,0.05);
+  border: 1px solid rgba(167,139,250,0.1);
+  border-bottom-left-radius: 4px;
+  color: rgba(255,255,255,0.6);
+}
+
+.ai-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--purple);
+  margin-bottom: 6px;
+}
+
+/* Chat input */
+.chat-input-bar {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  font-family: 'Manrope', sans-serif;
+  font-size: 13px;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-input::placeholder { color: rgba(255,255,255,0.2); }
+.chat-input:focus { border-color: rgba(34,211,238,0.2); }
+
+.chat-send-btn {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cyan);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.chat-send-btn:hover { background: rgba(34,211,238,0.15); }
+
+/* ═══ VACANCIES ═══ */
+.vacancy-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.vacancy-header-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 4px;
+}
+
+.vacancy-header-title { font-size: 18px; font-weight: 800; }
+
+.vacancy-apply-btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: var(--gradient);
+  color: var(--bg);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.vacancy-apply-btn:hover {
+  box-shadow: 0 6px 20px rgba(34,211,238,0.3), 0 6px 20px rgba(167,139,250,0.15);
+}
+
+.vacancy-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.filter-tag.active {
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.12);
+  color: var(--cyan);
+}
+
+.filter-tag.inactive {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.3);
+}
+
+.vacancy-list { display: flex; flex-direction: column; gap: 10px; }
+
+.vacancy-row {
+  padding: 14px 18px;
+  border: 1px solid rgba(255,255,255,0.03);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+
+.vacancy-row:hover {
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.06);
+}
+
+.vacancy-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.25);
+}
+
+.vacancy-info { flex: 1; min-width: 0; }
+.vacancy-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vacancy-meta { font-size: 12px; color: rgba(255,255,255,0.25); }
+
+.vacancy-salary { text-align: right; flex-shrink: 0; }
+.vacancy-salary-amount { font-size: 14px; font-weight: 800; }
+.vacancy-salary-period { font-size: 10px; color: rgba(255,255,255,0.15); }
+
+.vacancy-match {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.vacancy-match.high { background: rgba(52,211,153,0.1); color: rgba(52,211,153,0.7); }
+.vacancy-match.medium { background: rgba(250,204,21,0.1); color: rgba(250,204,21,0.7); }
+
+/* ═══ INTERVIEW ═══ */
+.interview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.interview-header-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 4px;
+}
+
+.interview-header-title { font-size: 18px; font-weight: 800; }
+
+.interview-badges { display: flex; gap: 10px; align-items: center; }
+
+.recording-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.12);
+}
+
+.interview-wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+}
+
+.interview-wave span {
+  width: 2px;
+  background: #ef4444;
+  border-radius: 1px;
+  animation: wave 1.2s ease-in-out infinite;
+}
+
+.interview-wave span:nth-child(1) { height: 6px; animation-delay: 0s; }
+.interview-wave span:nth-child(2) { height: 12px; animation-delay: 0.1s; }
+.interview-wave span:nth-child(3) { height: 5px; animation-delay: 0.2s; }
+.interview-wave span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+.interview-wave span:nth-child(5) { height: 8px; animation-delay: 0.4s; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.3); }
+}
+
+.recording-text {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgba(239,68,68,0.8);
+}
+
+.timer-badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
+  font-variant-numeric: tabular-nums;
+}
+
+.interview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Transcript */
+.transcript-card {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.transcript-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.transcript-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); }
+
+.transcript-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.transcript-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  animation: pulse-dot 1.5s infinite;
+}
+
+.transcript-status-text { font-size: 10px; color: rgba(255,255,255,0.2); }
+
+.transcript-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.transcript-speaker {
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 4px;
+}
+
+.transcript-text {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+
+.transcript-divider { height: 1px; background: var(--border); }
+
+/* AI Hints */
+.hints-section { display: flex; flex-direction: column; gap: 14px; }
+
+.hints-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(34,211,238,0.5);
+}
+
+.hint-card {
+  background: rgba(34,211,238,0.04);
+  border: 1px solid rgba(34,211,238,0.08);
+  border-radius: 14px;
+  padding: 14px 18px;
+}
+
+.hint-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.hint-icon {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  background: rgba(34,211,238,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hint-icon svg { width: 12px; height: 12px; color: var(--cyan); }
+
+.hint-type {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(34,211,238,0.5);
+}
+
+.hint-text {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+}
+
+.hint-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.hint-tag {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.04);
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+}
+
+/* TTS */
+.tts-bar {
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tts-play {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cyan);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tts-play:hover { background: rgba(34,211,238,0.15); }
+
+.tts-progress {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.06);
+}
+
+.tts-progress-fill {
+  height: 100%;
+  width: 33%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+}
+
+.tts-label {
+  font-size: 10px;
+  color: rgba(255,255,255,0.15);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══ ANALYTICS ═══ */
+.analytics-header {
+  margin-bottom: 24px;
+}
+
+.analytics-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 4px;
+}
+
+.analytics-title { font-size: 18px; font-weight: 800; }
+
+.chart-card {
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.chart-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); }
+
+.chart-tabs { display: flex; gap: 4px; }
+
+.chart-tab {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.35);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chart-tab.active {
+  color: #fff;
+  background: rgba(34,211,238,0.08);
+  border: 1px solid rgba(34,211,238,0.1);
+}
+
+.chart-body {
+  padding: 24px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 180px;
+}
+
+.chart-bar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.chart-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: var(--gradient);
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+.chart-bar:hover { opacity: 0.6; }
+
+.chart-day { font-size: 9px; color: rgba(255,255,255,0.15); }
+
+/* Activity */
+.activity-card {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.activity-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.4); }
+
+.activity-list { padding: 0; }
+
+.activity-item {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.activity-icon {
+  width: 32px; height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activity-icon.green { background: rgba(52,211,153,0.08); }
+.activity-icon.cyan { background: rgba(34,211,238,0.08); }
+.activity-icon.purple { background: rgba(167,139,250,0.08); }
+
+.activity-icon svg { width: 16px; height: 16px; }
+.activity-icon.green svg { color: rgba(52,211,153,0.6); }
+.activity-icon.cyan svg { color: rgba(34,211,238,0.6); }
+.activity-icon.purple svg { color: rgba(167,139,250,0.6); }
+
+.activity-text { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); }
+.activity-time { font-size: 10px; color: rgba(255,255,255,0.15); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .sidebar { display: none; }
+  .mobile-menu { display: block; }
+  .interview-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .panel { padding: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interview-wave span { animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<div class="dash-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">HC</div>
+      <div class="sidebar-logo-text">HH <span>Copilot</span></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-link active" onclick="switchPanel('chat')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Чат
+      </div>
+      <div class="sidebar-link" onclick="switchPanel('vacancies')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        Вакансии
+      </div>
+      <div class="sidebar-link" onclick="switchPanel('interview')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/></svg>
+        Интервью
+      </div>
+      <div class="sidebar-link" onclick="switchPanel('analytics')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        Аналитика
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Настройки
+      </div>
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="sidebar-avatar">А</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name">Алексей Иванов</div>
+        <div class="sidebar-user-plan">Про тариф</div>
+      </div>
+      <a href="wireframe-auth-v2.html" class="sidebar-logout">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <!-- Top bar -->
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <button class="mobile-menu" aria-label="Меню">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h1 class="topbar-title" id="panel-title">Чат</h1>
+      </div>
+      <div class="topbar-status">
+        <div class="status-pill">
+          <div class="status-dot"></div>
+          <span>Подключено к HH.ru</span>
+        </div>
+        <button class="topbar-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- ========= ЧАТ ========= -->
+    <div id="panel-chat" class="panel">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Непрочитанных</div>
+          <div class="stat-value">12</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ответов сегодня</div>
+          <div class="stat-value">5</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">AI-черновиков</div>
+          <div class="stat-value accent">8</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ожидает ответа</div>
+          <div class="stat-value">3</div>
+        </div>
+      </div>
+
+      <div class="glass chat-card">
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <div class="chat-avatar">ЯН</div>
+            <div>
+              <div class="chat-name">Яндекс — Senior Frontend</div>
+              <div class="chat-status">HR-менеджер — Онлайн</div>
+            </div>
+          </div>
+          <div class="chat-online">
+            <div class="chat-online-dot"></div>
+            <span class="chat-online-text">В сети</span>
+          </div>
+        </div>
+
+        <div class="chat-messages">
+          <div class="chat-msg">
+            <div class="msg-avatar them">ЯН</div>
+            <div class="msg-bubble them">Здравствуйте, Алексей! Мы ознакомились с вашим профилем и очень заинтересованы. Хотите пройти техническое собеседование на этой неделе?</div>
+          </div>
+          <div class="chat-msg me">
+            <div class="msg-bubble me">Здравствуйте! Да, с удовольствием. Я доступен в среду или четверг после 14:00.</div>
+          </div>
+          <div class="chat-msg">
+            <div class="msg-avatar ai">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+            </div>
+            <div class="msg-bubble ai">
+              <div class="ai-label">AI-подсказка</div>
+              Отличный ответ! Рекомендую также упомянуть опыт с микросервисной архитектурой — в описании вакансии это указано как ключевое требование. Можно добавить: «Также у меня более 3 лет опыта с микросервисами, что заметил в вашем стеке.»
+            </div>
+          </div>
+          <div class="chat-msg">
+            <div class="msg-avatar them">ЯН</div>
+            <div class="msg-bubble them">Четверг в 15:00 отлично подходит! Пришлю приглашение в календаре. Нужны ли вам материалы для подготовки?</div>
+          </div>
+        </div>
+
+        <div class="chat-input-bar">
+          <input type="text" class="chat-input" placeholder="Напишите сообщение...">
+          <button class="chat-send-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========= ВАКАНСИИ ========= -->
+    <div id="panel-vacancies" class="panel panel-hidden">
+      <div class="vacancy-header">
+        <div>
+          <div class="vacancy-header-label">Авто-отклики</div>
+          <div class="vacancy-header-title">Найдено 47 совпадений</div>
+        </div>
+        <button class="vacancy-apply-btn">Откликнуться на все</button>
+      </div>
+
+      <div class="vacancy-filters">
+        <div class="filter-tag active">Frontend</div>
+        <div class="filter-tag inactive">от 200k</div>
+        <div class="filter-tag inactive">Удалёнка</div>
+        <div class="filter-tag inactive">Москва</div>
+      </div>
+
+      <div class="vacancy-list">
+        <div class="vacancy-row">
+          <div class="vacancy-icon">ЯН</div>
+          <div class="vacancy-info">
+            <div class="vacancy-title">Senior Frontend Developer</div>
+            <div class="vacancy-meta">Яндекс — Москва — Удалёнка</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-amount">250-350k</div>
+            <div class="vacancy-salary-period">руб/мес</div>
+          </div>
+          <div class="vacancy-match high">95%</div>
+        </div>
+        <div class="vacancy-row">
+          <div class="vacancy-icon">ВК</div>
+          <div class="vacancy-info">
+            <div class="vacancy-title">Lead React Developer</div>
+            <div class="vacancy-meta">VK Group — Санкт-Петербург — Гибрид</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-amount">280-380k</div>
+            <div class="vacancy-salary-period">руб/мес</div>
+          </div>
+          <div class="vacancy-match high">91%</div>
+        </div>
+        <div class="vacancy-row">
+          <div class="vacancy-icon">ТБ</div>
+          <div class="vacancy-info">
+            <div class="vacancy-title">Fullstack TypeScript</div>
+            <div class="vacancy-meta">Т-Банк — Москва — Офис</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-amount">300-400k</div>
+            <div class="vacancy-salary-period">руб/мес</div>
+          </div>
+          <div class="vacancy-match medium">78%</div>
+        </div>
+        <div class="vacancy-row">
+          <div class="vacancy-icon">АВ</div>
+          <div class="vacancy-info">
+            <div class="vacancy-title">Frontend Engineer (React+Node)</div>
+            <div class="vacancy-meta">Авито — Москва — Удалёнка</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-amount">220-320k</div>
+            <div class="vacancy-salary-period">руб/мес</div>
+          </div>
+          <div class="vacancy-match medium">82%</div>
+        </div>
+        <div class="vacancy-row">
+          <div class="vacancy-icon">ОЗ</div>
+          <div class="vacancy-info">
+            <div class="vacancy-title">Senior UI Engineer</div>
+            <div class="vacancy-meta">Ozon — Москва — Гибрид</div>
+          </div>
+          <div class="vacancy-salary">
+            <div class="vacancy-salary-amount">200-280k</div>
+            <div class="vacancy-salary-period">руб/мес</div>
+          </div>
+          <div class="vacancy-match high">88%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========= ИНТЕРВЬЮ ========= -->
+    <div id="panel-interview" class="panel panel-hidden">
+      <div class="interview-header">
+        <div>
+          <div class="interview-header-label">Интервью в реальном времени</div>
+          <div class="interview-header-title">Яндекс — Технический раунд</div>
+        </div>
+        <div class="interview-badges">
+          <div class="recording-badge">
+            <div class="interview-wave"><span></span><span></span><span></span><span></span><span></span></div>
+            <span class="recording-text">Запись</span>
+          </div>
+          <div class="timer-badge">12:34</div>
+        </div>
+      </div>
+
+      <div class="interview-grid">
+        <div class="glass transcript-card">
+          <div class="transcript-header">
+            <span class="transcript-title">Транскрипция</span>
+            <div class="transcript-status">
+              <div class="transcript-dot"></div>
+              <span class="transcript-status-text">ASR активно</span>
+            </div>
+          </div>
+          <div class="transcript-body">
+            <div class="transcript-speaker">Интервьюер:</div>
+            <div class="transcript-text">«Расскажите, как бы вы спроектировали систему совместного редактирования документов в реальном времени?»</div>
+            <div class="transcript-divider"></div>
+            <div class="transcript-speaker">Вы:</div>
+            <div class="transcript-text">«Для начала я бы использовал Operational Transformation или CRDT для разрешения конфликтов. WebSocket-соединения для синхронизации в реальном времени, с системой присутствия для отображения активных курсоров...»</div>
+            <div class="transcript-divider"></div>
+            <div class="transcript-speaker">Интервьюер:</div>
+            <div class="transcript-text">«Как бы вы организовали поддержку офлайн-режима и переподключение?»</div>
+          </div>
+        </div>
+
+        <div class="hints-section">
+          <div class="hints-label">AI-подсказки</div>
+
+          <div class="hint-card">
+            <div class="hint-card-header">
+              <div class="hint-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+              <span class="hint-type">Предлагаемый ответ</span>
+            </div>
+            <div class="hint-text">Для офлайн-поддержки упомяните: 1) Local-first архитектура с IndexedDB, 2) Очередь отложенных операций, 3) Векторные часы для обнаружения конфликтов при переподключении, 4) Стратегия слияния CRDT. Пример: подход Figma к multiplayer.</div>
+          </div>
+
+          <div class="hint-card">
+            <div class="hint-card-header">
+              <div class="hint-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 014 4v1a4 4 0 01-8 0V6a4 4 0 014-4z"/><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/></svg></div>
+              <span class="hint-type">Поведенческий совет</span>
+            </div>
+            <div class="hint-text">Интервьюер ценит глубину системного дизайна. Рисуйте на доске, если возможно. Покажите осознанность trade-offs — упомяните consistency vs availability. Ссылайтесь на свой опыт с WebSocket в масштабе.</div>
+          </div>
+
+          <div class="hint-card">
+            <div class="hint-card-header">
+              <div class="hint-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+              <span class="hint-type">Ключевые темы</span>
+            </div>
+            <div class="hint-tags">
+              <span class="hint-tag">CRDTs</span>
+              <span class="hint-tag">WebSocket</span>
+              <span class="hint-tag">IndexedDB</span>
+              <span class="hint-tag">Векторные часы</span>
+              <span class="hint-tag">Presence</span>
+              <span class="hint-tag">Разрешение конфликтов</span>
+            </div>
+          </div>
+
+          <div class="glass tts-bar">
+            <button class="tts-play">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <div class="tts-progress"><div class="tts-progress-fill"></div></div>
+            <span class="tts-label">TTS подсказка</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========= АНАЛИТИКА ========= -->
+    <div id="panel-analytics" class="panel panel-hidden">
+      <div class="analytics-header">
+        <div class="analytics-label">Аналитика</div>
+        <div class="analytics-title">Эффективность поиска работы</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Откликов</div>
+          <div class="stat-value">156</div>
+          <div class="stat-change positive">+23 за неделю</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Конверсия ответов</div>
+          <div class="stat-value">87%</div>
+          <div class="stat-change positive">+12% к среднему</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Собеседований</div>
+          <div class="stat-value">14</div>
+          <div class="stat-change positive" style="color:var(--cyan)">3 предстоящих</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Офферов</div>
+          <div class="stat-value accent">2</div>
+          <div class="stat-change positive">На переговорах</div>
+        </div>
+      </div>
+
+      <div class="glass chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Воронка откликов</span>
+          <div class="chart-tabs">
+            <button class="chart-tab active">Неделя</button>
+            <button class="chart-tab">Месяц</button>
+            <button class="chart-tab">Всё время</button>
+          </div>
+        </div>
+        <div class="chart-body">
+          <div class="chart-bar-item"><div class="chart-bar" style="height:100%"></div><span class="chart-day">Пн</span></div>
+          <div class="chart-bar-item"><div class="chart-bar" style="height:75%"></div><span class="chart-day">Вт</span></div>
+          <div class="chart-bar-item"><div class="chart-bar" style="height:90%"></div><span class="chart-day">Ср</span></div>
+          <div class="chart-bar-item"><div class="chart-bar" style="height:55%"></div><span class="chart-day">Чт</span></div>
+          <div class="chart-bar-item"><div class="chart-bar" style="height:65%"></div><span class="chart-day">Пт</span></div>
+          <div class="chart-bar-item"><div class="chart-bar" style="height:30%"></div><span class="chart-day">Сб</span></div>
+          <div class="chart-bar-item"><div class="chart-bar" style="height:20%"></div><span class="chart-day">Вс</span></div>
+        </div>
+      </div>
+
+      <div class="glass activity-card">
+        <div class="activity-header"><span class="activity-title">Последняя активность</span></div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+            <div><div class="activity-text">Получен оффер от Яндекса</div><div class="activity-time">2 часа назад</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <div><div class="activity-text">AI-ответ отправлен в Авито</div><div class="activity-time">4 часа назад</div></div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+            <div><div class="activity-text">5 новых вакансий подобрано</div><div class="activity-time">6 часов назад</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Cursor Glow
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', (e) => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+// Panel switching
+const panels = ['chat', 'vacancies', 'interview', 'analytics'];
+const panelTitles = {
+  chat: 'Чат',
+  vacancies: 'Вакансии',
+  interview: 'Интервью',
+  analytics: 'Аналитика'
+};
+
+function switchPanel(name) {
+  panels.forEach(p => {
+    const el = document.getElementById('panel-' + p);
+    if (el) el.classList.toggle('panel-hidden', p !== name);
+  });
+
+  document.querySelectorAll('.sidebar-link').forEach((link, i) => {
+    link.classList.toggle('active', panels[i] === name);
+  });
+
+  document.getElementById('panel-title').textContent = panelTitles[name] || name;
+}
+
+// Chart tab switching
+document.querySelectorAll('.chart-tabs').forEach(tabGroup => {
+  tabGroup.querySelectorAll('.chart-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabGroup.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+});
+</script>
+
+</body>
+</html>

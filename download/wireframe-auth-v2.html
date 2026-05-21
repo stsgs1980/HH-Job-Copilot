@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HH Job Copilot — Вход</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0A0A10;
+  --surface: #12121A;
+  --surface2: #1A1A24;
+  --cyan: #22D3EE;
+  --cyan-light: #67E8F9;
+  --purple: #A78BFA;
+  --purple-light: #C4B5FD;
+  --emerald: #34D399;
+  --accent: #22D3EE;
+  --accent2: #A78BFA;
+  --text: #F0F0F5;
+  --secondary: #8888A0;
+  --dim: #55556A;
+  --border: rgba(255,255,255,0.07);
+  --glass: rgba(255,255,255,0.02);
+  --glass-hover: rgba(255,255,255,0.05);
+  --gradient: linear-gradient(135deg, #22D3EE, #A78BFA);
+  --gradient-light: linear-gradient(135deg, #67E8F9, #C4B5FD);
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Noise */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+.auth-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ═══ LEFT — DECORATIVE ═══ */
+.auth-left {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.auth-left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(34,211,238,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 60% 80%, rgba(52,211,153,0.06) 0%, transparent 40%);
+}
+
+/* Mesh gradient overlays */
+.mesh-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.mesh-blob-1 {
+  width: 400px; height: 400px;
+  top: 10%; left: 10%;
+  background: rgba(34,211,238,0.12);
+  animation: float 8s ease-in-out infinite;
+}
+
+.mesh-blob-2 {
+  width: 300px; height: 300px;
+  bottom: 20%; right: 10%;
+  background: rgba(167,139,250,0.1);
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+.mesh-blob-3 {
+  width: 250px; height: 250px;
+  top: 50%; left: 50%;
+  background: rgba(52,211,153,0.08);
+  animation: float 12s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* Dot pattern */
+.auth-left .dot-pattern {
+  position: absolute;
+  width: 300px; height: 300px;
+  background-image: radial-gradient(circle, rgba(34,211,238,0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  top: 30%;
+  right: 10%;
+  pointer-events: none;
+}
+
+/* Left content */
+.auth-left-content {
+  position: relative;
+  z-index: 2;
+  padding: 60px;
+  max-width: 500px;
+}
+
+.auth-left-content .logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  perspective: 600px;
+}
+
+.logo-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--bg);
+  transform: rotateY(-8deg) rotateX(4deg);
+  box-shadow: 0 6px 30px rgba(34,211,238,0.35), 0 6px 30px rgba(167,139,250,0.2);
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.logo-text span {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-left-content h1 {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+}
+
+.auth-left-content h1 .gradient-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.auth-left-content p {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--secondary);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+/* Testimonial card on left */
+.testimonial-card {
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(24px);
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonial-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--gradient);
+}
+
+.testimonial-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--secondary);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.testimonial-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--bg);
+}
+
+.testimonial-name { font-size: 13px; font-weight: 600; }
+.testimonial-role { font-size: 12px; color: var(--dim); }
+
+/* ═══ RIGHT — FORM ═══ */
+.auth-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
+}
+
+.auth-right::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--border), transparent);
+}
+
+.auth-form-wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Tab switcher */
+.auth-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: var(--surface);
+  border-radius: 14px;
+  margin-bottom: 40px;
+  border: 1px solid var(--border);
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: transparent;
+  color: var(--secondary);
+}
+
+.auth-tab.active {
+  background: var(--gradient);
+  color: var(--bg);
+  box-shadow: 0 4px 16px rgba(34,211,238,0.25), 0 4px 16px rgba(167,139,250,0.15);
+}
+
+.auth-tab:not(.active):hover { color: var(--text); }
+
+/* Form */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--secondary);
+  letter-spacing: 0.3px;
+}
+
+.form-input {
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-input::placeholder { color: var(--dim); }
+
+.form-input:focus {
+  border-color: rgba(34,211,238,0.4);
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.08);
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--secondary);
+  cursor: pointer;
+}
+
+.form-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--cyan);
+}
+
+.form-link {
+  font-size: 13px;
+  color: var(--cyan);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.form-link:hover { color: var(--cyan-light); }
+
+.btn-submit {
+  padding: 16px;
+  background: var(--gradient);
+  color: var(--bg);
+  border: none;
+  border-radius: 14px;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.3s;
+  margin-top: 8px;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(34,211,238,0.35), 0 12px 40px rgba(167,139,250,0.15);
+}
+
+.btn-submit::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-submit:hover::after { left: 100%; }
+
+/* Divider */
+.form-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--dim);
+  font-size: 13px;
+}
+
+.form-divider::before,
+.form-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Social buttons */
+.social-buttons { display: flex; gap: 12px; }
+
+.btn-social {
+  flex: 1;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.btn-social:hover {
+  border-color: rgba(34,211,238,0.3);
+  background: var(--glass-hover);
+}
+
+.btn-social .icon { font-size: 18px; }
+
+/* Footer text */
+.auth-footer {
+  margin-top: 32px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.auth-footer a {
+  color: var(--cyan);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-footer a:hover { color: var(--cyan-light); }
+
+/* Cursor glow */
+.cursor-glow {
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(circle, rgba(34,211,238,0.05) 0%, rgba(167,139,250,0.03) 40%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: left 0.3s ease-out, top 0.3s ease-out;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-left-content > * {
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+.auth-left-content > :nth-child(1) { animation-delay: 0.1s; }
+.auth-left-content > :nth-child(2) { animation-delay: 0.2s; }
+.auth-left-content > :nth-child(3) { animation-delay: 0.3s; }
+.auth-left-content > :nth-child(4) { animation-delay: 0.4s; }
+
+.auth-form-wrapper > * {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.auth-form-wrapper > :nth-child(1) { animation-delay: 0.2s; }
+.auth-form-wrapper > :nth-child(2) { animation-delay: 0.3s; }
+.auth-form-wrapper > :nth-child(3) { animation-delay: 0.35s; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .auth-left { display: none; }
+  .auth-right {
+    flex: 1;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(34,211,238,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(167,139,250,0.04) 0%, transparent 40%);
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-right { padding: 24px; }
+  .auth-left-content h1 { font-size: 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<div class="auth-wrapper">
+  <!-- Left decorative -->
+  <div class="auth-left">
+    <div class="mesh-blob mesh-blob-1"></div>
+    <div class="mesh-blob mesh-blob-2"></div>
+    <div class="mesh-blob mesh-blob-3"></div>
+    <div class="dot-pattern"></div>
+
+    <div class="auth-left-content">
+      <div class="logo">
+        <div class="logo-icon">HC</div>
+        <div class="logo-text">HH <span>Copilot</span></div>
+      </div>
+      <h1>Найди работу <span class="gradient-text">мечты</span></h1>
+      <p>Автоматизируйте поиск на HH.ru, получайте AI-подсказки на собеседованиях и получайте офферы быстрее, чем когда-либо</p>
+      <div class="testimonial-card">
+        <div class="testimonial-text">«С HH Copilot я нашла работу за 2 недели вместо 3 месяцев. AI-подсказки на собеседовании — это просто магия!»</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">АК</div>
+          <div>
+            <div class="testimonial-name">Анна Козлова</div>
+            <div class="testimonial-role">Frontend Developer, Яндекс</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right form -->
+  <div class="auth-right">
+    <div class="auth-form-wrapper">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login', this)">Вход</button>
+        <button class="auth-tab" onclick="switchTab('register', this)">Регистрация</button>
+      </div>
+
+      <!-- Login form -->
+      <form class="auth-form" id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-input" placeholder="anna@example.com">
+        </div>
+        <div class="form-group">
+          <label>Пароль</label>
+          <input type="password" class="form-input" placeholder="Введите пароль">
+        </div>
+        <div class="form-row">
+          <label class="form-checkbox">
+            <input type="checkbox" checked> Запомнить меня
+          </label>
+          <a href="#" class="form-link">Забыли пароль?</a>
+        </div>
+        <button type="button" class="btn-submit" onclick="location.href='wireframe-dashboard-v2.html'">Войти</button>
+        <div class="form-divider">или</div>
+        <div class="social-buttons">
+          <button type="button" class="btn-social">
+            <span class="icon">&#9679;</span> HH.ru
+          </button>
+          <button type="button" class="btn-social">
+            <span class="icon">&#9679;</span> Google
+          </button>
+        </div>
+      </form>
+
+      <!-- Register form (hidden) -->
+      <form class="auth-form" id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label>Имя</label>
+          <input type="text" class="form-input" placeholder="Ваше имя">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-input" placeholder="anna@example.com">
+        </div>
+        <div class="form-group">
+          <label>Пароль</label>
+          <input type="password" class="form-input" placeholder="Минимум 8 символов">
+        </div>
+        <div class="form-group">
+          <label>Подтвердите пароль</label>
+          <input type="password" class="form-input" placeholder="Повторите пароль">
+        </div>
+        <label class="form-checkbox">
+          <input type="checkbox"> Принимаю <a href="#" class="form-link">условия использования</a>
+        </label>
+        <button type="button" class="btn-submit">Создать аккаунт</button>
+        <div class="form-divider">или</div>
+        <div class="social-buttons">
+          <button type="button" class="btn-social">
+            <span class="icon">&#9679;</span> HH.ru
+          </button>
+          <button type="button" class="btn-social">
+            <span class="icon">&#9679;</span> Google
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-footer">
+        Продолжая, вы соглашаетесь с <a href="#">Политикой конфиденциальности</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Cursor Glow
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', (e) => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+// Tab switcher
+function switchTab(tab, btn) {
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  
+  if (tab === 'login') {
+    document.getElementById('loginForm').style.display = 'flex';
+    document.getElementById('registerForm').style.display = 'none';
+  } else {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('registerForm').style.display = 'flex';
+  }
+}
+</script>
+
+</body>
+</html>
