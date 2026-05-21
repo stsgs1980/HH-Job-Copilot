@@ -2,10 +2,8 @@
 
 import { useState } from 'react'
 import { AIDigest, UserMessage, VacancyResponse, InterviewLive, AnalyticsInline, ChatPanel } from '@/components/dashboard'
-import { useAIChat } from '@/hooks/use-ai-chat'
+import { useChatContext } from '@/contexts/chat-context'
 import { useHHChat } from '@/hooks/use-hh-chat'
-import { useInterview } from '@/hooks/use-interview'
-import { useAnalytics } from '@/hooks/use-analytics'
 import { useFeatureFlag } from '@/hooks/use-feature-flag'
 import { Zap, User } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -13,15 +11,9 @@ import type { ChatMessage } from '@/hooks/use-ai-chat'
 
 export default function DashboardPage() {
   const [showPanel, setShowPanel] = useState(true)
-  const aiChatEnabled = useFeatureFlag('aiChat')
-  const asrEnabled = useFeatureFlag('asr')
-  const hhChatikEnabled = useFeatureFlag('hhChatik')
-
-  // Hooks
-  const aiChat = useAIChat()
+  const chat = useChatContext()
   const hhChat = useHHChat()
-  const interview = useInterview()
-  const analytics = useAnalytics()
+  const hhChatikEnabled = useFeatureFlag('hhChatik')
 
   return (
     <>
@@ -32,14 +24,14 @@ export default function DashboardPage() {
             <p className="text-muted-foreground text-sm mt-1">Ваш AI-ассистент для поиска работы и прохождения интервью</p>
           </div>
 
-          {/* AI Chat messages from useAIChat */}
-          {aiChat.messages.length > 0 && (
+          {/* AI Chat messages */}
+          {chat.messages.length > 0 && (
             <div className="space-y-4">
-              {aiChat.messages.map((msg: ChatMessage) => (
+              {chat.messages.map((msg: ChatMessage) => (
                 <ChatMessageBubble key={msg.id} message={msg} />
               ))}
               {/* Streaming text indicator */}
-              {aiChat.isLoading && aiChat.streamingText && (
+              {chat.isLoading && chat.streamingText && (
                 <div className="flex gap-3">
                   <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center shrink-0">
                     <Zap className="w-4 h-4 text-white" />
@@ -47,13 +39,13 @@ export default function DashboardPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
                     <div className="glass-card rounded-2xl rounded-tl-sm p-4">
-                      <p className="text-sm">{aiChat.streamingText}<span className="inline-block w-1.5 h-4 bg-cyan animate-pulse ml-0.5 align-middle" /></p>
+                      <p className="text-sm">{chat.streamingText}<span className="inline-block w-1.5 h-4 bg-cyan animate-pulse ml-0.5 align-middle" /></p>
                     </div>
                   </div>
                 </div>
               )}
               {/* Loading indicator (non-streaming) */}
-              {aiChat.isLoading && !aiChat.streamingText && (
+              {chat.isLoading && !chat.streamingText && (
                 <div className="flex gap-3">
                   <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center shrink-0">
                     <Zap className="w-4 h-4 text-white animate-pulse" />
@@ -77,14 +69,14 @@ export default function DashboardPage() {
           )}
 
           {/* Error state */}
-          {aiChat.error && (
+          {chat.error && (
             <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-sm text-red-400">
-              Ошибка: {aiChat.error}
+              Ошибка: {chat.error}
             </div>
           )}
 
           {/* When no chat messages, show the default dashboard view */}
-          {aiChat.messages.length === 0 && (
+          {chat.messages.length === 0 && (
             <>
               <AIDigest />
               <UserMessage text="Ответь Елене из Яндекса, что готов на собеседование завтра в 14:00. И покажи новые вакансии по React" />
@@ -126,7 +118,7 @@ function ChatMessageBubble({ message }: { message: ChatMessage }) {
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-cyan mb-1">HH Job Copilot</p>
         <div className="glass-card rounded-2xl rounded-tl-sm p-4">
-          <p className="text-sm">{message.content}</p>
+          <p className="text-sm whitespace-pre-wrap">{message.content}</p>
         </div>
         <div className="flex items-center gap-2 mt-1.5">
           <span className="text-[10px] text-muted-foreground">

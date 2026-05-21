@@ -5,8 +5,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle, Logo } from '@/components/shared'
+import { ChatProvider, useChatContext } from '@/contexts/chat-context'
+import { useFeatureFlag } from '@/hooks/use-feature-flag'
 import {
   Zap, MessageSquare, Search, Briefcase, Mic, BarChart3, Check, LogOut, Send,
+  Square, MicOff,
 } from 'lucide-react'
 import type { DashboardMode } from '@/types'
 
@@ -23,9 +26,18 @@ export default function AppLayout({
 }: {
   children: React.ReactNode
 }) {
+  return (
+    <ChatProvider>
+      <AppShell>{children}</AppShell>
+    </ChatProvider>
+  )
+}
+
+function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [activeMode, setActiveMode] = useState<DashboardMode>('chat')
-  const [inputValue, setInputValue] = useState('')
+  const chat = useChatContext()
+  const asrEnabled = useFeatureFlag('asr')
 
   return (
     <div className="h-screen flex flex-col bg-background relative overflow-hidden">
@@ -77,19 +89,62 @@ export default function AppLayout({
       <div className="relative z-50 glass-card rounded-none shrink-0">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex items-center gap-2 bg-muted rounded-xl px-4 py-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0"><Send className="w-4 h-4" /></Button>
+            {/* Send / Stop button */}
+            {chat.isLoading ? (
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-red-400 hover:text-red-300" onClick={chat.stopStreaming}>
+                <Square className="w-4 h-4" />
+              </Button>
+            ) : (
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={chat.handleSubmit} disabled={!chat.inputValue.trim()}>
+                <Send className="w-4 h-4" />
+              </Button>
+            )}
             <input
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              placeholder="Спросите что угодно или дайте команду..."
+              value={chat.inputValue}
+              onChange={e => chat.setInputValue(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chat.handleSubmit() } }}
+              placeholder={chat.isRecording ? 'Слушаю...' : 'Спросите что угодно или дайте команду...'}
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon" className="h-8 w-8"><Mic className="w-4 h-4 text-purple" /></Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8"><Briefcase className="w-4 h-4 text-cyan" /></Button>
+              {/* Mic / ASR button */}
+              {chat.isRecording ? (
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400 hover:text-red-300" onClick={chat.stopRecording}>
+                  <MicOff className="w-4 h-4" />
+                </Button>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={asrEnabled ? chat.startRecording : undefined}
+                  title={asrEnabled ? 'Голосовой ввод' : 'Скоро'}
+                >
+                  <Mic className={`w-4 h-4 ${asrEnabled ? 'text-purple' : 'text-muted-foreground'}`} />
+                  {chat.isRecording && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-400 animate-pulse-dot" />}
+                </Button>
+              )}
+              {/* Vacancy shortcut button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => { chat.setInputValue('Найди вакансии по '); }}
+                title="Поиск вакансий"
+              >
+                <Briefcase className="w-4 h-4 text-cyan" />
+              </Button>
             </div>
           </div>
-          <p className="text-center text-[10px] text-muted-foreground mt-2">HH Job Copilot может ошибаться. Проверяйте важную информацию.</p>
+          <p className="text-center text-[10px] text-muted-foreground mt-2">
+            {chat.isRecording ? (
+              <span className="text-red-400 flex items-center justify-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse-dot" /> Запись...
+              </span>
+            ) : (
+              'HH Job Copilot может ошибаться. Проверяйте важную информацию.'
+            )}
+          </p>
         </div>
       </div>
     </div>

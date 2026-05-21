@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
 import { Providers } from "@/components/providers";
 import { AuthProvider } from "@/components/auth";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +45,9 @@ export default function RootLayout({
         >
           <Providers>
             <AuthProvider>
-              {children}
+              <ErrorBoundary>
+                {children}
+              </ErrorBoundary>
               <Toaster />
             </AuthProvider>
           </Providers>
