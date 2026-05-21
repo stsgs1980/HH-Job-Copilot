@@ -1,9 +1,5 @@
 'use client'
 
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-
 export default function MarketingError({
   error,
   reset,
@@ -12,43 +8,44 @@ export default function MarketingError({
   reset: () => void
 }) {
   return (
-    <div className="min-h-[60vh] flex items-center justify-center px-4 py-16">
-      <div className="glass-card p-8 sm:p-10 max-w-md w-full text-center page-transition">
-        {/* Icon */}
-        <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-6">
-          <AlertTriangle className="w-8 h-8 text-white" />
+    <div className="min-h-[60vh] flex items-center justify-center px-4 py-16 gradient-mesh relative overflow-hidden">
+      <div className="mesh-blob mesh-blob-1 top-[10%] left-[10%]" />
+      <div className="mesh-blob mesh-blob-2 bottom-[20%] right-[10%]" />
+
+      <div className="glass-card p-8 sm:p-10 max-w-md w-full text-center page-transition relative z-10">
+        <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-6 shadow-lg shadow-cyan/20">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+            <path d="M12 9v4" /><path d="M12 17h.01" />
+          </svg>
         </div>
 
-        {/* Heading */}
         <h2 className="text-2xl sm:text-3xl font-bold gradient-text mb-3">
           Что-то пошло не так
         </h2>
-
-        {/* Description */}
         <p className="text-muted-foreground text-sm sm:text-base mb-2">
-          Попробуйте обновить страницу
+          Произошла непредвиденная ошибка
         </p>
         {error?.message && (
-          <p className="text-xs text-muted-foreground/70 mb-6 max-w-xs mx-auto truncate">
-            {error.message}
-          </p>
+          <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 mb-6">
+            <p className="text-xs text-red-400 break-words">{error.message}</p>
+          </div>
         )}
+        {!error?.message && <div className="mb-6" />}
 
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
-          <Button
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button
             onClick={reset}
-            className="gradient-bg text-white border-0 hover:opacity-90 gap-2"
+            className="gradient-bg text-white border-0 rounded-md px-5 py-2 text-sm font-medium cursor-pointer sweep-btn inline-flex items-center gap-2"
           >
-            <RefreshCw className="w-4 h-4" />
             Попробовать снова
-          </Button>
-          <Link href="/">
-            <Button variant="outline" className="gap-2">
-              <Home className="w-4 h-4" />
-              На главную
-            </Button>
-          </Link>
+          </button>
+          <a
+            href="/"
+            className="text-muted-foreground hover:text-foreground transition-colors text-sm inline-flex items-center gap-2 px-5 py-2 rounded-md border border-border"
+          >
+            На главную
+          </a>
         </div>
       </div>
     </div>

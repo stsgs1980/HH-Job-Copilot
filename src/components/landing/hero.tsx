@@ -3,7 +3,7 @@
 import { ArrowRight, Play } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { GradientButton } from '@/components/shared'
-import { RevealOnScroll, CountUp } from '@/components/neuro'
+import { RevealOnScroll, CountUp, GradientOrb, ScrollIndicator } from '@/components/neuro'
 
 interface HeroProps {
   onNavigate: () => void
@@ -37,15 +37,10 @@ export function Hero({ onNavigate }: HeroProps) {
         aria-hidden="true"
       />
 
-      {/* NEURO: Gradient orb in background */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full opacity-[0.04] pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse, rgba(34,211,238,0.5), rgba(167,139,250,0.3), transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-        aria-hidden="true"
-      />
+      {/* NEURO v4: Hero gradient orbs — premium ambient lighting */}
+      <GradientOrb color="cyan" size={500} x="20%" y="30%" />
+      <GradientOrb color="purple" size={400} x="75%" y="60%" />
+      <GradientOrb color="emerald" size={300} x="55%" y="80%" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-36 text-center">
         {/* Badge — animated border glow */}
@@ -93,7 +88,7 @@ export function Hero({ onNavigate }: HeroProps) {
               { target: 89, suffix: '%', label: 'получают оффер', accent: 'text-emerald' },
               { target: 4.9, decimals: 1, label: 'рейтинг', accent: 'gradient-text' },
             ].map((stat, i) => (
-              <div key={i} className="text-center glass-card p-4 sm:p-5 hover-glow stat-card">
+              <div key={i} className="text-center glass-card p-4 sm:p-5 hover-glow stat-card glow-line">
                 <div className={`text-3xl sm:text-4xl font-extrabold tracking-tight ${stat.accent}`}>
                   <CountUp
                     target={stat.target}
@@ -123,10 +118,9 @@ export function Hero({ onNavigate }: HeroProps) {
           </div>
         </RevealOnScroll>
 
-        {/* Scroll indicator — NEURO animated gradient line */}
-        <div className="mt-16 scroll-indicator">
-          <div className="scroll-indicator-line" />
-          <span>листай вниз</span>
+        {/* Scroll indicator — NEURO v4 animated gradient line */}
+        <div className="mt-16">
+          <ScrollIndicator label="листай вниз" />
         </div>
       </div>
     </section>

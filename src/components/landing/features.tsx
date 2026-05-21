@@ -61,7 +61,7 @@ export function Features() {
                 spotlightColor={spotlightColors[i]}
                 tilt
                 maxTilt={4}
-                className="p-8 h-full hover-lift glass-card"
+                className="p-8 h-full hover-lift glass-card glow-line"
               >
                 <CardHeader className="p-0 mb-4">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${iconBgs[i]}`}>

@@ -154,9 +154,10 @@
 }
 
 /* ===================================================================
-   HH Job Copilot — Cyan/Purple/Emerald + NEURO Design System v3
+   HH Job Copilot — Cyan/Purple/Emerald + NEURO Design System v4
    Enhanced: stronger visual presence, richer glassmorphism,
-   more dramatic gradients, refined micro-interactions
+   more dramatic gradients, refined micro-interactions,
+   premium depth effects, ambient lighting
    =================================================================== */
 
 @layer utilities {
@@ -263,68 +264,70 @@
     color: oklch(0.73 0.17 165);
   }
 
-  /* ── NEURO: Noise SVG overlay — richer grain ── */
+  /* ── NEURO: Noise SVG overlay — richer grain v4 ── */
   .noise-overlay {
     position: fixed;
     inset: 0;
     z-index: 9998;
     pointer-events: none;
-    opacity: 0.025;
+    opacity: 0.03;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 256px 256px;
   }
   .dark .noise-overlay {
-    opacity: 0.055;
+    opacity: 0.065;
   }
 
-  /* ── NEURO: Cursor glow — large, smooth, cyan→purple→emerald ── */
+  /* ── NEURO: Cursor glow — large, smooth, cyan→purple→emerald v4 ── */
   .cursor-glow {
     position: fixed;
-    width: 700px;
-    height: 700px;
+    width: 800px;
+    height: 800px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 1;
     background: radial-gradient(
       circle,
-      rgba(34,211,238,0.06) 0%,
-      rgba(167,139,250,0.035) 25%,
-      rgba(52,211,153,0.02) 45%,
+      rgba(34,211,238,0.08) 0%,
+      rgba(167,139,250,0.045) 25%,
+      rgba(52,211,153,0.025) 45%,
       transparent 65%
     );
     transform: translate(-50%, -50%);
-    transition: left 0.1s ease-out, top 0.1s ease-out;
+    transition: left 0.15s ease-out, top 0.15s ease-out;
     will-change: left, top;
   }
   .dark .cursor-glow {
     background: radial-gradient(
       circle,
-      rgba(34,211,238,0.14) 0%,
-      rgba(167,139,250,0.07) 25%,
-      rgba(52,211,153,0.035) 45%,
+      rgba(34,211,238,0.18) 0%,
+      rgba(167,139,250,0.09) 25%,
+      rgba(52,211,153,0.045) 45%,
       transparent 65%
     );
   }
 
-  /* ── NEURO: Dot pattern — organic, multi-size, cyan tinted ── */
+  /* ── NEURO: Dot pattern — organic, multi-size, cyan tinted v4 ── */
   .dot-pattern {
     position: absolute;
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 600px;
     background-image:
-      radial-gradient(circle, rgba(34,211,238,0.08) 1px, transparent 1px),
-      radial-gradient(circle, rgba(167,139,250,0.04) 1px, transparent 1px);
-    background-size: 24px 24px, 48px 48px;
-    background-position: 0 0, 12px 12px;
-    opacity: 0.6;
+      radial-gradient(circle, rgba(34,211,238,0.10) 1px, transparent 1px),
+      radial-gradient(circle, rgba(167,139,250,0.05) 1.5px, transparent 1.5px),
+      radial-gradient(circle, rgba(52,211,153,0.04) 1px, transparent 1px);
+    background-size: 24px 24px, 48px 48px, 72px 72px;
+    background-position: 0 0, 12px 12px, 24px 24px;
+    opacity: 0.7;
     pointer-events: none;
   }
   .dark .dot-pattern {
     background-image:
-      radial-gradient(circle, rgba(34,211,238,0.12) 1px, transparent 1px),
-      radial-gradient(circle, rgba(167,139,250,0.06) 1px, transparent 1px);
-    opacity: 0.7;
+      radial-gradient(circle, rgba(34,211,238,0.15) 1px, transparent 1px),
+      radial-gradient(circle, rgba(167,139,250,0.08) 1.5px, transparent 1.5px),
+      radial-gradient(circle, rgba(52,211,153,0.06) 1px, transparent 1px);
+    opacity: 0.8;
   }
 
   /* ── NEURO: 3D tilt card on hover — deeper shadows, cyan edge ── */
@@ -377,37 +380,37 @@
     transform: translateY(0) scale(1);
   }
 
-  /* ── NEURO: Mesh gradient blobs — larger, more organic, richer color ── */
+  /* ── NEURO: Mesh gradient blobs — larger, more vivid v4 ── */
   .mesh-blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(100px);
+    filter: blur(120px);
     pointer-events: none;
     animation: meshFloat 10s ease-in-out infinite;
   }
   .mesh-blob-1 {
-    width: 600px; height: 600px;
-    background: rgba(34,211,238,0.12);
+    width: 700px; height: 700px;
+    background: rgba(34,211,238,0.14);
   }
   .dark .mesh-blob-1 {
-    background: rgba(34,211,238,0.18);
+    background: rgba(34,211,238,0.22);
   }
   .mesh-blob-2 {
-    width: 500px; height: 500px;
-    background: rgba(167,139,250,0.10);
+    width: 550px; height: 550px;
+    background: rgba(167,139,250,0.12);
     animation-direction: reverse;
     animation-duration: 13s;
   }
   .dark .mesh-blob-2 {
-    background: rgba(167,139,250,0.15);
+    background: rgba(167,139,250,0.18);
   }
   .mesh-blob-3 {
-    width: 400px; height: 400px;
-    background: rgba(52,211,153,0.08);
+    width: 450px; height: 450px;
+    background: rgba(52,211,153,0.10);
     animation-duration: 16s;
   }
   .dark .mesh-blob-3 {
-    background: rgba(52,211,153,0.12);
+    background: rgba(52,211,153,0.15);
   }
 
   /* ── NEURO: Scroll indicator — animated gradient line ── */
@@ -528,14 +531,15 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-/* Glass card — dark mode */
+/* Glass card — dark mode: subtle cyan tint for depth */
 .dark .glass-card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(34, 211, 238, 0.03);
+  border: 1px solid rgba(34, 211, 238, 0.08);
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.3),
     0 4px 16px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 30px rgba(34, 211, 238, 0.02);
 }
 
 /* Glass card — elevated variant (hero, pricing) */
@@ -552,13 +556,13 @@
 }
 
 .dark .glass-card-elevated {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(34, 211, 238, 0.08);
+  background: rgba(34, 211, 238, 0.04);
+  border: 1px solid rgba(34, 211, 238, 0.12);
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.4),
     0 8px 32px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 0 60px rgba(34, 211, 238, 0.03);
+    0 0 80px rgba(34, 211, 238, 0.05);
 }
 
 /* Glass nav — more transparent, cyan edge highlight */
@@ -571,11 +575,11 @@
 }
 
 .dark .glass-nav {
-  background: rgba(10, 10, 20, 0.72);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  border-bottom: 1px solid rgba(34, 211, 238, 0.06);
-  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.3);
+  background: rgba(10, 10, 20, 0.78);
+  backdrop-filter: blur(28px) saturate(1.5);
+  -webkit-backdrop-filter: blur(28px) saturate(1.5);
+  border-bottom: 1px solid rgba(34, 211, 238, 0.10);
+  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.3), 0 4px 24px rgba(34, 211, 238, 0.03);
 }
 
 /* ===================================================================
@@ -866,6 +870,83 @@
     rgba(34,211,238,0.25),
     rgba(167,139,250,0.20),
     transparent
+  );
+}
+
+/* ===================================================================
+   NEURO v4: New premium effects — glow line, hero orb, text glow
+   =================================================================== */
+
+/* Glow line — animated top border for premium cards */
+.glow-line {
+  position: relative;
+}
+.glow-line::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(34,211,238,0.6), rgba(167,139,250,0.4), rgba(52,211,153,0.3), transparent);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.glow-line:hover::before {
+  opacity: 1;
+}
+
+/* Hero orb — large gradient orb for hero sections */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+  animation: heroOrbFloat 12s ease-in-out infinite;
+}
+
+@keyframes heroOrbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -15px) scale(1.05); }
+  66% { transform: translate(-15px, 10px) scale(0.97); }
+}
+
+/* Text glow — neon effect for important headings */
+.text-glow-cyan {
+  text-shadow: 0 0 20px rgba(34,211,238,0.3), 0 0 40px rgba(34,211,238,0.15);
+}
+.dark .text-glow-cyan {
+  text-shadow: 0 0 24px rgba(34,211,238,0.5), 0 0 48px rgba(34,211,238,0.25), 0 0 80px rgba(34,211,238,0.10);
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 20px rgba(167,139,250,0.3), 0 0 40px rgba(167,139,250,0.15);
+}
+.dark .text-glow-purple {
+  text-shadow: 0 0 24px rgba(167,139,250,0.5), 0 0 48px rgba(167,139,250,0.25), 0 0 80px rgba(167,139,250,0.10);
+}
+
+/* Gradient line separator — thicker variant for sections */
+.gradient-line {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34,211,238,0.30) 20%,
+    rgba(167,139,250,0.25) 50%,
+    rgba(52,211,153,0.20) 80%,
+    transparent 100%
+  );
+}
+.dark .gradient-line {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34,211,238,0.40) 20%,
+    rgba(167,139,250,0.35) 50%,
+    rgba(52,211,153,0.25) 80%,
+    transparent 100%
   );
 }
 

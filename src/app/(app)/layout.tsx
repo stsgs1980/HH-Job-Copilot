@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { ThemeToggle, Logo } from '@/components/shared'
 import { ChatProvider, useChatContext } from '@/contexts/chat-context'
 import { useFeatureFlag } from '@/hooks/use-feature-flag'
+import { GradientOrb } from '@/components/neuro'
 import {
   Zap, MessageSquare, Search, Briefcase, Mic, BarChart3, Check, LogOut, Send,
   Square, MicOff,
@@ -45,6 +46,10 @@ function AppShell({ children }: { children: React.ReactNode }) {
       <div className="ambient-glow w-[600px] h-[600px] bg-cyan -top-64 -right-64" aria-hidden="true" />
       <div className="ambient-glow w-[400px] h-[400px] bg-purple -bottom-40 -left-40" style={{ animationDelay: '-12s' }} aria-hidden="true" />
       <div className="ambient-glow w-[300px] h-[300px] bg-emerald top-1/2 left-1/3" style={{ animationDelay: '-6s', opacity: 0.05 }} aria-hidden="true" />
+
+      {/* NEURO v4: Premium gradient orbs */}
+      <GradientOrb color="cyan" size={300} x="85%" y="15%" />
+      <GradientOrb color="purple" size={250} x="15%" y="75%" />
 
       {/* NEURO: Dot pattern in background */}
       <div className="dot-pattern top-20 right-20 opacity-20" aria-hidden="true" />

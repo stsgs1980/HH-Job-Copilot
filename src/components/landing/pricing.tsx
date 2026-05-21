@@ -69,7 +69,7 @@ export function Pricing({ onNavigate }: PricingProps) {
                   spotlightColor={p.popular ? 'rgba(34,211,238,0.12)' : 'rgba(34,211,238,0.04)'}
                   animatedBorder={p.popular}
                   tilt={false}
-                  className={`p-8 flex flex-col h-full glass-card ${p.popular ? 'shadow-xl shadow-cyan/8' : ''}`}
+                  className={`p-8 flex flex-col h-full glass-card ${p.popular ? 'shadow-xl shadow-cyan/8 glow-line' : ''}`}
                 >
                   {p.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">

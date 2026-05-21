@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Logo, ThemeToggle } from '@/components/shared'
+import { GradientOrb } from '@/components/neuro'
 
 export default function AuthLayout({
   children,
@@ -12,6 +13,10 @@ export default function AuthLayout({
       <div className="mesh-blob mesh-blob-1 top-[5%] left-[5%]" />
       <div className="mesh-blob mesh-blob-2 bottom-[10%] right-[5%]" />
       <div className="mesh-blob mesh-blob-3 top-[40%] left-[45%]" />
+
+      {/* NEURO v4: Premium gradient orbs */}
+      <GradientOrb color="purple" size={350} x="30%" y="50%" />
+      <GradientOrb color="emerald" size={250} x="80%" y="25%" />
 
       {/* NEURO: Dot pattern — dual-layer */}
       <div className="dot-pattern top-[20%] right-[8%]" />
@@ -90,7 +95,7 @@ export default function AuthLayout({
             </Link>
           </div>
 
-          <div className="glass-card-elevated p-8 hover-glow">
+          <div className="glass-card-elevated p-8 hover-glow glow-line">
             {children}
           </div>
 
