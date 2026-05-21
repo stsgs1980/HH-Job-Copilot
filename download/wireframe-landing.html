@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HH Job Copilot — Landing Wireframe</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        accent: '#E8443A',
+                        'accent-light': '#FF6B5E',
+                        graphite: '#343439',
+                        'graphite-light': '#4a4a52',
+                        'bg-primary': '#0a0a0c',
+                        'bg-secondary': '#111115',
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        :root {
+            --accent: #E8443A;
+            --accent-light: #FF6B5E;
+            --bg: #0a0a0c;
+            --bg-secondary: #111115;
+            --glass-bg: rgba(52, 52, 57, 0.10);
+            --glass-border: rgba(255, 255, 255, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: #fff;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .noise-overlay {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 9998;
+            opacity: 0.035; mix-blend-mode: overlay;
+        }
+
+        .dot-pattern {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+        }
+        .glass-hover {
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .glass-hover:hover {
+            background: rgba(52, 52, 57, 0.18);
+            border-color: rgba(232, 68, 58, 0.15);
+            box-shadow: 0 8px 40px rgba(232, 68, 58, 0.06);
+        }
+
+        .mesh-hero {
+            background:
+                radial-gradient(ellipse 700px 500px at 8% 35%, rgba(232,68,58,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 500px at 92% 10%, rgba(232,68,58,0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 900px 600px at 50% 100%, rgba(52,52,57,0.18) 0%, transparent 70%),
+                var(--bg);
+        }
+        .mesh-cta {
+            background:
+                radial-gradient(ellipse 900px 600px at 50% 50%, rgba(232,68,58,0.14) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 400px at 15% 80%, rgba(232,68,58,0.06) 0%, transparent 70%),
+                var(--bg-secondary);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-muted {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .text-glow-accent {
+            text-shadow: 0 0 50px rgba(232,68,58,0.35), 0 0 100px rgba(232,68,58,0.12);
+        }
+
+        #cursor-glow {
+            position: fixed; width: 400px; height: 400px; border-radius: 50%;
+            pointer-events: none; z-index: 2;
+            background: radial-gradient(circle, rgba(232,68,58,0.05) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s; will-change: left, top;
+        }
+
+        section { position: relative; z-index: 1; }
+        header { position: relative; z-index: 100; }
+        footer { position: relative; z-index: 1; }
+
+        .btn-accent {
+            background: var(--accent); color: #fff;
+            font-weight: 700; padding: 16px 40px; border-radius: 60px;
+            border: none; cursor: pointer; font-size: 15px; font-family: inherit;
+            letter-spacing: 0.01em;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative; overflow: hidden;
+        }
+        .btn-accent::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+            transform: translateX(-100%); transition: transform 0.6s;
+        }
+        .btn-accent:hover::before { transform: translateX(100%); }
+        .btn-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(232,68,58,0.3), 0 0 60px rgba(232,68,58,0.08);
+        }
+        .btn-outline {
+            background: transparent; color: #fff;
+            font-weight: 600; padding: 16px 40px; border-radius: 60px;
+            border: 1px solid rgba(255,255,255,0.12); cursor: pointer;
+            font-size: 15px; font-family: inherit; letter-spacing: 0.01em;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-outline:hover {
+            border-color: var(--accent); color: var(--accent);
+            box-shadow: 0 0 25px rgba(232,68,58,0.08);
+        }
+
+        .reveal {
+            opacity: 0; transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.92);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal-scale.active { opacity: 1; transform: scale(1); }
+        .d-1 { transition-delay: 0.08s; }
+        .d-2 { transition-delay: 0.16s; }
+        .d-3 { transition-delay: 0.24s; }
+        .d-4 { transition-delay: 0.32s; }
+        .d-5 { transition-delay: 0.40s; }
+        .d-6 { transition-delay: 0.48s; }
+
+        [data-parallax] { will-change: transform; }
+
+        .tilt-card { transform-style: preserve-3d; perspective: 800px; }
+        .tilt-inner { transform-style: preserve-3d; transition: transform 0.2s ease-out; }
+
+        .service-arrow { transition: transform 0.35s ease, color 0.35s ease; }
+        .service-card:hover .service-arrow { transform: translate(4px, -4px); color: var(--accent); }
+
+        .marquee-track {
+            display: flex; width: max-content;
+            animation: marquee 35s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .hamburger span {
+            display: block; width: 22px; height: 1.5px; background: #fff;
+            margin: 5px 0; transition: all 0.35s ease; border-radius: 2px;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+        .mobile-menu {
+            position: fixed; inset: 0;
+            background: rgba(10,10,12,0.97);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            z-index: 999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; gap: 32px;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .mobile-menu.open { opacity: 1; pointer-events: all; }
+
+        .pricing-toggle-track {
+            width: 52px; height: 28px; border-radius: 14px;
+            background: rgba(255,255,255,0.08); position: relative;
+            cursor: pointer; transition: background 0.3s;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .pricing-toggle-track.active { background: var(--accent); border-color: var(--accent); }
+        .pricing-toggle-thumb {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: #fff; position: absolute; top: 2px; left: 3px;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .pricing-toggle-track.active .pricing-toggle-thumb { transform: translateX(24px); }
+
+        .pricing-popular {
+            position: relative;
+        }
+        .pricing-popular::before {
+            content: 'Popular'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: var(--accent); color: #fff; font-size: 10px; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            padding: 4px 14px; border-radius: 20px;
+        }
+
+        .stat-number { font-variant-numeric: tabular-nums; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--graphite); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .marquee-track { animation: none !important; }
+            .reveal, .reveal-scale { opacity: 1 !important; transform: none !important; transition: none !important; }
+            #cursor-glow { display: none !important; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.75rem !important; line-height: 1.05 !important; }
+        }
+        @media (max-width: 480px) {
+            .hero-title { font-size: 2rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <svg style="position:absolute;width:0;height:0;" aria-hidden="true">
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+        </filter>
+    </svg>
+    <div class="noise-overlay" style="filter:url(#noiseFilter);" aria-hidden="true"></div>
+    <div id="cursor-glow" aria-hidden="true"></div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 w-full z-100 transition-all duration-500" id="main-header">
+        <div class="max-w-7xl mx-auto px-6 md:px-10 py-5 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-9 h-9 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <span class="text-white font-bold text-lg tracking-tight hidden sm:block">HH Copilot</span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-9">
+                <a href="#features" class="text-sm font-medium text-white/50 hover:text-white transition-colors duration-300">Features</a>
+                <a href="#how" class="text-sm font-medium text-white/50 hover:text-white transition-colors duration-300">How it works</a>
+                <a href="#pricing" class="text-sm font-medium text-white/50 hover:text-white transition-colors duration-300">Pricing</a>
+                <a href="/wireframe-auth.html" class="text-sm font-medium text-white/50 hover:text-white transition-colors duration-300">Login</a>
+                <button class="btn-accent !py-2.5 !px-6 !text-sm" onclick="window.location.href='/wireframe-auth.html'">
+                    Start free
+                </button>
+            </nav>
+
+            <button class="hamburger md:hidden relative z-[1001]" id="hamburger-btn" aria-label="Menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Mobile menu">
+        <a href="#features" class="text-2xl font-bold text-white/70 hover:text-accent transition-colors mobile-link">Features</a>
+        <a href="#how" class="text-2xl font-bold text-white/70 hover:text-accent transition-colors mobile-link">How it works</a>
+        <a href="#pricing" class="text-2xl font-bold text-white/70 hover:text-accent transition-colors mobile-link">Pricing</a>
+        <a href="/wireframe-auth.html" class="text-2xl font-bold text-white/70 hover:text-accent transition-colors mobile-link">Login</a>
+        <button class="btn-accent mt-4">Start free</button>
+    </div>
+
+    <main>
+        <!-- HERO -->
+        <section id="hero" class="mesh-hero min-h-screen flex items-center relative overflow-hidden">
+            <div class="absolute top-20 right-[10%] w-72 h-72 rounded-full opacity-[0.03]"
+                 style="background: radial-gradient(circle, var(--accent), transparent);" data-parallax="0.15" aria-hidden="true"></div>
+            <div class="absolute bottom-32 left-[5%] w-96 h-96 rounded-full opacity-[0.025]"
+                 style="background: radial-gradient(circle, var(--accent), transparent);" data-parallax="0.25" aria-hidden="true"></div>
+
+            <div class="max-w-7xl mx-auto px-6 md:px-10 pt-28 pb-20 w-full">
+                <div class="flex flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-20">
+                    <div class="flex-1 text-center lg:text-left">
+                        <div class="reveal inline-flex items-center gap-2.5 glass !rounded-full !py-2 !px-5 mb-8">
+                            <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+                            <span class="text-[11px] font-semibold tracking-[0.15em] uppercase text-white/50">AI-Powered Job Search</span>
+                        </div>
+
+                        <h1 class="hero-title reveal d-1 text-5xl md:text-7xl lg:text-[5.5rem] font-black leading-[1.0] tracking-tight mb-7">
+                            <span class="gradient-text">Find your</span><br>
+                            <span class="text-white">dream job</span><br>
+                            <span class="text-white">with </span><span class="text-accent text-glow-accent">AI</span>
+                        </h1>
+
+                        <p class="reveal d-2 text-lg md:text-xl text-white/40 font-light max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+                            Auto-apply to hundreds of vacancies on HH.ru. Get real-time AI hints during interviews. Land offers faster.
+                        </p>
+
+                        <div class="reveal d-3 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-14">
+                            <button class="btn-accent" onclick="window.location.href='/wireframe-auth.html'">Start free</button>
+                            <button class="btn-outline" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</button>
+                        </div>
+
+                        <div class="reveal d-4 flex gap-10 md:gap-16 justify-center lg:justify-start">
+                            <div>
+                                <div class="stat-number text-3xl md:text-4xl font-black text-white" data-count="12">0</div>
+                                <div class="text-[10px] text-white/30 font-medium mt-1 uppercase tracking-[0.15em]">Applications/min</div>
+                            </div>
+                            <div>
+                                <div class="stat-number text-3xl md:text-4xl font-black text-white" data-count="87">0</div>
+                                <div class="text-[10px] text-white/30 font-medium mt-1 uppercase tracking-[0.15em]">Response rate %</div>
+                            </div>
+                            <div>
+                                <div class="stat-number text-3xl md:text-4xl font-black text-white" data-count="5">0</div>
+                                <div class="text-[10px] text-white/30 font-medium mt-1 uppercase tracking-[0.15em]">Avg days to offer</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Product mockup -->
+                    <div class="flex-shrink-0 reveal-scale d-3" data-parallax="0.08">
+                        <div class="w-[320px] md:w-[420px] glass !rounded-2xl overflow-hidden" style="border-color: rgba(255,255,255,0.04);">
+                            <!-- Mock browser bar -->
+                            <div class="flex items-center gap-2 px-5 py-3 border-b border-white/[0.04]">
+                                <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                                <div class="flex-1 ml-3 h-5 rounded-md bg-white/[0.04] flex items-center px-3">
+                                    <span class="text-[9px] text-white/20 font-mono">hh-copilot.app/dashboard</span>
+                                </div>
+                            </div>
+                            <!-- Mock dashboard -->
+                            <div class="p-5 space-y-4">
+                                <!-- Chat message -->
+                                <div class="flex gap-3">
+                                    <div class="w-7 h-7 rounded-full bg-accent/20 flex-shrink-0 flex items-center justify-center">
+                                        <svg class="w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 014 4v1a4 4 0 01-8 0V6a4 4 0 014-4z"/><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/></svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-[10px] text-white/25 mb-1">HR Manager</div>
+                                        <div class="text-xs text-white/60 bg-white/[0.04] rounded-xl rounded-tl-sm px-3.5 py-2.5 leading-relaxed">
+                                            Good afternoon! We reviewed your CV and would like to invite you for an interview...
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- AI hint -->
+                                <div class="flex gap-3">
+                                    <div class="w-7 h-7 rounded-full bg-accent/10 flex-shrink-0 flex items-center justify-center">
+                                        <svg class="w-3.5 h-3.5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-[10px] text-accent/50 mb-1 font-semibold tracking-wider uppercase">AI Suggestion</div>
+                                        <div class="text-xs text-white/50 bg-accent/[0.06] border border-accent/10 rounded-xl rounded-tl-sm px-3.5 py-2.5 leading-relaxed">
+                                            Accept and propose 3 time slots. Highlight your React + TypeScript experience for this role.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Input bar -->
+                                <div class="flex items-center gap-2 pt-2 border-t border-white/[0.04]">
+                                    <div class="flex-1 h-8 rounded-lg bg-white/[0.04] border border-white/[0.04]"></div>
+                                    <div class="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-30" data-parallax="0.3" aria-hidden="true">
+                <span class="text-[9px] uppercase tracking-[0.2em] font-medium">Scroll</span>
+                <div class="w-px h-8 bg-gradient-to-b from-white/40 to-transparent animate-pulse"></div>
+            </div>
+        </section>
+
+        <!-- MARQUEE -->
+        <section class="py-6 border-y border-white/[0.03] overflow-hidden relative z-10" aria-hidden="true">
+            <div class="marquee-track">
+                <div class="flex items-center gap-10 px-6">
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Auto Apply</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Chatik API</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">AI Interview</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Speech Recognition</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Smart Replies</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Analytics</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">HH.ru Integration</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                </div>
+                <div class="flex items-center gap-10 px-6">
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Auto Apply</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Chatik API</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">AI Interview</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Speech Recognition</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Smart Replies</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">Analytics</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                    <span class="text-xl font-extralight text-white/[0.08] whitespace-nowrap">HH.ru Integration</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-accent/20"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES -->
+        <section id="features" class="py-24 md:py-36 relative">
+            <div class="max-w-7xl mx-auto px-6 md:px-10">
+                <div class="max-w-2xl mb-16 md:mb-24">
+                    <p class="reveal text-[11px] font-bold tracking-[0.2em] uppercase text-accent mb-4">Features</p>
+                    <h2 class="reveal d-1 text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight">
+                        <span class="gradient-text-muted">Everything you need</span><br>
+                        <span class="text-white">to land offers</span>
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Card 1 -->
+                    <div class="tilt-card reveal d-1">
+                        <div class="tilt-inner service-card glass glass-hover p-8 h-full flex flex-col">
+                            <div class="w-11 h-11 rounded-xl bg-accent/8 flex items-center justify-center mb-6">
+                                <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-3">Auto-Apply</h3>
+                            <p class="text-sm text-white/35 leading-relaxed flex-1">Automatically apply to matching vacancies on HH.ru. Set filters, customize cover letters, and let AI handle the rest.</p>
+                            <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.04]">
+                                <span class="text-[11px] text-white/20 font-medium">Learn more</span>
+                                <svg class="service-arrow w-3.5 h-3.5 text-white/20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="tilt-card reveal d-2">
+                        <div class="tilt-inner service-card glass glass-hover p-8 h-full flex flex-col">
+                            <div class="w-11 h-11 rounded-xl bg-accent/8 flex items-center justify-center mb-6">
+                                <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-3">Chatik AI</h3>
+                            <p class="text-sm text-white/35 leading-relaxed flex-1">AI-powered chat assistant reads employer messages on HH.ru and drafts perfect replies in your tone and style.</p>
+                            <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.04]">
+                                <span class="text-[11px] text-white/20 font-medium">Learn more</span>
+                                <svg class="service-arrow w-3.5 h-3.5 text-white/20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="tilt-card reveal d-3">
+                        <div class="tilt-inner service-card glass glass-hover p-8 h-full flex flex-col">
+                            <div class="w-11 h-11 rounded-xl bg-accent/8 flex items-center justify-center mb-6">
+                                <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-3">Interview Copilot</h3>
+                            <p class="text-sm text-white/35 leading-relaxed flex-1">Real-time AI hints during interviews. Speech recognition captures questions, LLM generates optimal answers instantly.</p>
+                            <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.04]">
+                                <span class="text-[11px] text-white/20 font-medium">Learn more</span>
+                                <svg class="service-arrow w-3.5 h-3.5 text-white/20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="tilt-card reveal d-4">
+                        <div class="tilt-inner service-card glass glass-hover p-8 h-full flex flex-col">
+                            <div class="w-11 h-11 rounded-xl bg-accent/8 flex items-center justify-center mb-6">
+                                <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-3">Analytics</h3>
+                            <p class="text-sm text-white/35 leading-relaxed flex-1">Track application status, response rates, interview outcomes. Data-driven insights to optimize your job search strategy.</p>
+                            <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.04]">
+                                <span class="text-[11px] text-white/20 font-medium">Learn more</span>
+                                <svg class="service-arrow w-3.5 h-3.5 text-white/20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="tilt-card reveal d-5">
+                        <div class="tilt-inner service-card glass glass-hover p-8 h-full flex flex-col">
+                            <div class="w-11 h-11 rounded-xl bg-accent/8 flex items-center justify-center mb-6">
+                                <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-3">Smart Dashboard</h3>
+                            <p class="text-sm text-white/35 leading-relaxed flex-1">Unified workspace for all your job search activities. Manage chats, track applications, schedule interviews in one place.</p>
+                            <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.04]">
+                                <span class="text-[11px] text-white/20 font-medium">Learn more</span>
+                                <svg class="service-arrow w-3.5 h-3.5 text-white/20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="tilt-card reveal d-6">
+                        <div class="tilt-inner service-card glass glass-hover p-8 h-full flex flex-col">
+                            <div class="w-11 h-11 rounded-xl bg-accent/8 flex items-center justify-center mb-6">
+                                <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-3">Privacy First</h3>
+                            <p class="text-sm text-white/35 leading-relaxed flex-1">Your data stays yours. End-to-end encryption, no selling to third parties, GDPR-compliant. Full control over your information.</p>
+                            <div class="flex items-center justify-between mt-6 pt-4 border-t border-white/[0.04]">
+                                <span class="text-[11px] text-white/20 font-medium">Learn more</span>
+                                <svg class="service-arrow w-3.5 h-3.5 text-white/20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 12L12 4M12 4H6M12 4v6"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section id="how" class="py-24 md:py-36 relative dot-pattern">
+            <div class="absolute top-1/2 right-0 w-80 h-80 rounded-full opacity-[0.04] -translate-y-1/2 translate-x-1/2"
+                 style="background: radial-gradient(circle, var(--accent), transparent);" aria-hidden="true"></div>
+
+            <div class="max-w-7xl mx-auto px-6 md:px-10">
+                <div class="max-w-2xl mb-16 md:mb-24">
+                    <p class="reveal text-[11px] font-bold tracking-[0.2em] uppercase text-accent mb-4">How it works</p>
+                    <h2 class="reveal d-1 text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight">
+                        <span class="gradient-text-muted">Three steps to</span><br>
+                        <span class="text-white">your next offer</span>
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                    <!-- Step 1 -->
+                    <div class="reveal d-1">
+                        <div class="flex items-start gap-5">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-2xl glass !rounded-xl flex items-center justify-center text-accent font-black text-lg">1</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-3">Connect HH.ru</h3>
+                                <p class="text-sm text-white/35 leading-relaxed">Sign in with your HH.ru account. We securely connect via OAuth and sync your profile, resumes, and preferences.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="reveal d-2">
+                        <div class="flex items-start gap-5">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-2xl glass !rounded-xl flex items-center justify-center text-accent font-black text-lg">2</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-3">Set your filters</h3>
+                                <p class="text-sm text-white/35 leading-relaxed">Define job criteria: role, salary, location, company size. AI learns your preferences and gets smarter with every application.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div class="reveal d-3">
+                        <div class="flex items-start gap-5">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-2xl glass !rounded-xl flex items-center justify-center text-accent font-black text-lg">3</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-3">Let AI work</h3>
+                                <p class="text-sm text-white/35 leading-relaxed">Auto-apply to matching jobs, get AI-crafted chat responses, receive real-time hints during interviews. Just accept offers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual timeline -->
+                <div class="reveal d-4 mt-16 md:mt-24">
+                    <div class="glass !rounded-2xl p-8 md:p-10">
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-0">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-white">Connect</div>
+                                    <div class="text-[11px] text-white/25">1 click</div>
+                                </div>
+                            </div>
+                            <div class="hidden md:block flex-1 h-px bg-white/[0.06] mx-6"></div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-white">Configure</div>
+                                    <div class="text-[11px] text-white/25">2 minutes</div>
+                                </div>
+                            </div>
+                            <div class="hidden md:block flex-1 h-px bg-white/[0.06] mx-6"></div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-sm font-semibold text-white">Get hired</div>
+                                    <div class="text-[11px] text-white/25">5 days avg</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRICING -->
+        <section id="pricing" class="py-24 md:py-36 relative">
+            <div class="max-w-7xl mx-auto px-6 md:px-10">
+                <div class="text-center mb-16 md:mb-20">
+                    <p class="reveal text-[11px] font-bold tracking-[0.2em] uppercase text-accent mb-4">Pricing</p>
+                    <h2 class="reveal d-1 text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight">
+                        <span class="text-white">Simple, transparent</span><br>
+                        <span class="gradient-text">pricing</span>
+                    </h2>
+
+                    <!-- Toggle -->
+                    <div class="reveal d-2 flex items-center justify-center gap-4 mt-10">
+                        <span class="text-sm text-white/50 font-medium" id="monthly-label">Monthly</span>
+                        <div class="pricing-toggle-track" id="pricing-toggle" onclick="togglePricing()">
+                            <div class="pricing-toggle-thumb"></div>
+                        </div>
+                        <span class="text-sm text-white/50 font-medium" id="yearly-label">Yearly <span class="text-accent text-xs font-bold">-20%</span></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6 max-w-5xl mx-auto">
+                    <!-- Starter -->
+                    <div class="reveal d-1">
+                        <div class="glass glass-hover p-8 h-full flex flex-col">
+                            <div class="text-[11px] font-bold tracking-[0.15em] uppercase text-white/30 mb-2">Starter</div>
+                            <div class="flex items-baseline gap-1 mb-1">
+                                <span class="text-4xl font-black text-white">$0</span>
+                                <span class="text-sm text-white/25">/mo</span>
+                            </div>
+                            <p class="text-xs text-white/25 mb-6">Free forever</p>
+                            <div class="h-px bg-white/[0.04] mb-6"></div>
+                            <ul class="space-y-3 flex-1 mb-8">
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    5 auto-applies/day
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Basic chat suggestions
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Application tracking
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/20">
+                                    <svg class="w-4 h-4 text-white/10 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    Interview Copilot
+                                </li>
+                            </ul>
+                            <button class="btn-outline w-full !py-3 !text-sm">Get started</button>
+                        </div>
+                    </div>
+
+                    <!-- Pro -->
+                    <div class="reveal d-2">
+                        <div class="pricing-popular glass glass-hover p-8 h-full flex flex-col" style="border-color: rgba(232,68,58,0.15); box-shadow: 0 0 60px rgba(232,68,58,0.06);">
+                            <div class="text-[11px] font-bold tracking-[0.15em] uppercase text-accent mb-2">Pro</div>
+                            <div class="flex items-baseline gap-1 mb-1">
+                                <span class="text-4xl font-black text-white price-value" data-monthly="19" data-yearly="15">$19</span>
+                                <span class="text-sm text-white/25">/mo</span>
+                            </div>
+                            <p class="text-xs text-white/25 mb-6">For active job seekers</p>
+                            <div class="h-px bg-white/[0.04] mb-6"></div>
+                            <ul class="space-y-3 flex-1 mb-8">
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Unlimited auto-applies
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    AI chat with smart replies
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Advanced analytics
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Interview Copilot (basic)
+                                </li>
+                            </ul>
+                            <button class="btn-accent w-full !py-3 !text-sm">Start free trial</button>
+                        </div>
+                    </div>
+
+                    <!-- Ultra -->
+                    <div class="reveal d-3">
+                        <div class="glass glass-hover p-8 h-full flex flex-col">
+                            <div class="text-[11px] font-bold tracking-[0.15em] uppercase text-white/30 mb-2">Ultra</div>
+                            <div class="flex items-baseline gap-1 mb-1">
+                                <span class="text-4xl font-black text-white price-value" data-monthly="49" data-yearly="39">$49</span>
+                                <span class="text-sm text-white/25">/mo</span>
+                            </div>
+                            <p class="text-xs text-white/25 mb-6">For serious candidates</p>
+                            <div class="h-px bg-white/[0.04] mb-6"></div>
+                            <ul class="space-y-3 flex-1 mb-8">
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Everything in Pro
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Interview Copilot (full)
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Real-time speech recognition
+                                </li>
+                                <li class="flex items-center gap-3 text-sm text-white/40">
+                                    <svg class="w-4 h-4 text-accent/60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                                    Priority support + coaching
+                                </li>
+                            </ul>
+                            <button class="btn-outline w-full !py-3 !text-sm">Start free trial</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section id="cta" class="py-28 md:py-40 relative mesh-cta overflow-hidden">
+            <div class="absolute top-10 right-10 w-40 h-40 rounded-full border border-accent/[0.06]" aria-hidden="true" data-parallax="0.12"></div>
+            <div class="absolute bottom-16 left-16 w-24 h-24 rounded-full border border-accent/[0.04]" aria-hidden="true" data-parallax="0.2"></div>
+
+            <div class="max-w-4xl mx-auto px-6 md:px-10 text-center relative z-10">
+                <p class="reveal text-[11px] font-bold tracking-[0.2em] uppercase text-accent mb-6">Ready to start</p>
+                <h2 class="reveal d-1 text-4xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-8">
+                    <span class="text-white">Stop searching.</span><br>
+                    <span class="text-accent text-glow-accent">Start landing.</span>
+                </h2>
+                <p class="reveal d-2 text-lg text-white/35 font-light max-w-xl mx-auto mb-12 leading-relaxed">
+                    Join thousands of candidates who found their dream job faster with AI. Free to start, no credit card required.
+                </p>
+                <div class="reveal d-3 flex flex-col sm:flex-row gap-4 justify-center">
+                    <button class="btn-accent text-lg !py-5 !px-12" style="box-shadow: 0 0 50px rgba(232,68,58,0.2), 0 0 100px rgba(232,68,58,0.06);" onclick="window.location.href='/wireframe-auth.html'">
+                        Get started free
+                    </button>
+                </div>
+
+                <!-- Social proof -->
+                <div class="reveal d-4 mt-14 flex items-center justify-center gap-6">
+                    <div class="flex -space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-white/[0.06] border border-white/[0.08]"></div>
+                        <div class="w-8 h-8 rounded-full bg-white/[0.08] border border-white/[0.08]"></div>
+                        <div class="w-8 h-8 rounded-full bg-white/[0.06] border border-white/[0.08]"></div>
+                        <div class="w-8 h-8 rounded-full bg-white/[0.08] border border-white/[0.08]"></div>
+                    </div>
+                    <span class="text-sm text-white/25 font-medium">2,400+ candidates already hired</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/[0.03] py-12 md:py-16 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 md:px-10">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-8 h-8 rounded-lg bg-accent/10 border border-accent/15 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                        </div>
+                        <span class="text-white font-bold text-lg tracking-tight">HH Copilot</span>
+                    </div>
+                    <p class="text-sm text-white/20 leading-relaxed max-w-sm">
+                        AI-powered job search automation. Auto-apply, smart chat, interview copilot. Land offers faster on HH.ru.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-4">Product</h4>
+                    <ul class="flex flex-col gap-2.5">
+                        <li><a href="#features" class="text-sm text-white/25 hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#pricing" class="text-sm text-white/25 hover:text-white transition-colors">Pricing</a></li>
+                        <li><a href="#" class="text-sm text-white/25 hover:text-white transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-4">Legal</h4>
+                    <ul class="flex flex-col gap-2.5">
+                        <li><a href="#" class="text-sm text-white/25 hover:text-white transition-colors">Privacy</a></li>
+                        <li><a href="#" class="text-sm text-white/25 hover:text-white transition-colors">Terms</a></li>
+                        <li><a href="mailto:support@hhcopilot.app" class="text-sm text-white/25 hover:text-accent transition-colors">support@hhcopilot.app</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-white/[0.03] flex flex-col sm:flex-row items-center justify-between gap-4">
+                <span class="text-[11px] text-white/15">2025 HH Job Copilot. All rights reserved.</span>
+                <div class="flex gap-5">
+                    <a href="#" class="text-white/15 hover:text-accent transition-colors" aria-label="Telegram">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                    </a>
+                    <a href="#" class="text-white/15 hover:text-accent transition-colors" aria-label="GitHub">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // Cursor glow
+        const cursorGlow = document.getElementById('cursor-glow');
+        let mouseX = -500, mouseY = -500, glowX = -500, glowY = -500;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            glowX += (mouseX - glowX) * 0.08;
+            glowY += (mouseY - glowY) * 0.08;
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        if ('ontouchstart' in window) cursorGlow.style.display = 'none';
+
+        // Reveal on scroll
+        const revealElements = document.querySelectorAll('.reveal, .reveal-scale');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // Parallax
+        const parallaxElements = document.querySelectorAll('[data-parallax]');
+        window.addEventListener('scroll', () => {
+            const sy = window.pageYOffset;
+            parallaxElements.forEach(el => {
+                const speed = parseFloat(el.dataset.parallax) || 0.1;
+                el.style.transform = 'translateY(' + (sy * speed) + 'px)';
+            });
+        }, { passive: true });
+
+        // Header bg on scroll
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            const sy = window.pageYOffset;
+            if (sy > 60) {
+                header.style.background = 'rgba(10,10,12,0.85)';
+                header.style.backdropFilter = 'blur(20px)';
+            } else {
+                header.style.background = 'transparent';
+                header.style.backdropFilter = 'none';
+            }
+        }, { passive: true });
+
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        let menuOpen = false;
+        hamburger.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            hamburger.classList.toggle('active', menuOpen);
+            mobileMenu.classList.toggle('open', menuOpen);
+            hamburger.setAttribute('aria-expanded', menuOpen);
+            document.body.style.overflow = menuOpen ? 'hidden' : '';
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Tilt cards
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            const inner = card.querySelector('.tilt-inner');
+            if (!inner) return;
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 5;
+                const rotateX = ((rect.height / 2 - y) / (rect.height / 2)) * 5;
+                inner.style.transform = 'rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+            });
+            card.addEventListener('mouseleave', () => { inner.style.transform = 'rotateX(0) rotateY(0)'; });
+        });
+
+        // Stat count-up
+        const statNumbers = document.querySelectorAll('[data-count]');
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.count);
+                    const duration = 1800;
+                    const start = performance.now();
+                    function countUp(now) {
+                        const progress = Math.min((now - start) / duration, 1);
+                        const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                        el.textContent = Math.round(target * ease);
+                        if (progress < 1) requestAnimationFrame(countUp);
+                        else el.textContent = target + '+';
+                    }
+                    requestAnimationFrame(countUp);
+                    statObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        statNumbers.forEach(el => statObserver.observe(el));
+
+        // Pricing toggle
+        window.togglePricing = function() {
+            const toggle = document.getElementById('pricing-toggle');
+            toggle.classList.toggle('active');
+            const isYearly = toggle.classList.contains('active');
+            document.querySelectorAll('.price-value').forEach(el => {
+                const val = isYearly ? el.dataset.yearly : el.dataset.monthly;
+                el.textContent = '$' + val;
+            });
+        };
+    })();
+    </script>
+</body>
+</html>
