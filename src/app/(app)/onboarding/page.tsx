@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Logo } from '@/components/shared'
+import { SpotlightCard } from '@/components/neuro/spotlight-card'
 import {
   FileText, MapPin, Building2, Sparkles, ArrowRight, ArrowLeft, Check,
-  Briefcase, DollarSign, Globe, Users,
+  Globe, Users,
 } from 'lucide-react'
 
 const steps = [
@@ -40,9 +41,10 @@ export default function OnboardingPage() {
   const finish = () => router.push('/dashboard')
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center p-4 gradient-mesh">
-      <div className="ambient-glow w-[400px] h-[400px] bg-cyan -top-32 -right-32" />
-      <div className="ambient-glow w-[300px] h-[300px] bg-purple -bottom-24 -left-24" style={{ animationDelay: '-8s' }} />
+    <div className="h-screen flex flex-col items-center justify-center p-4 gradient-mesh relative overflow-hidden">
+      {/* NEURO: Mesh blobs */}
+      <div className="mesh-blob mesh-blob-1 top-[10%] left-[10%]" />
+      <div className="mesh-blob mesh-blob-2 bottom-[20%] right-[10%]" />
 
       <div className="relative z-10 w-full max-w-2xl">
         {/* Header */}
@@ -52,11 +54,11 @@ export default function OnboardingPage() {
         </div>
 
         {/* Progress */}
-        <div className="flex items-center justify-center gap-2 mb-8">
+        <div className="flex items-center justify-center gap-2 mb-8" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={4}>
           {steps.map((s, i) => (
             <div key={s.id} className="flex items-center">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                step > s.id ? 'gradient-bg' : step === s.id ? 'glass-card hover-glow' : 'bg-muted'
+                step > s.id ? 'gradient-bg shadow-lg shadow-cyan/20' : step === s.id ? 'glass-card hover-glow' : 'bg-muted'
               }`}>
                 {step > s.id ? (
                   <Check className="w-5 h-5 text-white" />
@@ -74,155 +76,158 @@ export default function OnboardingPage() {
         </div>
 
         {/* Step Content */}
-        <Card className="glass-card hover-glow">
-          <CardHeader className="text-center">
-            <CardTitle className="text-xl">{steps[step - 1].title}</CardTitle>
-            <CardDescription>{steps[step - 1].desc}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {step === 1 && (
-              <div className="space-y-4 fade-in-up">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Ваше имя</label>
-                  <Input
-                    placeholder="Сергей Т."
-                    value={formData.name}
-                    onChange={e => update('name', e.target.value)}
-                    className="h-11"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Опыт работы (ключевые навыки)</label>
-                  <textarea
-                    placeholder="React, Next.js, TypeScript, 5 лет опыта во фронтенд-разработке..."
-                    value={formData.resume}
-                    onChange={e => update('resume', e.target.value)}
-                    className="w-full min-h-[120px] rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground">Позже вы сможете загрузить полное резюме из файла</p>
-              </div>
-            )}
-
-            {step === 2 && (
-              <div className="space-y-4 fade-in-up stagger-1">
-                <div className="grid grid-cols-2 gap-3">
+        <SpotlightCard className="p-0">
+          <Card className="bg-transparent border-0 shadow-none">
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl font-bold">{steps[step - 1].title}</CardTitle>
+              <CardDescription>{steps[step - 1].desc}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {step === 1 && (
+                <div className="space-y-4 fade-in-up">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center gap-1.5"><DollarSign className="w-3.5 h-3.5" /> Зарплата от</label>
-                    <Input placeholder="200 000" value={formData.salaryMin} onChange={e => update('salaryMin', e.target.value)} className="h-11" />
+                    <label htmlFor="onb-name" className="text-sm font-medium">Ваше имя</label>
+                    <Input
+                      id="onb-name"
+                      placeholder="Сергей Т."
+                      value={formData.name}
+                      onChange={e => update('name', e.target.value)}
+                      className="h-11"
+                    />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Зарплата до</label>
-                    <Input placeholder="350 000" value={formData.salaryMax} onChange={e => update('salaryMax', e.target.value)} className="h-11" />
+                    <label htmlFor="onb-resume" className="text-sm font-medium">Опыт работы (ключевые навыки)</label>
+                    <textarea
+                      id="onb-resume"
+                      placeholder="React, Next.js, TypeScript, 5 лет опыта во фронтенд-разработке..."
+                      value={formData.resume}
+                      onChange={e => update('resume', e.target.value)}
+                      className="w-full min-h-[120px] rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"
+                    />
                   </div>
+                  <p className="text-xs text-muted-foreground">Позже вы сможете загрузить полное резюме из файла</p>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Локация</label>
-                  <Input placeholder="Москва / Удаленка" value={formData.location} onChange={e => update('location', e.target.value)} className="h-11" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium flex items-center gap-1.5"><Globe className="w-3.5 h-3.5" /> Формат</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { id: 'remote', label: 'Удаленка', icon: Globe },
-                      { id: 'office', label: 'Офис', icon: Building2 },
-                      { id: 'hybrid', label: 'Гибрид', icon: Users },
-                    ].map(f => (
-                      <button
-                        key={f.id}
-                        onClick={() => update('format', f.id)}
-                        className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all ${
-                          formData.format === f.id
-                            ? 'border-cyan bg-cyan/5 text-cyan'
-                            : 'border-border/50 hover:border-cyan/30 text-muted-foreground'
-                        }`}
-                      >
-                        <f.icon className="w-4 h-4" />
-                        <span className="text-xs font-medium">{f.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {step === 3 && (
-              <div className="space-y-4 fade-in-up stagger-2">
-                <div className="text-center py-6 space-y-4">
-                  <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto">
-                    <Building2 className="w-8 h-8 text-white" />
-                  </div>
-                  <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                    Подключите HH.ru аккаунт для доступа к вакансиям, чатам с HR и автоматическим откликам
-                  </p>
-                  <Button
-                    size="lg"
-                    className="gradient-bg gradient-shimmer text-white border-0 hover:opacity-90"
-                    onClick={() => {
-                      update('hhConnected', true)
-                      // In production: redirect to /api/hh/oauth
-                      // For now: mark as connected
-                    }}
-                  >
-                    {formData.hhConnected ? (
-                      <><Check className="mr-2 w-4 h-4" /> Подключено</>
-                    ) : (
-                      <><Building2 className="mr-2 w-4 h-4" /> Подключить HH.ru</>
-                    )}
-                  </Button>
-                  {!formData.hhConnected && (
-                    <p className="text-xs text-muted-foreground">Можно пропустить и подключить позже</p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {step === 4 && (
-              <div className="space-y-4 fade-in-up stagger-3">
-                <div className="text-center py-4 space-y-4">
-                  <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto">
-                    <Sparkles className="w-8 h-8 text-white" />
-                  </div>
-                  <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                    Ответьте на пару вопросов, чтобы AI научился общаться как вы
-                  </p>
-                </div>
-                <div className="bg-muted rounded-xl p-4 space-y-3">
-                  <p className="text-sm font-medium">Представьтесь работодателю:</p>
-                  <textarea
-                    placeholder="Здравствуйте! Меня зовут Сергей, я фронтенд-разработчик с 5-летним опытом..."
-                    className="w-full min-h-[80px] rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"
-                  />
-                  <p className="text-sm font-medium mt-3">Как бы вы ответили на приглашение:</p>
-                  <div className="bg-muted/50 rounded-lg p-3 text-sm text-muted-foreground italic">
-                    &ldquo;Здравствуйте! Нас заинтересовало ваше резюме. Когда сможете пройти собеседование?&rdquo;
-                  </div>
-                  <textarea
-                    placeholder="Спасибо за приглашение! Готов пройти собеседование..."
-                    className="w-full min-h-[80px] rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground text-center">AI запомнит ваш стиль и будет отвечать похоже</p>
-              </div>
-            )}
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between pt-4">
-              <Button variant="ghost" onClick={prev} disabled={step === 1} className="gap-1.5">
-                <ArrowLeft className="w-4 h-4" /> Назад
-              </Button>
-              {step < 4 ? (
-                <Button onClick={next} className="gradient-bg text-white border-0 hover:opacity-90 gap-1.5">
-                  Далее <ArrowRight className="w-4 h-4" />
-                </Button>
-              ) : (
-                <Button onClick={finish} className="gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 gap-1.5">
-                  Начать работу <Sparkles className="w-4 h-4" />
-                </Button>
               )}
-            </div>
-          </CardContent>
-        </Card>
+
+              {step === 2 && (
+                <div className="space-y-4 fade-in-up stagger-1">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <label htmlFor="onb-sal-min" className="text-sm font-medium flex items-center gap-1.5">Зарплата от</label>
+                      <Input id="onb-sal-min" placeholder="200 000" value={formData.salaryMin} onChange={e => update('salaryMin', e.target.value)} className="h-11" />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="onb-sal-max" className="text-sm font-medium">Зарплата до</label>
+                      <Input id="onb-sal-max" placeholder="350 000" value={formData.salaryMax} onChange={e => update('salaryMax', e.target.value)} className="h-11" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="onb-loc" className="text-sm font-medium flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" /> Локация</label>
+                    <Input id="onb-loc" placeholder="Москва / Удаленка" value={formData.location} onChange={e => update('location', e.target.value)} className="h-11" />
+                  </div>
+                  <div className="space-y-2">
+                    <span className="text-sm font-medium flex items-center gap-1.5"><Globe className="w-3.5 h-3.5" /> Формат</span>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { id: 'remote', label: 'Удаленка', icon: Globe },
+                        { id: 'office', label: 'Офис', icon: Building2 },
+                        { id: 'hybrid', label: 'Гибрид', icon: Users },
+                      ].map(f => (
+                        <button
+                          key={f.id}
+                          onClick={() => update('format', f.id)}
+                          className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all ${
+                            formData.format === f.id
+                              ? 'border-cyan bg-cyan/5 text-cyan'
+                              : 'border-border/50 hover:border-cyan/30 text-muted-foreground'
+                          }`}
+                          aria-pressed={formData.format === f.id}
+                        >
+                          <f.icon className="w-4 h-4" />
+                          <span className="text-xs font-medium">{f.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {step === 3 && (
+                <div className="space-y-4 fade-in-up stagger-2">
+                  <div className="text-center py-6 space-y-4">
+                    <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto shadow-lg shadow-cyan/20">
+                      <Building2 className="w-8 h-8 text-white" />
+                    </div>
+                    <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                      Подключите HH.ru аккаунт для доступа к вакансиям, чатам с HR и автоматическим откликам
+                    </p>
+                    <Button
+                      size="lg"
+                      className="gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 sweep-btn"
+                      onClick={() => update('hhConnected', true)}
+                    >
+                      {formData.hhConnected ? (
+                        <><Check className="mr-2 w-4 h-4" /> Подключено</>
+                      ) : (
+                        <><Building2 className="mr-2 w-4 h-4" /> Подключить HH.ru</>
+                      )}
+                    </Button>
+                    {!formData.hhConnected && (
+                      <p className="text-xs text-muted-foreground">Можно пропустить и подключить позже</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {step === 4 && (
+                <div className="space-y-4 fade-in-up stagger-3">
+                  <div className="text-center py-4 space-y-4">
+                    <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto shadow-lg shadow-purple/20">
+                      <Sparkles className="w-8 h-8 text-white" />
+                    </div>
+                    <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                      Ответьте на пару вопросов, чтобы AI научился общаться как вы
+                    </p>
+                  </div>
+                  <div className="bg-muted rounded-xl p-4 space-y-3">
+                    <label htmlFor="onb-ai-intro" className="text-sm font-medium">Представьтесь работодателю:</label>
+                    <textarea
+                      id="onb-ai-intro"
+                      placeholder="Здравствуйте! Меня зовут Сергей, я фронтенд-разработчик с 5-летним опытом..."
+                      className="w-full min-h-[80px] rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"
+                    />
+                    <label htmlFor="onb-ai-reply" className="text-sm font-medium mt-3">Как бы вы ответили на приглашение:</label>
+                    <div className="bg-muted/50 rounded-lg p-3 text-sm text-muted-foreground italic">
+                      &ldquo;Здравствуйте! Нас заинтересовало ваше резюме. Когда сможете пройти собеседование?&rdquo;
+                    </div>
+                    <textarea
+                      id="onb-ai-reply"
+                      placeholder="Спасибо за приглашение! Готов пройти собеседование..."
+                      className="w-full min-h-[80px] rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">AI запомнит ваш стиль и будет отвечать похоже</p>
+                </div>
+              )}
+
+              {/* Navigation */}
+              <div className="flex items-center justify-between pt-4">
+                <Button variant="ghost" onClick={prev} disabled={step === 1} className="gap-1.5">
+                  <ArrowLeft className="w-4 h-4" /> Назад
+                </Button>
+                {step < 4 ? (
+                  <Button onClick={next} className="gradient-bg text-white border-0 hover:opacity-90 sweep-btn gap-1.5">
+                    Далее <ArrowRight className="w-4 h-4" />
+                  </Button>
+                ) : (
+                  <Button onClick={finish} className="gradient-bg gradient-shimmer text-white border-0 hover:opacity-90 sweep-btn gap-1.5">
+                    Начать работу <Sparkles className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </SpotlightCard>
       </div>
     </div>
   )
