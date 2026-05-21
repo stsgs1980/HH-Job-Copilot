@@ -98,10 +98,10 @@ export default function RootLayout({
       <body
         className={`${manrope.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
       >
-        {/* NEURO: Noise overlay */}
+        {/* NEURO: Noise overlay — refined SVG grain */}
         <div className="noise-overlay" aria-hidden="true" />
 
-        {/* NEURO: Cursor glow (client-side positioned) */}
+        {/* NEURO: Cursor glow — smooth, large, cyan→purple→emerald */}
         <div
           className="cursor-glow"
           id="cursorGlow"
@@ -131,16 +131,23 @@ export default function RootLayout({
           </Providers>
         </ThemeProvider>
 
-        {/* NEURO: Cursor glow script */}
+        {/* NEURO: Cursor glow script — optimized with rAF throttling */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 var glow = document.getElementById('cursorGlow');
                 if (!glow) return;
+                var ticking = false;
                 document.addEventListener('mousemove', function(e) {
-                  glow.style.left = e.clientX + 'px';
-                  glow.style.top = e.clientY + 'px';
+                  if (!ticking) {
+                    requestAnimationFrame(function() {
+                      glow.style.left = e.clientX + 'px';
+                      glow.style.top = e.clientY + 'px';
+                      ticking = false;
+                    });
+                    ticking = true;
+                  }
                 });
               })();
             `,

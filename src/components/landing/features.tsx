@@ -16,12 +16,12 @@ const features: FeatureCard[] = [
 ]
 
 const spotlightColors = [
-  'rgba(34,211,238,0.06)',   // cyan
-  'rgba(52,211,153,0.06)',   // emerald
-  'rgba(167,139,250,0.06)',  // purple
-  'rgba(34,211,238,0.06)',   // cyan
-  'rgba(52,211,153,0.06)',   // emerald
-  'rgba(167,139,250,0.06)',  // purple
+  'rgba(34,211,238,0.08)',
+  'rgba(52,211,153,0.08)',
+  'rgba(167,139,250,0.08)',
+  'rgba(34,211,238,0.08)',
+  'rgba(52,211,153,0.08)',
+  'rgba(167,139,250,0.08)',
 ]
 
 export function Features() {
@@ -45,7 +45,12 @@ export function Features() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((f, i) => (
             <RevealOnScroll key={i} delay={i * 0.08}>
-              <SpotlightCard spotlightColor={spotlightColors[i]} className="p-8 h-full">
+              <SpotlightCard
+                spotlightColor={spotlightColors[i]}
+                tilt
+                maxTilt={4}
+                className="p-8 h-full hover-lift"
+              >
                 <CardHeader className="p-0 mb-4">
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${
                     f.accent === 'text-cyan'

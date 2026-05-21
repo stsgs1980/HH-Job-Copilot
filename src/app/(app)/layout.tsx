@@ -41,19 +41,22 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-screen flex flex-col bg-background relative overflow-hidden">
-      {/* NEURO: Ambient glow */}
-      <div className="ambient-glow w-[500px] h-[500px] bg-cyan -top-48 -right-48" aria-hidden="true" />
-      <div className="ambient-glow w-[350px] h-[350px] bg-purple -bottom-32 -left-32" style={{ animationDelay: '-12s' }} aria-hidden="true" />
+      {/* NEURO: Ambient glow — larger, better positioned */}
+      <div className="ambient-glow w-[600px] h-[600px] bg-cyan -top-64 -right-64" aria-hidden="true" />
+      <div className="ambient-glow w-[400px] h-[400px] bg-purple -bottom-40 -left-40" style={{ animationDelay: '-12s' }} aria-hidden="true" />
 
-      {/* Top Bar */}
-      <header className="relative z-50 glass-card rounded-none shrink-0" role="banner">
+      {/* NEURO: Dot pattern in background */}
+      <div className="dot-pattern top-20 right-20 opacity-20" aria-hidden="true" />
+
+      {/* Top Bar — glass nav */}
+      <header className="relative z-50 glass-nav shrink-0" role="banner">
         <div className="px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <Link href="/" aria-label="HH Job Copilot — главная">
               <Logo size="sm" />
             </Link>
             <span className="font-bold text-sm hidden sm:inline">HH Job Copilot</span>
-            <nav className="hidden md:flex gap-1 bg-muted rounded-xl p-1" role="tablist" aria-label="Режимы дашборда">
+            <nav className="hidden md:flex gap-1 glass-card rounded-xl p-1" role="tablist" aria-label="Режимы дашборда">
               {modes.map(m => (
                 <button
                   key={m.id}
@@ -71,15 +74,15 @@ function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="hidden lg:flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-lg">
+              <span className="flex items-center gap-1.5 glass-card px-2.5 py-1 rounded-lg">
                 <Zap className="w-3 h-3 text-cyan" />
                 <span className="font-semibold tabular-nums">47</span> откликов
               </span>
-              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-lg">
+              <span className="flex items-center gap-1.5 glass-card px-2.5 py-1 rounded-lg">
                 <Check className="w-3 h-3 text-emerald" />
                 <span className="font-semibold tabular-nums">8</span> приглашений
               </span>
-              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-lg">
+              <span className="flex items-center gap-1.5 glass-card px-2.5 py-1 rounded-lg">
                 <MessageSquare className="w-3 h-3 text-purple" />
                 <span className="font-semibold tabular-nums">5</span> чатов
               </span>
@@ -97,10 +100,10 @@ function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </div>
 
-      {/* Input Bar */}
-      <div className="relative z-50 glass-card rounded-none shrink-0">
+      {/* Input Bar — glass nav style */}
+      <div className="relative z-50 glass-nav shrink-0">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3">
-          <div className="flex items-center gap-2 bg-muted rounded-xl px-4 py-2">
+          <div className="flex items-center gap-2 glass-card rounded-xl px-4 py-2">
             {chat.isLoading ? (
               <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 text-red-400 hover:text-red-300" onClick={chat.stopStreaming} aria-label="Остановить">
                 <Square className="w-4 h-4" />

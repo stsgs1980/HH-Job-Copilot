@@ -60,15 +60,15 @@ export function Pricing({ onNavigate }: PricingProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {tiers.map((p, i) => (
-            <RevealOnScroll key={i} delay={i * 0.1}>
-              <TiltCard maxTilt={p.popular ? 8 : 4}>
+            <RevealOnScroll key={i} delay={i * 0.1} direction={i === 0 ? 'left' : i === 2 ? 'right' : 'up'}>
+              <TiltCard maxTilt={p.popular ? 6 : 3} glareIntensity={p.popular ? 0.12 : 0.05}>
                 <SpotlightCard
-                  spotlightColor={p.popular ? 'rgba(34,211,238,0.08)' : 'rgba(34,211,238,0.04)'}
-                  className={`p-8 flex flex-col h-full ${p.popular ? 'border-cyan/25 shadow-lg shadow-cyan/5' : ''}`}
+                  spotlightColor={p.popular ? 'rgba(34,211,238,0.10)' : 'rgba(34,211,238,0.04)'}
+                  className={`p-8 flex flex-col h-full ${p.popular ? 'gradient-border-animated shadow-xl shadow-cyan/5' : ''}`}
                 >
                   {p.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                      <Badge className="gradient-bg text-white border-0 px-3">Популярный</Badge>
+                      <Badge className="gradient-bg text-white border-0 px-3 shadow-lg shadow-cyan/30">Популярный</Badge>
                     </div>
                   )}
                   <CardHeader className="text-center pb-2 p-0">

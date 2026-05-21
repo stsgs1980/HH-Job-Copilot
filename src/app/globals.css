@@ -60,7 +60,6 @@
   --card-foreground: oklch(0.13 0.02 270);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.13 0.02 270);
-  /* Primary = Cyan for light theme (WCAG AA on white) */
   --primary: oklch(0.55 0.16 195);
   --primary-foreground: oklch(0.99 0 0);
   --secondary: oklch(0.95 0.008 270);
@@ -154,9 +153,12 @@
   }
 }
 
-/* ===== HH Job Copilot — Cyan/Purple/Emerald Brand + NEURO Design System ===== */
+/* ===================================================================
+   HH Job Copilot — Cyan/Purple/Emerald + NEURO Design System v2
+   =================================================================== */
+
 @layer utilities {
-  /* Gradient backgrounds — cyan to purple */
+  /* ── Gradient backgrounds ── */
   .gradient-bg {
     background: linear-gradient(135deg, oklch(0.75 0.14 195), oklch(0.63 0.18 295));
   }
@@ -164,21 +166,51 @@
     background: linear-gradient(135deg, oklch(0.75 0.14 195), oklch(0.63 0.18 295));
   }
 
-  /* Gradient text — cyan to purple */
+  /* ── Gradient text — cyan→purple ── */
   .gradient-text {
-    background: linear-gradient(135deg, oklch(0.75 0.14 195), oklch(0.63 0.18 295));
+    background: linear-gradient(135deg, oklch(0.55 0.16 195), oklch(0.63 0.18 295));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .dark .gradient-text {
-    background: linear-gradient(135deg, oklch(0.75 0.14 195), oklch(0.63 0.18 295));
+    background: linear-gradient(135deg, oklch(0.75 0.14 195), oklch(0.73 0.14 295));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Ambient glow orbs */
+  /* ── Animated gradient text — slow hue shift ── */
+  .gradient-text-animated {
+    background: linear-gradient(
+      90deg,
+      oklch(0.55 0.16 195),
+      oklch(0.63 0.18 295),
+      oklch(0.73 0.17 165),
+      oklch(0.55 0.16 195)
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 6s ease-in-out infinite;
+  }
+  .dark .gradient-text-animated {
+    background: linear-gradient(
+      90deg,
+      oklch(0.75 0.14 195),
+      oklch(0.73 0.14 295),
+      oklch(0.73 0.17 165),
+      oklch(0.75 0.14 195)
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 6s ease-in-out infinite;
+  }
+
+  /* ── Ambient glow orbs ── */
   .ambient-glow {
     position: absolute;
     border-radius: 50%;
@@ -188,10 +220,10 @@
     animation: ambientFloat 20s ease-in-out infinite;
   }
   .dark .ambient-glow {
-    opacity: 0.15;
+    opacity: 0.18;
   }
 
-  /* Brand color utilities */
+  /* ── Brand color utilities ── */
   .bg-cyan {
     background: oklch(0.55 0.16 195);
   }
@@ -229,61 +261,84 @@
     color: oklch(0.73 0.17 165);
   }
 
-  /* NEURO: Noise overlay */
+  /* ── NEURO: Noise SVG overlay ── */
   .noise-overlay {
     position: fixed;
     inset: 0;
     z-index: 9998;
     pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-repeat: repeat;
     background-size: 256px 256px;
   }
   .dark .noise-overlay {
-    opacity: 0.04;
+    opacity: 0.05;
   }
 
-  /* NEURO: Cursor glow — cyan/purple */
+  /* ── NEURO: Cursor glow — large, smooth, cyan→purple ── */
   .cursor-glow {
     position: fixed;
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 600px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 1;
-    background: radial-gradient(circle, rgba(34,211,238,0.06) 0%, rgba(167,139,250,0.03) 40%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(34,211,238,0.07) 0%,
+      rgba(167,139,250,0.04) 30%,
+      rgba(52,211,153,0.02) 50%,
+      transparent 70%
+    );
     transform: translate(-50%, -50%);
-    transition: left 0.3s ease-out, top 0.3s ease-out;
+    transition: left 0.15s ease-out, top 0.15s ease-out;
+    will-change: left, top;
   }
   .dark .cursor-glow {
-    background: radial-gradient(circle, rgba(34,211,238,0.08) 0%, rgba(167,139,250,0.04) 40%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      rgba(34,211,238,0.12) 0%,
+      rgba(167,139,250,0.06) 30%,
+      rgba(52,211,153,0.03) 50%,
+      transparent 70%
+    );
   }
 
-  /* NEURO: Dot pattern — cyan based */
+  /* ── NEURO: Dot pattern — cyan based ── */
   .dot-pattern {
     position: absolute;
-    width: 300px;
-    height: 300px;
-    background-image: radial-gradient(circle, rgba(34,211,238,0.06) 1px, transparent 1px);
-    background-size: 24px 24px;
-    opacity: 0.5;
+    width: 400px;
+    height: 400px;
+    background-image: radial-gradient(circle, rgba(34,211,238,0.07) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.6;
     pointer-events: none;
   }
   .dark .dot-pattern {
-    background-image: radial-gradient(circle, rgba(34,211,238,0.08) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(34,211,238,0.10) 1px, transparent 1px);
+    opacity: 0.7;
   }
 
-  /* NEURO: 3D tilt card on hover */
+  /* ── NEURO: 3D tilt card on hover ── */
   .tilt-card {
-    transition: transform 0.4s ease, border-color 0.3s, box-shadow 0.3s;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
   }
   .tilt-card:hover {
-    transform: translateY(-4px) rotateX(2deg);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.15),
+      0 0 30px rgba(34,211,238,0.06),
+      0 0 60px rgba(167,139,250,0.03);
+  }
+  .dark .tilt-card:hover {
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.4),
+      0 0 30px rgba(34,211,238,0.10),
+      0 0 60px rgba(167,139,250,0.06);
   }
 
-  /* NEURO: Premium button sweep */
+  /* ── NEURO: Premium button sweep ── */
   .sweep-btn {
     position: relative;
     overflow: hidden;
@@ -295,66 +350,80 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition: left 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     pointer-events: none;
   }
   .sweep-btn:hover::after {
     left: 100%;
   }
 
-  /* NEURO: Reveal animation (for intersection observer) */
+  /* ── NEURO: Reveal animation (intersection observer) ── */
   .reveal {
     opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: translateY(30px) scale(0.98);
+    transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1),
+                transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
   }
   .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 
-  /* NEURO: Mesh gradient blobs */
+  /* ── NEURO: Mesh gradient blobs — larger, more organic ── */
   .mesh-blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(80px);
+    filter: blur(100px);
     pointer-events: none;
-    animation: meshFloat 8s ease-in-out infinite;
+    animation: meshFloat 10s ease-in-out infinite;
   }
   .mesh-blob-1 {
-    width: 400px; height: 400px;
-    background: rgba(34,211,238,0.12);
+    width: 500px; height: 500px;
+    background: rgba(34,211,238,0.10);
+  }
+  .dark .mesh-blob-1 {
+    background: rgba(34,211,238,0.15);
   }
   .mesh-blob-2 {
-    width: 300px; height: 300px;
-    background: rgba(167,139,250,0.10);
+    width: 400px; height: 400px;
+    background: rgba(167,139,250,0.08);
     animation-direction: reverse;
-    animation-duration: 10s;
+    animation-duration: 13s;
+  }
+  .dark .mesh-blob-2 {
+    background: rgba(167,139,250,0.12);
   }
   .mesh-blob-3 {
-    width: 250px; height: 250px;
-    background: rgba(52,211,153,0.08);
-    animation-duration: 12s;
+    width: 350px; height: 350px;
+    background: rgba(52,211,153,0.06);
+    animation-duration: 16s;
+  }
+  .dark .mesh-blob-3 {
+    background: rgba(52,211,153,0.10);
   }
 }
 
-/* ===== Keyframes ===== */
+/* ===================================================================
+   Keyframes — NEURO Design System
+   =================================================================== */
 @keyframes ambientFloat {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -20px) scale(1.05); }
-  66% { transform: translate(-20px, 15px) scale(0.95); }
+  25% { transform: translate(40px, -30px) scale(1.08); }
+  50% { transform: translate(-20px, 20px) scale(0.95); }
+  75% { transform: translate(30px, 10px) scale(1.03); }
 }
 
 @keyframes meshFloat {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -20px) scale(1.05); }
-  66% { transform: translate(-20px, 20px) scale(0.95); }
+  25% { transform: translate(50px, -30px) scale(1.10); }
+  50% { transform: translate(-30px, 25px) scale(0.92); }
+  75% { transform: translate(40px, 15px) scale(1.05); }
 }
 
 @keyframes pulse-dot {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.3; }
 }
 
 @keyframes wave {
@@ -365,6 +434,28 @@
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: rgba(34,211,238,0.15);
+    box-shadow: 0 0 8px rgba(34,211,238,0.05);
+  }
+  50% {
+    border-color: rgba(167,139,250,0.25);
+    box-shadow: 0 0 16px rgba(167,139,250,0.08);
+  }
 }
 
 .animate-pulse-dot {
@@ -379,93 +470,201 @@
   animation: marquee 30s linear infinite;
 }
 
-/* ===== Design Polish: Glassmorphism, Gradient Mesh, Micro-animations ===== */
+.animate-float {
+  animation: floatSlow 4s ease-in-out infinite;
+}
 
-/* Glassmorphism card — light mode */
+.animate-border-glow {
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+/* ===================================================================
+   NEURO: Glassmorphism Cards — blur(24px), thin borders, depth
+   =================================================================== */
+
+/* Glass card — light mode */
 .glass-card {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(16px) saturate(1.2);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.02);
 }
 
-/* Dark mode glass */
+/* Glass card — dark mode */
 .dark .glass-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255,255,255,0.04);
 }
 
-/* Gradient mesh — cyan + purple + emerald */
+/* Glass card — elevated variant (hero, pricing) */
+.glass-card-elevated {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(32px) saturate(1.5);
+  -webkit-backdrop-filter: blur(32px) saturate(1.5);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 32px rgba(0, 0, 0, 0.04);
+}
+
+.dark .glass-card-elevated {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Glass nav — more transparent, no shadow */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.60);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark .glass-nav {
+  background: rgba(10, 10, 20, 0.70);
+  backdrop-filter: blur(24px) saturate(1.3);
+  -webkit-backdrop-filter: blur(24px) saturate(1.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ===================================================================
+   NEURO: Gradient Mesh Backgrounds
+   =================================================================== */
+
 .gradient-mesh {
   background:
-    radial-gradient(at 20% 20%, rgba(34,211,238,0.06) 0px, transparent 50%),
-    radial-gradient(at 80% 20%, rgba(167,139,250,0.04) 0px, transparent 50%),
-    radial-gradient(at 50% 80%, rgba(52,211,153,0.04) 0px, transparent 50%);
+    radial-gradient(ellipse at 15% 15%, rgba(34,211,238,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 15%, rgba(167,139,250,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 85%, rgba(52,211,153,0.05) 0%, transparent 50%);
 }
 
 .dark .gradient-mesh {
   background:
-    radial-gradient(at 20% 20%, rgba(34,211,238,0.10) 0px, transparent 50%),
-    radial-gradient(at 80% 20%, rgba(167,139,250,0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 80%, rgba(52,211,153,0.06) 0px, transparent 50%);
+    radial-gradient(ellipse at 15% 15%, rgba(34,211,238,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 15%, rgba(167,139,250,0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 85%, rgba(52,211,153,0.07) 0%, transparent 50%);
 }
 
-/* Hover glow — cyan tinted */
+/* Deep gradient mesh for hero sections */
+.gradient-mesh-deep {
+  background:
+    radial-gradient(ellipse at 10% 20%, rgba(34,211,238,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 10%, rgba(167,139,250,0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 40% 90%, rgba(52,211,153,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 50%, rgba(34,211,238,0.04) 0%, transparent 30%);
+}
+
+.dark .gradient-mesh-deep {
+  background:
+    radial-gradient(ellipse at 10% 20%, rgba(34,211,238,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 10%, rgba(167,139,250,0.14) 0%, transparent 40%),
+    radial-gradient(ellipse at 40% 90%, rgba(52,211,153,0.10) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 50%, rgba(34,211,238,0.06) 0%, transparent 30%);
+}
+
+/* ===================================================================
+   NEURO: Hover & Interactive Effects
+   =================================================================== */
+
+/* Hover glow — cyan tinted with depth */
 .hover-glow {
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              border-color 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .hover-glow:hover {
-  box-shadow: 0 0 20px rgba(34,211,238,0.08), 0 0 40px rgba(167,139,250,0.04);
-  border-color: rgba(34,211,238,0.2);
+  box-shadow:
+    0 0 20px rgba(34,211,238,0.10),
+    0 0 40px rgba(167,139,250,0.05),
+    0 4px 12px rgba(0,0,0,0.06);
+  border-color: rgba(34,211,238,0.25);
+  transform: translateY(-1px);
 }
 .dark .hover-glow:hover {
-  box-shadow: 0 0 20px rgba(34,211,238,0.15), 0 0 40px rgba(167,139,250,0.08);
-  border-color: rgba(34,211,238,0.3);
+  box-shadow:
+    0 0 24px rgba(34,211,238,0.18),
+    0 0 48px rgba(167,139,250,0.10),
+    0 4px 12px rgba(0,0,0,0.3);
+  border-color: rgba(34,211,238,0.35);
+  transform: translateY(-1px);
 }
+
+/* Hover lift — subtle elevation on hover */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+}
+.dark .hover-lift:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+}
+
+/* ===================================================================
+   NEURO: Animations & Transitions
+   =================================================================== */
 
 /* Fade in from bottom */
 .fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
+  animation: fadeInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   opacity: 0;
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 /* Stagger animation delays */
-.stagger-1 { animation-delay: 0.1s; }
-.stagger-2 { animation-delay: 0.2s; }
-.stagger-3 { animation-delay: 0.3s; }
-.stagger-4 { animation-delay: 0.4s; }
-.stagger-5 { animation-delay: 0.5s; }
+.stagger-1 { animation-delay: 0.08s; }
+.stagger-2 { animation-delay: 0.16s; }
+.stagger-3 { animation-delay: 0.24s; }
+.stagger-4 { animation-delay: 0.32s; }
+.stagger-5 { animation-delay: 0.40s; }
+.stagger-6 { animation-delay: 0.48s; }
 
-/* Streak glow — emerald based */
+/* Streak glow — emerald pulse */
 .streak-glow {
-  animation: streakGlowLight 2s ease-in-out infinite;
+  animation: streakGlowLight 2.5s ease-in-out infinite;
 }
 @keyframes streakGlowLight {
   0%, 100% { box-shadow: 0 0 8px oklch(0.73 0.17 165 / 0.15); }
-  50% { box-shadow: 0 0 16px oklch(0.73 0.17 165 / 0.3); }
+  50% { box-shadow: 0 0 20px oklch(0.73 0.17 165 / 0.35); }
 }
 .dark .streak-glow {
-  animation: streakGlowDark 2s ease-in-out infinite;
+  animation: streakGlowDark 2.5s ease-in-out infinite;
 }
 @keyframes streakGlowDark {
-  0%, 100% { box-shadow: 0 0 8px oklch(0.73 0.17 165 / 0.3); }
-  50% { box-shadow: 0 0 16px oklch(0.73 0.17 165 / 0.6); }
+  0%, 100% { box-shadow: 0 0 10px oklch(0.73 0.17 165 / 0.30); }
+  50% { box-shadow: 0 0 24px oklch(0.73 0.17 165 / 0.60); }
 }
 
-/* Gradient border — cyan to purple */
+/* ===================================================================
+   NEURO: Gradient Borders
+   =================================================================== */
+
+/* Gradient border — cyan→purple */
 .gradient-border {
   position: relative;
   border: none !important;
@@ -476,17 +675,59 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, oklch(0.75 0.14 195), oklch(0.63 0.18 295));
+  background: linear-gradient(135deg, oklch(0.55 0.16 195), oklch(0.63 0.18 295));
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: xor;
   pointer-events: none;
 }
 .dark .gradient-border::before {
-  background: linear-gradient(135deg, oklch(0.75 0.14 195), oklch(0.63 0.18 295));
+  background: linear-gradient(135deg, oklch(0.75 0.14 195), oklch(0.73 0.14 295));
 }
 
-/* Shimmer loading */
+/* Animated gradient border — slow rotation */
+.gradient-border-animated {
+  position: relative;
+  border: none !important;
+}
+.gradient-border-animated::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from 0deg,
+    oklch(0.55 0.16 195),
+    oklch(0.63 0.18 295),
+    oklch(0.73 0.17 165),
+    oklch(0.55 0.16 195)
+  );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  animation: rotateBorder 4s linear infinite;
+}
+.dark .gradient-border-animated::before {
+  background: conic-gradient(
+    from 0deg,
+    oklch(0.75 0.14 195),
+    oklch(0.73 0.14 295),
+    oklch(0.73 0.17 165),
+    oklch(0.75 0.14 195)
+  );
+}
+
+@keyframes rotateBorder {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ===================================================================
+   NEURO: Shimmer & Loading
+   =================================================================== */
+
 .shimmer {
   background: linear-gradient(
     90deg,
@@ -513,16 +754,6 @@
   100% { background-position: 200% 0; }
 }
 
-/* Page transition */
-.page-transition {
-  animation: pageIn 0.3s ease-out;
-}
-
-@keyframes pageIn {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 /* Gradient shimmer on buttons */
 .gradient-shimmer {
   position: relative;
@@ -535,31 +766,52 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    oklch(1 0 0 / 0.2) 50%,
+    oklch(1 0 0 / 0.25) 50%,
     transparent 100%
   );
   background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+  animation: shimmer 2.5s ease-in-out infinite;
   pointer-events: none;
+}
+
+/* ===================================================================
+   NEURO: Page Transition & Micro-animations
+   =================================================================== */
+
+.page-transition {
+  animation: pageIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* Zap hover pulse */
 .zap-pulse {
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .zap-pulse:hover {
   animation: zapPulse 0.6s ease-in-out;
 }
 
 @keyframes zapPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
+  0% { transform: scale(1) rotateY(-8deg) rotateX(4deg); }
+  50% { transform: scale(1.12) rotateY(-8deg) rotateX(4deg); }
+  100% { transform: scale(1) rotateY(-8deg) rotateX(4deg); }
 }
 
-/* ===== WCAG Typography Enhancements ===== */
-/* Minimum touch target 44px for interactive elements */
+/* ===================================================================
+   WCAG Typography & Accessibility
+   =================================================================== */
 @layer base {
+  /* Minimum touch target 44px for interactive elements */
   button, a[role="button"], [tabindex="0"] {
     min-height: 44px;
     min-width: 44px;
@@ -572,7 +824,7 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
-    .noise-overlay, .cursor-glow, .mesh-blob {
+    .noise-overlay, .cursor-glow, .mesh-blob, .ambient-glow {
       display: none !important;
     }
   }

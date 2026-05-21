@@ -41,10 +41,18 @@ export default function OnboardingPage() {
   const finish = () => router.push('/dashboard')
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center p-4 gradient-mesh relative overflow-hidden">
+    <div className="h-screen flex flex-col items-center justify-center p-4 gradient-mesh-deep relative overflow-hidden">
       {/* NEURO: Mesh blobs */}
       <div className="mesh-blob mesh-blob-1 top-[10%] left-[10%]" />
       <div className="mesh-blob mesh-blob-2 bottom-[20%] right-[10%]" />
+      <div className="mesh-blob mesh-blob-3 top-[50%] left-[50%]" />
+
+      {/* NEURO: Dot pattern */}
+      <div className="dot-pattern bottom-10 right-10 opacity-20" />
+
+      {/* NEURO: Floating elements */}
+      <div className="absolute top-1/4 right-1/4 w-2 h-2 rounded-full bg-cyan/15 animate-float" aria-hidden="true" />
+      <div className="absolute bottom-1/3 left-1/4 w-3 h-3 rounded-full bg-purple/10 animate-float" style={{ animationDelay: '3s' }} aria-hidden="true" />
 
       <div className="relative z-10 w-full max-w-2xl">
         {/* Header */}
@@ -53,12 +61,12 @@ export default function OnboardingPage() {
           <p className="text-muted-foreground text-sm mt-2">Настройка за 2 минуты</p>
         </div>
 
-        {/* Progress */}
+        {/* Progress — NEURO glass style */}
         <div className="flex items-center justify-center gap-2 mb-8" role="progressbar" aria-valuenow={step} aria-valuemin={1} aria-valuemax={4}>
           {steps.map((s, i) => (
             <div key={s.id} className="flex items-center">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                step > s.id ? 'gradient-bg shadow-lg shadow-cyan/20' : step === s.id ? 'glass-card hover-glow' : 'bg-muted'
+                step > s.id ? 'gradient-bg shadow-lg shadow-cyan/20' : step === s.id ? 'glass-card hover-glow gradient-border' : 'glass-card'
               }`}>
                 {step > s.id ? (
                   <Check className="w-5 h-5 text-white" />
@@ -68,15 +76,15 @@ export default function OnboardingPage() {
               </div>
               {i < 3 && (
                 <div className={`w-8 sm:w-16 h-0.5 mx-1 transition-colors duration-300 ${
-                  step > s.id ? 'bg-cyan' : 'bg-muted'
+                  step > s.id ? 'bg-cyan' : 'bg-border/50'
                 }`} />
               )}
             </div>
           ))}
         </div>
 
-        {/* Step Content */}
-        <SpotlightCard className="p-0">
+        {/* Step Content — NEURO glass-elevated card */}
+        <SpotlightCard tilt maxTilt={2} className="p-0 glass-card-elevated">
           <Card className="bg-transparent border-0 shadow-none">
             <CardHeader className="text-center">
               <CardTitle className="text-xl font-bold">{steps[step - 1].title}</CardTitle>
@@ -136,10 +144,10 @@ export default function OnboardingPage() {
                         <button
                           key={f.id}
                           onClick={() => update('format', f.id)}
-                          className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all ${
+                          className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all glass-card ${
                             formData.format === f.id
-                              ? 'border-cyan bg-cyan/5 text-cyan'
-                              : 'border-border/50 hover:border-cyan/30 text-muted-foreground'
+                              ? 'border-cyan bg-cyan/5 text-cyan gradient-border'
+                              : 'border-border/50 hover:border-cyan/30 text-muted-foreground hover-glow'
                           }`}
                           aria-pressed={formData.format === f.id}
                         >
@@ -155,7 +163,7 @@ export default function OnboardingPage() {
               {step === 3 && (
                 <div className="space-y-4 fade-in-up stagger-2">
                   <div className="text-center py-6 space-y-4">
-                    <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto shadow-lg shadow-cyan/20">
+                    <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto shadow-lg shadow-cyan/20 animate-float">
                       <Building2 className="w-8 h-8 text-white" />
                     </div>
                     <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
@@ -182,14 +190,14 @@ export default function OnboardingPage() {
               {step === 4 && (
                 <div className="space-y-4 fade-in-up stagger-3">
                   <div className="text-center py-4 space-y-4">
-                    <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto shadow-lg shadow-purple/20">
+                    <div className="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center mx-auto shadow-lg shadow-purple/20 animate-float" style={{ animationDelay: '1s' }}>
                       <Sparkles className="w-8 h-8 text-white" />
                     </div>
                     <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
                       Ответьте на пару вопросов, чтобы AI научился общаться как вы
                     </p>
                   </div>
-                  <div className="bg-muted rounded-xl p-4 space-y-3">
+                  <div className="glass-card rounded-xl p-4 space-y-3">
                     <label htmlFor="onb-ai-intro" className="text-sm font-medium">Представьтесь работодателю:</label>
                     <textarea
                       id="onb-ai-intro"
@@ -197,7 +205,7 @@ export default function OnboardingPage() {
                       className="w-full min-h-[80px] rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring resize-none"
                     />
                     <label htmlFor="onb-ai-reply" className="text-sm font-medium mt-3">Как бы вы ответили на приглашение:</label>
-                    <div className="bg-muted/50 rounded-lg p-3 text-sm text-muted-foreground italic">
+                    <div className="glass-card rounded-lg p-3 text-sm text-muted-foreground italic">
                       &ldquo;Здравствуйте! Нас заинтересовало ваше резюме. Когда сможете пройти собеседование?&rdquo;
                     </div>
                     <textarea

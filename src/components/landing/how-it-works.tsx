@@ -12,8 +12,11 @@ const steps: StepItem[] = [
 
 export function HowItWorks() {
   return (
-    <section id="how" className="py-24 sm:py-32 bg-muted/30" aria-labelledby="how-heading">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="how" className="py-24 sm:py-32 relative" aria-labelledby="how-heading">
+      {/* NEURO: Subtle background gradient */}
+      <div className="absolute inset-0 gradient-mesh opacity-50 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <RevealOnScroll className="text-center mb-16">
           <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-cyan mb-4">
             <span className="w-6 h-px bg-cyan" />
@@ -21,23 +24,26 @@ export function HowItWorks() {
             <span className="w-6 h-px bg-cyan" />
           </div>
           <h2 id="how-heading" className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4">
-            Четыре шага к <span className="gradient-text">новой работе</span>
+            Три шага к <span className="gradient-text">новой работе</span>
           </h2>
         </RevealOnScroll>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {steps.map((s, i) => (
-            <RevealOnScroll key={i} delay={i * 0.15}>
-              <div className="relative text-center">
-                <div className="text-5xl font-extrabold gradient-text opacity-20 mb-2">{s.step}</div>
-                <div className="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-4 sweep-btn shadow-lg shadow-cyan/20">
+            <RevealOnScroll key={i} delay={i * 0.15} direction={i === 0 ? 'left' : i === 2 ? 'right' : 'up'}>
+              <div className="relative text-center glass-card p-8 hover-glow">
+                <div className="text-5xl font-extrabold gradient-text opacity-15 mb-3">{s.step}</div>
+                <div className="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center mx-auto mb-4 sweep-btn shadow-lg shadow-cyan/20 animate-float" style={{ animationDelay: `${i * 0.5}s` }}>
                   <s.icon className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">{s.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
-                {/* Connector line between steps */}
+                {/* NEURO: Connector line between steps */}
                 {i < 2 && (
-                  <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-px bg-gradient-to-r from-cyan/30 to-transparent" aria-hidden="true" />
+                  <div className="hidden md:block absolute top-1/2 -right-4 w-8" aria-hidden="true">
+                    <div className="h-px bg-gradient-to-r from-cyan/30 to-purple/30" />
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-purple/40" />
+                  </div>
                 )}
               </div>
             </RevealOnScroll>

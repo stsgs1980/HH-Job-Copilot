@@ -11,7 +11,7 @@ export default function MarketingLayout({
     <div className="min-h-screen flex flex-col bg-background">
       {/* NEURO: Noise overlay is global from root layout */}
 
-      <nav className="sticky top-0 z-50 glass-card rounded-none border-b border-border/50" role="navigation" aria-label="Главная навигация">
+      <nav className="sticky top-0 z-50 glass-nav" role="navigation" aria-label="Главная навигация">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" aria-label="HH Job Copilot — главная">
             <Logo />

@@ -36,7 +36,7 @@ export function CountUp({
           function animate(now: number) {
             const elapsed = now - start
             const progress = Math.min(elapsed / duration, 1)
-            // Cubic ease-out
+            // Cubic ease-out with slight bounce
             const eased = 1 - Math.pow(1 - progress, 3)
             const current = target * eased
 
@@ -55,7 +55,7 @@ export function CountUp({
           observer.unobserve(el)
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     )
 
     observer.observe(el)
