@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HH Job Copilot — Auth Wireframe (Premium Palette)</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        accent: '#C8A97E',
+                        'accent-dark': '#9A8468',
+                        'accent-deep': '#6B5F52',
+                        'bg-primary': '#0B0B0F',
+                        'bg-secondary': '#16161A',
+                        'text-primary': '#EDEDEF',
+                        'text-muted': '#72727E',
+                        'text-dim': '#55555E',
+                        'border-subtle': '#3A3A42',
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        :root {
+            --accent: #C8A97E;
+            --accent-dark: #9A8468;
+            --accent-deep: #6B5F52;
+            --bg: #0B0B0F;
+            --bg-surface: #16161A;
+            --text: #EDEDEF;
+            --text-muted: #72727E;
+            --text-dim: #55555E;
+            --border-subtle: #3A3A42;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+
+        .noise-overlay {
+            position: fixed; inset: 0;
+            pointer-events: none; z-index: 9998;
+            opacity: 0.03; mix-blend-mode: overlay;
+        }
+
+        .mesh-auth {
+            background:
+                radial-gradient(ellipse 600px 600px at 20% 50%, rgba(200,169,126,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 500px 400px at 80% 20%, rgba(154,132,104,0.04) 0%, transparent 70%),
+                radial-gradient(ellipse 800px 500px at 60% 100%, rgba(22,22,26,0.8) 0%, transparent 70%),
+                var(--bg);
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+        }
+
+        #cursor-glow {
+            position: fixed; width: 400px; height: 400px; border-radius: 50%;
+            pointer-events: none; z-index: 2;
+            background: radial-gradient(circle, rgba(200,169,126,0.04) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            will-change: left, top;
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .input-field::placeholder { color: var(--text-dim); }
+        .input-field:focus {
+            border-color: rgba(200,169,126,0.35);
+            box-shadow: 0 0 0 3px rgba(200,169,126,0.08);
+        }
+
+        .btn-accent {
+            background: var(--accent); color: var(--bg);
+            font-weight: 700; padding: 15px 40px; border-radius: 60px;
+            border: none; cursor: pointer; font-size: 15px; font-family: inherit;
+            letter-spacing: 0.01em;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative; overflow: hidden;
+        }
+        .btn-accent::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transform: translateX(-100%); transition: transform 0.6s;
+        }
+        .btn-accent:hover::before { transform: translateX(100%); }
+        .btn-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(200,169,126,0.25), 0 0 60px rgba(200,169,126,0.08);
+        }
+
+        .btn-outline {
+            background: transparent; color: var(--accent);
+            font-weight: 600; padding: 15px 40px; border-radius: 60px;
+            border: 1px solid rgba(200,169,126,0.25); cursor: pointer;
+            font-size: 15px; font-family: inherit;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            background: rgba(200,169,126,0.06);
+            box-shadow: 0 0 25px rgba(200,169,126,0.08);
+        }
+
+        .btn-oauth {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            width: 100%; padding: 14px 20px; border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+            color: var(--text); font-family: inherit; font-size: 14px; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-oauth:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(200,169,126,0.2);
+        }
+
+        .divider {
+            display: flex; align-items: center; gap: 16px;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.06);
+        }
+
+        .tab-active {
+            color: var(--text);
+            border-bottom: 2px solid var(--accent);
+        }
+        .tab-inactive {
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+        }
+
+        /* Gold shimmer line at top of card */
+        .card-accent-line {
+            position: relative;
+        }
+        .card-accent-line::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 20%; right: 20%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.4;
+            border-radius: 1px;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
+
+        @media (prefers-reduced-motion: reduce) {
+            #cursor-glow { display: none !important; }
+        }
+    </style>
+</head>
+<body class="mesh-auth">
+
+    <svg style="position:absolute;width:0;height:0;" aria-hidden="true">
+        <filter id="noiseFilter">
+            <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+        </filter>
+    </svg>
+    <div class="noise-overlay" style="filter:url(#noiseFilter);" aria-hidden="true"></div>
+    <div id="cursor-glow" aria-hidden="true"></div>
+
+    <div class="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative z-10">
+        <!-- Logo -->
+        <a href="/wireframe-landing.html" class="flex items-center gap-3 mb-10 group">
+            <div class="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <span class="text-[#EDEDEF] font-bold text-xl tracking-tight">HH Copilot</span>
+            <span class="text-[10px] font-semibold tracking-[0.15em] uppercase text-accent/50 ml-1 hidden sm:inline">Premium</span>
+        </a>
+
+        <!-- Auth Card -->
+        <div class="glass card-accent-line w-full max-w-[420px] p-8 md:p-10">
+            <!-- Tabs -->
+            <div class="flex gap-8 mb-8">
+                <button class="tab-active pb-2 text-sm font-semibold transition-colors" id="tab-signin" onclick="switchTab('signin')">Sign in</button>
+                <button class="tab-inactive pb-2 text-sm font-semibold transition-colors" id="tab-signup" onclick="switchTab('signup')">Sign up</button>
+            </div>
+
+            <!-- OAuth Buttons -->
+            <div class="space-y-3 mb-6">
+                <button class="btn-oauth">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                        <rect x="0" y="0" width="24" height="24" rx="4" fill="#C8A97E"/>
+                        <text x="5" y="17" font-family="Manrope,sans-serif" font-size="13" font-weight="900" fill="#0B0B0F">HH</text>
+                    </svg>
+                    Continue with HH.ru
+                </button>
+                <button class="btn-oauth">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    Continue with Google
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider text-[11px] text-[#72727E] font-medium mb-6">or</div>
+
+            <!-- Sign In Form -->
+            <form id="form-signin" class="space-y-4" onsubmit="event.preventDefault(); window.location.href='/wireframe-dashboard.html'">
+                <div>
+                    <label class="text-[11px] font-semibold text-[#72727E] uppercase tracking-wider mb-2 block">Email</label>
+                    <input type="email" class="input-field" placeholder="you@example.com">
+                </div>
+                <div>
+                    <label class="text-[11px] font-semibold text-[#72727E] uppercase tracking-wider mb-2 block">Password</label>
+                    <input type="password" class="input-field" placeholder="Enter password">
+                </div>
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <div class="w-4 h-4 rounded border border-[#3A3A42] bg-white/[0.02]"></div>
+                        <span class="text-xs text-[#72727E]">Remember me</span>
+                    </label>
+                    <a href="#" class="text-xs text-accent/70 hover:text-accent transition-colors">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-accent w-full !rounded-xl">Sign in</button>
+            </form>
+
+            <!-- Sign Up Form (hidden) -->
+            <form id="form-signup" class="space-y-4 hidden" onsubmit="event.preventDefault(); window.location.href='/wireframe-dashboard.html'">
+                <div>
+                    <label class="text-[11px] font-semibold text-[#72727E] uppercase tracking-wider mb-2 block">Full name</label>
+                    <input type="text" class="input-field" placeholder="Your name">
+                </div>
+                <div>
+                    <label class="text-[11px] font-semibold text-[#72727E] uppercase tracking-wider mb-2 block">Email</label>
+                    <input type="email" class="input-field" placeholder="you@example.com">
+                </div>
+                <div>
+                    <label class="text-[11px] font-semibold text-[#72727E] uppercase tracking-wider mb-2 block">Password</label>
+                    <input type="password" class="input-field" placeholder="Create password">
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded border border-[#3A3A42] bg-white/[0.02]"></div>
+                    <span class="text-xs text-[#55555E]">I agree to Terms and Privacy Policy</span>
+                </div>
+                <button type="submit" class="btn-accent w-full !rounded-xl">Create account</button>
+            </form>
+
+            <!-- Footer note -->
+            <p class="text-center text-[11px] text-[#55555E] mt-6">
+                By continuing you agree to our Terms of Service and Privacy Policy
+            </p>
+        </div>
+
+        <!-- Decorative line below card -->
+        <div class="mt-8 flex items-center gap-4">
+            <div class="w-8 h-px bg-gradient-to-r from-transparent to-accent/20"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-accent/20"></div>
+            <div class="w-8 h-px bg-gradient-to-l from-transparent to-accent/20"></div>
+        </div>
+
+        <!-- Back link -->
+        <a href="/wireframe-landing.html" class="mt-6 text-sm text-[#72727E] hover:text-[#EDEDEF] transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back to home
+        </a>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // Cursor glow (gold tinted)
+        const cursorGlow = document.getElementById('cursor-glow');
+        let mouseX = -500, mouseY = -500, glowX = -500, glowY = -500;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        function animateCursor() {
+            glowX += (mouseX - glowX) * 0.08;
+            glowY += (mouseY - glowY) * 0.08;
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+        if ('ontouchstart' in window) cursorGlow.style.display = 'none';
+
+        // Tab switching
+        window.switchTab = function(tab) {
+            const signinTab = document.getElementById('tab-signin');
+            const signupTab = document.getElementById('tab-signup');
+            const signinForm = document.getElementById('form-signin');
+            const signupForm = document.getElementById('form-signup');
+
+            if (tab === 'signin') {
+                signinTab.className = 'tab-active pb-2 text-sm font-semibold transition-colors';
+                signupTab.className = 'tab-inactive pb-2 text-sm font-semibold transition-colors';
+                signinForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+            } else {
+                signupTab.className = 'tab-active pb-2 text-sm font-semibold transition-colors';
+                signinTab.className = 'tab-inactive pb-2 text-sm font-semibold transition-colors';
+                signupForm.classList.remove('hidden');
+                signinForm.classList.add('hidden');
+            }
+        };
+    })();
+    </script>
+</body>
+</html>
