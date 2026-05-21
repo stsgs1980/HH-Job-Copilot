@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { chatCompletion } from '@/lib/ai'
 import { db } from '@/lib/db'
+import { resolveUserId } from '@/lib/mock-auth'
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { messages, source, userId } = body as {
+    const { messages, source } = body as {
       messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>
       source?: string
-      userId?: string
     }
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
@@ -18,8 +18,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Mock userId until real auth is implemented
-    const mockUserId = userId ?? 'mock-user-001'
+    // Resolve userId from session or fallback
+    const resolvedUserId = await resolveUserId(req, { bodyField: 'userId' })
 
     // Save the last user message to DB
     const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user')
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     if (lastUserMsg) {
       await db.aIMessage.create({
         data: {
-          userId: mockUserId,
+          userId: resolvedUserId,
           role: 'user',
           content: lastUserMsg.content,
           source: source ?? 'chat',
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     // Save AI response to DB
     await db.aIMessage.create({
       data: {
-        userId: mockUserId,
+        userId: resolvedUserId,
         role: 'assistant',
         content: aiResponse,
         source: source ?? 'chat',

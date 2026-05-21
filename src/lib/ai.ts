@@ -37,6 +37,23 @@ export async function chatCompletion(
   return completion.choices[0]?.message?.content ?? ''
 }
 
+// ---- LLM Chat Streaming ----
+
+export async function chatCompletionStream(
+  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
+): Promise<ReadableStream<Uint8Array>> {
+  const zai = await getZAI()
+  const stream = await zai.chat.completions.create({
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...messages,
+    ],
+    stream: true,
+  })
+  // z-ai-sdk returns response.body (ReadableStream) when stream=true
+  return stream as ReadableStream<Uint8Array>
+}
+
 // ---- Humanizer ----
 
 const HUMANIZER_PROMPT = `Перепиши текст так, чтобы он звучал как сообщение от живого человека. Правила:

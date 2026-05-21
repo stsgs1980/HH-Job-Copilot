@@ -88,3 +88,20 @@
 - Proper error handling with try/catch and meaningful error messages
 - All routes import helpers from `@/lib/hh-api` and `@/lib/db`
 - Lint verification: `bun run lint` passes with no errors
+
+## Task 2: Stripe payments integration (test mode) + Rate limiting
+**Date:** 2026-05-21
+**Status:** ✅ Completed
+
+### What was done
+- Installed `stripe` npm package
+- Created `src/lib/stripe.ts` — Server utilities: getStripe(), getOrCreateCustomer(), createCheckoutSession(), createPortalSession(), handleSubscriptionUpdate(), handleSubscriptionDeleted(), getPlanLimits(), getPlanInfo(), PLANS definitions (STARTER/PRO/ULTRA)
+- Created `src/lib/rate-limit.ts` — In-memory rate limiting by plan: checkRateLimit(), getUserUsage(), resetRateLimit(), resetAllRateLimits(). Works independently of Stripe (reads plan from DB)
+- Created 4 API routes:
+  - `POST /api/stripe/checkout` — Create Stripe Checkout Session (403 when disabled)
+  - `POST /api/stripe/webhook` — Handle Stripe webhooks with signature verification (200 when disabled)
+  - `POST /api/stripe/portal` — Create Stripe Customer Portal session (403 when disabled)
+  - `GET /api/stripe/plans` — Return plans + current subscription (works when disabled)
+- Created `src/hooks/use-stripe.ts` — Client hook: subscribe(), openPortal(), plans, currentPlan, isLoading, isEnabled, refreshPlans. Shows "Coming Soon" toast when Stripe disabled
+- All Stripe operations guarded by `isFeatureEnabled('stripe')`
+- Lint verification: all new files pass with no errors

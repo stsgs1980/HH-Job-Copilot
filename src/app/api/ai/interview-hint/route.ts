@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { chatCompletion } from '@/lib/ai'
 import { db } from '@/lib/db'
+import { resolveUserId } from '@/lib/mock-auth'
 
 const INTERVIEW_HINT_SYSTEM_PROMPT = `Ты — AI-ассистент на собеседовании. На основе вопроса интервьюера и контекста резюме, дай краткую, конкретную подсказку что ответить. Формат: 1-2 предложения с ключевыми моментами.
 
@@ -19,13 +20,11 @@ export async function POST(req: NextRequest) {
       question,
       resumeContext,
       previousQA,
-      userId,
     } = body as {
       interviewId?: string
       question?: string
       resumeContext?: string
       previousQA?: Array<{ q: string; a: string }>
-      userId?: string
     }
 
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
@@ -55,12 +54,12 @@ ${previousContext}
       { role: 'user', content: userMessage },
     ])
 
-    // Save hint to DB if we have a userId and interviewId
-    const mockUserId = userId ?? 'mock-user-001'
+    // Resolve userId from session or fallback
+    const resolvedUserId = await resolveUserId(req, { bodyField: 'userId' })
 
     await db.aIMessage.create({
       data: {
-        userId: mockUserId,
+        userId: resolvedUserId,
         role: 'assistant',
         content: hint,
         source: 'interview',

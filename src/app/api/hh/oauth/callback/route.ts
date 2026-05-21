@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { resolveUserId } from '@/lib/mock-auth'
 
 /**
  * GET /api/hh/oauth/callback
@@ -10,7 +11,6 @@ import { db } from '@/lib/db'
  *   state — CSRF state (should match the one sent, but we skip validation for MVP)
  *
  * Exchanges the code for an access token, then stores it in the DB.
- * For now uses a mock userId from query param since we don't have full auth.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -70,21 +70,26 @@ export async function GET(req: NextRequest) {
       expires_in: number
     }
 
-    // For now, use a mock userId from query param (no real auth yet)
-    const userId = req.nextUrl.searchParams.get('userId')
+    // Resolve userId from session or fallback to query param
+    const userId = await resolveUserId(req, { queryParam: 'userId' })
 
-    if (userId) {
-      // Store tokens in DB
-      const expiresAt = new Date(Date.now() + expiresIn * 1000)
-      await db.user.update({
-        where: { id: userId },
-        data: {
-          hhToken: accessToken,
-          hhRefreshToken: refreshToken,
-          hhTokenExpiresAt: expiresAt,
-        },
-      })
-    }
+    // Store tokens in DB
+    const expiresAt = new Date(Date.now() + expiresIn * 1000)
+    await db.user.upsert({
+      where: { id: userId },
+      update: {
+        hhToken: accessToken,
+        hhRefreshToken: refreshToken,
+        hhTokenExpiresAt: expiresAt,
+      },
+      create: {
+        id: userId,
+        email: `${userId}@hh-copilot.local`,
+        hhToken: accessToken,
+        hhRefreshToken: refreshToken,
+        hhTokenExpiresAt: expiresAt,
+      },
+    })
 
     // Redirect to dashboard
     return NextResponse.redirect(new URL('/dashboard', req.url))

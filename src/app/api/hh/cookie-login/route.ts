@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getChats, type ChatikCookies } from '@/lib/hh-api'
 import { db } from '@/lib/db'
+import { resolveUserId } from '@/lib/mock-auth'
 
 /**
  * POST /api/hh/cookie-login
@@ -11,7 +12,7 @@ import { db } from '@/lib/db'
  * OAuth bearer tokens.
  *
  * Body:
- *   userId       — (required) user ID to associate cookies with
+ *   userId       — (optional, resolved from session) user ID to associate cookies with
  *   hhtoken      — (required) HH.ru auth token cookie
  *   hhuid        — (required) HH.ru user ID cookie
  *   crypted_hhuid — (required) Encrypted HH.ru user ID cookie
@@ -20,21 +21,15 @@ import { db } from '@/lib/db'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { userId, hhtoken, hhuid, crypted_hhuid, _xsrf } = body as {
-      userId?: string
+    const { hhtoken, hhuid, crypted_hhuid, _xsrf } = body as {
       hhtoken?: string
       hhuid?: string
       crypted_hhuid?: string
       _xsrf?: string
     }
 
-    // Validate required fields
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Missing "userId" in request body.' },
-        { status: 400 },
-      )
-    }
+    // Resolve userId from session or fallback to body field
+    const userId = await resolveUserId(req, { bodyField: 'userId' })
 
     const requiredCookies: Record<string, string | undefined> = {
       hhtoken,

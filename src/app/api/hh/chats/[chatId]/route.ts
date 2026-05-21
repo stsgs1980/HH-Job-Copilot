@@ -6,6 +6,7 @@ import {
   type ChatikCookies,
 } from '@/lib/hh-api'
 import { db } from '@/lib/db'
+import { resolveUserId } from '@/lib/mock-auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,7 +39,7 @@ async function getCookiesForUser(userId: string): Promise<ChatikCookies | NextRe
  * Fetch messages for a specific chat.
  *
  * Query params:
- *   userId — (required) user ID
+ *   userId — (optional, fallback) user ID
  *   limit  — (optional, default 50) number of messages
  *   offset — (optional, default 0) offset for pagination
  */
@@ -48,14 +49,8 @@ export async function GET(
 ) {
   try {
     const { chatId } = await params
-    const userId = req.nextUrl.searchParams.get('userId')
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Missing userId query parameter' },
-        { status: 400 },
-      )
-    }
+    // Resolve userId from session or fallback to query param
+    const userId = await resolveUserId(req, { queryParam: 'userId' })
 
     const cookiesOrErr = await getCookiesForUser(userId)
     if (cookiesOrErr instanceof NextResponse) return cookiesOrErr
@@ -78,7 +73,7 @@ export async function GET(
  * Send a message or mark chat as read.
  *
  * Body:
- *   userId — (required) user ID
+ *   userId — (optional, fallback) user ID
  *   action — (optional) "mark_read" to mark as read; omit/other to send message
  *   text   — (required when action != "mark_read") message text
  */
@@ -88,22 +83,17 @@ export async function POST(
 ) {
   try {
     const { chatId } = await params
-    const body = await req.json()
-    const { userId, action, text } = body as {
-      userId?: string
-      action?: string
-      text?: string
-    }
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Missing userId in request body' },
-        { status: 400 },
-      )
-    }
+    // Resolve userId from session or fallback to body field
+    const userId = await resolveUserId(req, { bodyField: 'userId' })
 
     const cookiesOrErr = await getCookiesForUser(userId)
     if (cookiesOrErr instanceof NextResponse) return cookiesOrErr
+
+    const body = await req.json()
+    const { action, text } = body as {
+      action?: string
+      text?: string
+    }
 
     // Mark as read
     if (action === 'mark_read') {

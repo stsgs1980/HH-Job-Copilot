@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getChats, type ChatikCookies } from '@/lib/hh-api'
 import { db } from '@/lib/db'
+import { resolveUserId } from '@/lib/mock-auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,18 +10,12 @@ export const dynamic = 'force-dynamic'
  * Fetch list of chats from HH.ru Chatik API.
  *
  * Query params:
- *   userId — (required for now, mock auth) user ID to look up cookies for
+ *   userId — (optional, fallback) user ID to look up cookies for
  */
 export async function GET(req: NextRequest) {
   try {
-    const userId = req.nextUrl.searchParams.get('userId')
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Missing userId query parameter' },
-        { status: 400 },
-      )
-    }
+    // Resolve userId from session or fallback to query param
+    const userId = await resolveUserId(req, { queryParam: 'userId' })
 
     // Fetch user and their stored Chatik cookies
     const user = await db.user.findUnique({

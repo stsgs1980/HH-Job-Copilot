@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateHRReply } from '@/lib/ai'
 import { sendMessage } from '@/lib/hh-api'
 import { db } from '@/lib/db'
+import { resolveUserId } from '@/lib/mock-auth'
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,14 +13,12 @@ export async function POST(req: NextRequest) {
       vacancyTitle,
       company,
       autoSend,
-      userId,
     } = body as {
       chatId?: string
       employerMessage?: string
       vacancyTitle?: string
       company?: string
       autoSend?: boolean
-      userId?: string
     }
 
     if (!employerMessage || typeof employerMessage !== 'string' || employerMessage.trim().length === 0) {
@@ -36,8 +35,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Mock userId until real auth is implemented
-    const mockUserId = userId ?? 'mock-user-001'
+    // Resolve userId from session or fallback
+    const resolvedUserId = await resolveUserId(req, { bodyField: 'userId' })
 
     // Generate raw + humanized reply
     const { raw, humanized } = await generateHRReply({
@@ -53,7 +52,7 @@ export async function POST(req: NextRequest) {
       try {
         // Retrieve stored Chatik cookies for this user
         const user = await db.user.findUnique({
-          where: { id: mockUserId },
+          where: { id: resolvedUserId },
           select: { hhCookies: true },
         })
 

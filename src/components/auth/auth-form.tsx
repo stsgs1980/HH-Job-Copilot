@@ -1,11 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import { signIn } from 'next-auth/react'
 import { Building2, Mail, Lock, UserPlus, Eye, EyeOff, ArrowRight } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+
+const NEXTAUTH_ENABLED = process.env.NEXT_PUBLIC_FEATURE_NEXTAUTH === 'true'
 
 interface AuthFormProps {
   onNavigate: () => void
@@ -14,6 +17,88 @@ interface AuthFormProps {
 export function AuthForm({ onNavigate }: AuthFormProps) {
   const [authTab, setAuthTab] = useState('signin')
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [name, setName] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleCredentialsSignIn() {
+    if (!NEXTAUTH_ENABLED) {
+      onNavigate()
+      return
+    }
+
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError(result.error)
+      } else {
+        onNavigate()
+      }
+    } catch {
+      setError('Произошла ошибка при входе')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function handleCredentialsSignUp() {
+    if (!NEXTAUTH_ENABLED) {
+      onNavigate()
+      return
+    }
+
+    setIsLoading(true)
+    setError('')
+
+    try {
+      // For MVP: create user via credentials sign-in (which auto-creates in authorize)
+      // In production, you'd have a separate registration endpoint
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setError(result.error)
+      } else {
+        onNavigate()
+      }
+    } catch {
+      setError('Произошла ошибка при регистрации')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  function handleHHSignIn() {
+    if (!NEXTAUTH_ENABLED) {
+      onNavigate()
+      return
+    }
+
+    // Use custom HH.ru provider
+    signIn('hh', { callbackUrl: '/dashboard' })
+  }
+
+  function handleGoogleSignIn() {
+    if (!NEXTAUTH_ENABLED) {
+      onNavigate()
+      return
+    }
+
+    signIn('google', { callbackUrl: '/dashboard' })
+  }
 
   return (
     <Card className="border-border/50">
@@ -24,7 +109,12 @@ export function AuthForm({ onNavigate }: AuthFormProps) {
         </TabsList>
 
         <TabsContent value="signin" className="p-6 space-y-4">
-          <Button variant="outline" className="w-full h-11 gap-2" onClick={onNavigate}>
+          <Button
+            variant="outline"
+            className="w-full h-11 gap-2"
+            onClick={handleHHSignIn}
+            disabled={isLoading}
+          >
             <Building2 className="w-4 h-4" /> Войти через HH.ru
           </Button>
           <div className="relative">
@@ -35,30 +125,57 @@ export function AuthForm({ onNavigate }: AuthFormProps) {
             <label className="text-sm font-medium">Email</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input className="pl-9 h-11" placeholder="you@example.com" type="email" />
+              <Input
+                className="pl-9 h-11"
+                placeholder="you@example.com"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Пароль</label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input className="pl-9 pr-9 h-11" placeholder="Введите пароль" type={showPassword ? 'text' : 'password'} />
-              <button className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(!showPassword)}>
+              <Input
+                className="pl-9 pr-9 h-11"
+                placeholder="Введите пароль"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowPassword(!showPassword)}
+              >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </div>
+          {error && (
+            <p className="text-sm text-red-500">{error}</p>
+          )}
           <div className="flex justify-between items-center text-sm">
             <label className="flex items-center gap-2"><input type="checkbox" className="rounded" /> Запомнить</label>
             <a href="#" className="text-cyan hover:underline">Забыли пароль?</a>
           </div>
-          <Button className="w-full h-11 gradient-bg text-white border-0 hover:opacity-90" onClick={onNavigate}>
-            Войти <ArrowRight className="ml-2 w-4 h-4" />
+          <Button
+            className="w-full h-11 gradient-bg text-white border-0 hover:opacity-90"
+            onClick={handleCredentialsSignIn}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Входим...' : <>Войти <ArrowRight className="ml-2 w-4 h-4" /></>}
           </Button>
         </TabsContent>
 
         <TabsContent value="signup" className="p-6 space-y-4">
-          <Button variant="outline" className="w-full h-11 gap-2">
+          <Button
+            variant="outline"
+            className="w-full h-11 gap-2"
+            onClick={handleHHSignIn}
+            disabled={isLoading}
+          >
             <Building2 className="w-4 h-4" /> Войти через HH.ru
           </Button>
           <div className="relative">
@@ -69,29 +186,53 @@ export function AuthForm({ onNavigate }: AuthFormProps) {
             <label className="text-sm font-medium">Имя</label>
             <div className="relative">
               <UserPlus className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input className="pl-9 h-11" placeholder="Сергей Т." />
+              <Input
+                className="pl-9 h-11"
+                placeholder="Сергей Т."
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Email</label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input className="pl-9 h-11" placeholder="you@example.com" type="email" />
+              <Input
+                className="pl-9 h-11"
+                placeholder="you@example.com"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium">Пароль</label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input className="pl-9 h-11" placeholder="Минимум 8 символов" type="password" />
+              <Input
+                className="pl-9 h-11"
+                placeholder="Минимум 8 символов"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
           </div>
+          {error && (
+            <p className="text-sm text-red-500">{error}</p>
+          )}
           <label className="flex items-start gap-2 text-sm text-muted-foreground">
             <input type="checkbox" className="rounded mt-0.5" />
             <span>Принимаю <a href="#" className="text-cyan hover:underline">условия использования</a> и <a href="#" className="text-cyan hover:underline">политику конфиденциальности</a></span>
           </label>
-          <Button className="w-full h-11 gradient-bg text-white border-0 hover:opacity-90" onClick={onNavigate}>
-            Создать аккаунт <ArrowRight className="ml-2 w-4 h-4" />
+          <Button
+            className="w-full h-11 gradient-bg text-white border-0 hover:opacity-90"
+            onClick={handleCredentialsSignUp}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Создаём...' : <>Создать аккаунт <ArrowRight className="ml-2 w-4 h-4" /></>}
           </Button>
         </TabsContent>
       </Tabs>
