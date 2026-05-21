@@ -158,7 +158,7 @@ export function AuthForm({ onNavigate }: AuthFormProps) {
           )}
           <div className="flex justify-between items-center text-sm">
             <label className="flex items-center gap-2"><input type="checkbox" className="rounded" /> Запомнить</label>
-            <a href="#" className="text-cyan hover:underline">Забыли пароль?</a>
+            <a href="#" className="text-coral hover:underline">Забыли пароль?</a>
           </div>
           <Button
             className="w-full h-11 gradient-bg text-white border-0 hover:opacity-90"
@@ -225,7 +225,7 @@ export function AuthForm({ onNavigate }: AuthFormProps) {
           )}
           <label className="flex items-start gap-2 text-sm text-muted-foreground">
             <input type="checkbox" className="rounded mt-0.5" />
-            <span>Принимаю <a href="#" className="text-cyan hover:underline">условия использования</a> и <a href="#" className="text-cyan hover:underline">политику конфиденциальности</a></span>
+            <span>Принимаю <a href="#" className="text-coral hover:underline">условия использования</a> и <a href="#" className="text-coral hover:underline">политику конфиденциальности</a></span>
           </label>
           <Button
             className="w-full h-11 gradient-bg text-white border-0 hover:opacity-90"

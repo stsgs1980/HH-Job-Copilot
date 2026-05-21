@@ -41,8 +41,8 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-screen flex flex-col bg-background relative overflow-hidden">
-      <div className="ambient-glow w-[500px] h-[500px] bg-cyan -top-48 -right-48" />
-      <div className="ambient-glow w-[350px] h-[350px] bg-purple -bottom-32 -left-32" style={{ animationDelay: '-12s' }} />
+      <div className="ambient-glow w-[500px] h-[500px] bg-coral -top-48 -right-48" />
+      <div className="ambient-glow w-[350px] h-[350px] bg-green-accent -bottom-32 -left-32" style={{ animationDelay: '-12s' }} />
 
       {/* Top Bar */}
       <header className="relative z-50 glass-card rounded-none shrink-0">
@@ -68,9 +68,9 @@ function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="hidden lg:flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md"><Zap className="w-3 h-3 text-cyan" /><span className="font-semibold tabular-nums">47</span> откликов</span>
+              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md"><Zap className="w-3 h-3 text-coral" /><span className="font-semibold tabular-nums">47</span> откликов</span>
               <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md"><Check className="w-3 h-3 text-emerald-400" /><span className="font-semibold tabular-nums">8</span> приглашений</span>
-              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md"><MessageSquare className="w-3 h-3 text-purple" /><span className="font-semibold tabular-nums">5</span> чатов</span>
+              <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md"><MessageSquare className="w-3 h-3 text-green-accent" /><span className="font-semibold tabular-nums">5</span> чатов</span>
             </div>
             <ThemeToggle size="icon" className="h-8 w-8" />
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.push('/')}>
@@ -120,7 +120,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
                   onClick={asrEnabled ? chat.startRecording : undefined}
                   title={asrEnabled ? 'Голосовой ввод' : 'Скоро'}
                 >
-                  <Mic className={`w-4 h-4 ${asrEnabled ? 'text-purple' : 'text-muted-foreground'}`} />
+                  <Mic className={`w-4 h-4 ${asrEnabled ? 'text-green-accent' : 'text-muted-foreground'}`} />
                   {chat.isRecording && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-400 animate-pulse-dot" />}
                 </Button>
               )}
@@ -132,7 +132,7 @@ function AppShell({ children }: { children: React.ReactNode }) {
                 onClick={() => { chat.setInputValue('Найди вакансии по '); }}
                 title="Поиск вакансий"
               >
-                <Briefcase className="w-4 h-4 text-cyan" />
+                <Briefcase className="w-4 h-4 text-coral" />
               </Button>
             </div>
           </div>

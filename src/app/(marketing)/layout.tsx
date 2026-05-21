@@ -11,10 +11,10 @@ export default function MarketingLayout({
     <div className="min-h-screen flex flex-col bg-background">
       <nav className="sticky top-0 z-50 glass-card rounded-none border-b border-border/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/">
+          <Link href="/" aria-label="HH Job Copilot — главная">
             <Logo />
           </Link>
-          <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+          <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground font-medium">
             <a href="#features" className="hover:text-foreground transition-colors">Возможности</a>
             <a href="#how" className="hover:text-foreground transition-colors">Как работает</a>
             <a href="#pricing" className="hover:text-foreground transition-colors">Тарифы</a>
@@ -25,7 +25,7 @@ export default function MarketingLayout({
               <Button variant="ghost" size="sm">Войти</Button>
             </Link>
             <Link href="/login">
-              <Button size="sm" className="gradient-bg text-white border-0 hover:opacity-90">
+              <Button size="sm" className="gradient-bg text-white border-0 hover:opacity-90 sweep-btn">
                 Начать бесплатно
               </Button>
             </Link>
@@ -37,10 +37,10 @@ export default function MarketingLayout({
 
       <footer className="border-t border-border/50 py-8 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <Link href="/">
+          <Link href="/" aria-label="HH Job Copilot — главная">
             <Logo size="sm" />
           </Link>
-          <div className="flex gap-6 text-sm text-muted-foreground">
+          <div className="flex gap-6 text-sm text-muted-foreground font-medium">
             <a href="#" className="hover:text-foreground transition-colors">Условия</a>
             <a href="#" className="hover:text-foreground transition-colors">Конфиденциальность</a>
             <a href="#" className="hover:text-foreground transition-colors">Поддержка</a>

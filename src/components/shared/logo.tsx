@@ -14,8 +14,8 @@ export function Logo({ size = 'default' }: { size?: 'sm' | 'default' | 'lg' }) {
         <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
           <defs>
             <linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#22d3ee" />
-              <stop offset="100%" stopColor="#a78bfa" />
+              <stop offset="0%" stopColor="#E8443A" />
+              <stop offset="100%" stopColor="#4ade80" />
             </linearGradient>
           </defs>
           {/* Shield */}
@@ -25,7 +25,7 @@ export function Logo({ size = 'default' }: { size?: 'sm' | 'default' | 'lg' }) {
           <path d="M18 6l-6 9h4l-2 11 6-9h-4l2-11z" fill="url(#logo-grad)" />
         </svg>
       </div>
-      {size !== 'sm' && <span className={`font-bold ${s.text}`}>HH Job Copilot</span>}
+      {size !== 'sm' && <span className={`font-extrabold tracking-tight ${s.text}`}>HH <span className="text-coral">Copilot</span></span>}
     </div>
   )
 }

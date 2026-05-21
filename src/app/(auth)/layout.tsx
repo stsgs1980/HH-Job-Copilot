@@ -8,8 +8,8 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background gradient-mesh relative overflow-hidden">
-      <div className="ambient-glow w-[400px] h-[400px] bg-cyan -top-32 -right-32" />
-      <div className="ambient-glow w-[300px] h-[300px] bg-purple -bottom-24 -left-24" style={{ animationDelay: '-8s' }} />
+      <div className="ambient-glow w-[400px] h-[400px] bg-coral -top-32 -right-32" />
+      <div className="ambient-glow w-[300px] h-[300px] bg-green-accent -bottom-24 -left-24" style={{ animationDelay: '-8s' }} />
       <div className="relative z-10 w-full max-w-md px-4 page-transition">
         <div className="text-center mb-8">
           <Link href="/">

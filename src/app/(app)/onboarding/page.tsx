@@ -41,8 +41,8 @@ export default function OnboardingPage() {
 
   return (
     <div className="h-screen flex flex-col items-center justify-center p-4 gradient-mesh">
-      <div className="ambient-glow w-[400px] h-[400px] bg-cyan -top-32 -right-32" />
-      <div className="ambient-glow w-[300px] h-[300px] bg-purple -bottom-24 -left-24" style={{ animationDelay: '-8s' }} />
+      <div className="ambient-glow w-[400px] h-[400px] bg-coral -top-32 -right-32" />
+      <div className="ambient-glow w-[300px] h-[300px] bg-green-accent -bottom-24 -left-24" style={{ animationDelay: '-8s' }} />
 
       <div className="relative z-10 w-full max-w-2xl">
         {/* Header */}
@@ -61,12 +61,12 @@ export default function OnboardingPage() {
                 {step > s.id ? (
                   <Check className="w-5 h-5 text-white" />
                 ) : (
-                  <s.icon className={`w-5 h-5 ${step === s.id ? 'text-cyan' : 'text-muted-foreground'}`} />
+                  <s.icon className={`w-5 h-5 ${step === s.id ? 'text-coral' : 'text-muted-foreground'}`} />
                 )}
               </div>
               {i < 3 && (
                 <div className={`w-8 sm:w-16 h-0.5 mx-1 transition-colors duration-300 ${
-                  step > s.id ? 'bg-cyan' : 'bg-muted'
+                  step > s.id ? 'bg-coral' : 'bg-muted'
                 }`} />
               )}
             </div>
@@ -133,8 +133,8 @@ export default function OnboardingPage() {
                         onClick={() => update('format', f.id)}
                         className={`flex flex-col items-center gap-1.5 p-3 rounded-lg border transition-all ${
                           formData.format === f.id
-                            ? 'border-cyan bg-cyan/5 text-cyan'
-                            : 'border-border/50 hover:border-cyan/30 text-muted-foreground'
+                            ? 'border-coral bg-coral/5 text-coral'
+                            : 'border-border/50 hover:border-coral/30 text-muted-foreground'
                         }`}
                       >
                         <f.icon className="w-4 h-4" />

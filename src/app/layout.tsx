@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Manrope, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "next-themes";
@@ -7,9 +7,10 @@ import { Providers } from "@/components/providers";
 import { AuthProvider } from "@/components/auth";
 import { ErrorBoundary } from "@/components/error-boundary";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin", "cyrillic"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -95,8 +96,23 @@ export default function RootLayout({
   return (
     <html lang="ru" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${manrope.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
       >
+        {/* NEURO: Noise overlay */}
+        <div className="noise-overlay" aria-hidden="true" />
+
+        {/* NEURO: Cursor glow (client-side positioned) */}
+        <div
+          className="cursor-glow"
+          id="cursorGlow"
+          aria-hidden="true"
+        />
+
+        {/* WCAG: Skip link for keyboard navigation */}
+        <a href="#main-content" className="skip-link">
+          Перейти к основному содержимому
+        </a>
+
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -106,12 +122,30 @@ export default function RootLayout({
           <Providers>
             <AuthProvider>
               <ErrorBoundary>
-                {children}
+                <div id="main-content">
+                  {children}
+                </div>
               </ErrorBoundary>
               <Toaster />
             </AuthProvider>
           </Providers>
         </ThemeProvider>
+
+        {/* NEURO: Cursor glow script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var glow = document.getElementById('cursorGlow');
+                if (!glow) return;
+                document.addEventListener('mousemove', function(e) {
+                  glow.style.left = e.clientX + 'px';
+                  glow.style.top = e.clientY + 'px';
+                });
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );

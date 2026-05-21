@@ -11,17 +11,22 @@ interface HeroProps {
 export function Hero({ onNavigate }: HeroProps) {
   return (
     <section className="relative overflow-hidden gradient-mesh">
-      <div className="ambient-glow w-[500px] h-[500px] bg-cyan -top-48 -right-48" />
-      <div className="ambient-glow w-[350px] h-[350px] bg-purple -bottom-32 -left-32" style={{ animationDelay: '-12s' }} />
+      {/* NEURO: Ambient glow orbs */}
+      <div className="ambient-glow w-[500px] h-[500px] bg-coral -top-48 -right-48" />
+      <div className="ambient-glow w-[350px] h-[350px] bg-green-accent -bottom-32 -left-32" style={{ animationDelay: '-12s' }} />
+
+      {/* NEURO: Dot pattern */}
+      <div className="dot-pattern top-40 right-20" />
+
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32 text-center">
         <Badge variant="secondary" className="mb-6 gap-1.5 px-3 py-1 glass-card fade-in-up stagger-1">
-          <Sparkles className="w-3 h-3" /> AI-копилот для HH.ru
+          <Sparkles className="w-3 h-3 text-coral" /> AI-копилот для HH.ru
         </Badge>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6 fade-in-up stagger-2">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6 leading-[1.1] fade-in-up stagger-2">
           Найди работу мечты<br />
           <span className="gradient-text">с AI-копилотом</span>
         </h1>
-        <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 fade-in-up stagger-3">
+        <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed fade-in-up stagger-3">
           Автоматизируй отклики, общайся с HR через AI и проходи интервью с подсказками в реальном времени. Всё в одном месте.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center fade-in-up stagger-4">

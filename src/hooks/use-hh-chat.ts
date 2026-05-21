@@ -8,8 +8,8 @@ import type { ChatItem, HHChat } from '@/types'
 // ---- Mock data when FEATURE_HH_CHATIK=false ----
 
 const MOCK_CHATS: ChatItem[] = [
-  { name: 'Яндекс — Елена', preview: 'Когда сможете пройти собеседование?', time: '2м', unread: true, color: 'bg-cyan/10 text-cyan' },
-  { name: 'Avito — Михаил', preview: 'Расскажите о вашем опыте с Next.js', time: '15м', unread: true, color: 'bg-purple/10 text-purple' },
+  { name: 'Яндекс — Елена', preview: 'Когда сможете пройти собеседование?', time: '2м', unread: true, color: 'bg-coral/10 text-coral' },
+  { name: 'Avito — Михаил', preview: 'Расскажите о вашем опыте с Next.js', time: '15м', unread: true, color: 'bg-green-accent/10 text-green-accent' },
   { name: 'Тинькофф — Анна', preview: 'Отправьте портфолио', time: '1ч', unread: false, color: 'bg-orange-500/10 text-orange-400' },
   { name: 'VK — Дмитрий', preview: 'Спасибо за отклик! Нам интересен...', time: '2ч', unread: false, color: 'bg-emerald-500/10 text-emerald-400' },
 ]
@@ -17,8 +17,8 @@ const MOCK_CHATS: ChatItem[] = [
 /** Convert HHChat (API) to ChatItem (UI) */
 function hhChatToChatItem(chat: HHChat): ChatItem {
   const colors = [
-    'bg-cyan/10 text-cyan',
-    'bg-purple/10 text-purple',
+    'bg-coral/10 text-coral',
+    'bg-green-accent/10 text-green-accent',
     'bg-orange-500/10 text-orange-400',
     'bg-emerald-500/10 text-emerald-400',
   ]
