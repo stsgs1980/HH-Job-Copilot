@@ -11,7 +11,7 @@ import { useAnalytics } from '@/hooks/use-analytics'
 import { GradientOrb } from '@/components/neuro'
 import {
   Zap, MessageSquare, Search, Briefcase, Mic, BarChart3, Check, LogOut, Send,
-  Square, MicOff,
+  Square, MicOff, Settings,
 } from 'lucide-react'
 import type { DashboardMode } from '@/types'
 
@@ -89,6 +89,9 @@ function AppShell({ children }: { children: React.ReactNode }) {
                 <span className="font-semibold tabular-nums">{приглашения}</span> приглашений
               </span>
             </div>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.push('/settings')} aria-label="Настройки">
+              <Settings className="w-4 h-4" />
+            </Button>
             <ThemeToggle size="icon" className="h-8 w-8" />
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => router.push('/')} aria-label="Выйти">
               <LogOut className="w-4 h-4" />
