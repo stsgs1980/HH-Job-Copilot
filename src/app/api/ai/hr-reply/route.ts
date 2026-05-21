@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateHRReply } from '@/lib/ai'
-import { sendMessage } from '@/lib/hh-api'
-import { db } from '@/lib/db'
-import { resolveUserId } from '@/lib/mock-auth'
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,13 +9,11 @@ export async function POST(req: NextRequest) {
       employerMessage,
       vacancyTitle,
       company,
-      autoSend,
     } = body as {
       chatId?: string
       employerMessage?: string
       vacancyTitle?: string
       company?: string
-      autoSend?: boolean
     }
 
     if (!employerMessage || typeof employerMessage !== 'string' || employerMessage.trim().length === 0) {
@@ -28,16 +23,6 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    if (!chatId) {
-      return NextResponse.json(
-        { error: 'chatId is required' },
-        { status: 400 },
-      )
-    }
-
-    // Resolve userId from session or fallback
-    const resolvedUserId = await resolveUserId(req, { bodyField: 'userId' })
-
     // Generate raw + humanized reply
     const { raw, humanized } = await generateHRReply({
       employerMessage,
@@ -45,39 +30,9 @@ export async function POST(req: NextRequest) {
       company,
     })
 
-    let sent = false
-
-    // Auto-send via Chatik API if requested
-    if (autoSend) {
-      try {
-        // Retrieve stored Chatik cookies for this user
-        const user = await db.user.findUnique({
-          where: { id: resolvedUserId },
-          select: { hhCookies: true },
-        })
-
-        if (user?.hhCookies) {
-          const cookies = JSON.parse(user.hhCookies)
-          await sendMessage(cookies, chatId, humanized)
-          sent = true
-        }
-      } catch (sendError) {
-        console.error('[/api/ai/hr-reply] Auto-send failed:', sendError)
-        // Don't fail the whole request — just mark as not sent
-      }
-    }
-
-    // Save the message to DB
-    await db.message.create({
-      data: {
-        chatId,
-        role: 'AI',
-        content: humanized,
-        sentVia: sent ? 'HUMANIZED_AI' : 'MANUAL',
-        aiRawContent: raw,
-        aiHumanized: true,
-      },
-    })
+    // Auto-send is not available without HH.ru Chatik API credentials
+    // When FEATURE_HH_CHATIK=true and user has stored cookies, autoSend would be handled here
+    const sent = false
 
     return NextResponse.json({ raw, humanized, sent })
   } catch (error) {

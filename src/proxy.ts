@@ -1,5 +1,6 @@
 // ============================================================
-// Middleware — Route protection with NextAuth / mock fallback
+// Proxy (Next.js 16 replacement for middleware.ts)
+// Route protection with NextAuth / mock fallback
 // When FEATURE_NEXTAUTH=false: skip all checks (mock mode)
 // When FEATURE_NEXTAUTH=true: protect /dashboard, /api/hh/*, /api/ai/*
 // Public routes: /, /login, /api/auth/*, /api/hh/oauth/*
@@ -30,12 +31,8 @@ const PROTECTED_PREFIXES = [
 
 /** Check if a pathname matches a public route */
 function isPublicRoute(pathname: string): boolean {
-  // Exact match
   if (PUBLIC_ROUTES.includes(pathname)) return true
-
-  // Prefix match for public API routes
   if (PUBLIC_PREFIXES.some((prefix) => pathname.startsWith(prefix))) return true
-
   return false
 }
 
@@ -44,7 +41,7 @@ function isProtectedRoute(pathname: string): boolean {
   return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // When FEATURE_NEXTAUTH=false, skip all auth checks
@@ -70,7 +67,6 @@ export async function middleware(request: NextRequest) {
     })
 
     if (!token) {
-      // For API routes, return 401
       if (pathname.startsWith('/api/')) {
         return NextResponse.json(
           { error: 'Authentication required' },
@@ -78,15 +74,13 @@ export async function middleware(request: NextRequest) {
         )
       }
 
-      // For page routes, redirect to login
       const loginUrl = new URL('/login', request.url)
       loginUrl.searchParams.set('callbackUrl', pathname)
       return NextResponse.redirect(loginUrl)
     }
   } catch (error) {
-    console.error('[Middleware] Token verification error:', error)
+    console.error('[Proxy] Token verification error:', error)
 
-    // If token verification fails, treat as unauthenticated
     if (pathname.startsWith('/api/')) {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -104,13 +98,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico, logo.svg, etc. (public assets)
-     * - public folder files
-     */
     '/((?!_next/static|_next/image|favicon\\.ico|logo\\.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
   ],
 }

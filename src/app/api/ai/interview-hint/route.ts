@@ -54,10 +54,9 @@ ${previousContext}
       { role: 'user', content: userMessage },
     ])
 
-    // Resolve userId from session or fallback
+    // Save to DB in background (non-blocking)
     const resolvedUserId = await resolveUserId(req, { bodyField: 'userId' })
-
-    await db.aIMessage.create({
+    db.aIMessage.create({
       data: {
         userId: resolvedUserId,
         role: 'assistant',
@@ -65,7 +64,7 @@ ${previousContext}
         source: 'interview',
         interviewId: interviewId ?? undefined,
       },
-    })
+    }).catch(e => console.error('[/api/ai/interview-hint] DB save error:', e.message))
 
     return NextResponse.json({ hint })
   } catch (error) {

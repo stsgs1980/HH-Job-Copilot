@@ -21,32 +21,29 @@ export async function POST(req: NextRequest) {
     // Resolve userId from session or fallback
     const resolvedUserId = await resolveUserId(req, { bodyField: 'userId' })
 
-    // Save the last user message to DB
-    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user')
+    // Call AI first — this is the critical path
+    const aiResponse = await chatCompletion(messages)
 
-    if (lastUserMsg) {
-      await db.aIMessage.create({
+    // Save messages to DB in background (non-blocking — DB failure shouldn't break the API)
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user')
+    Promise.all([
+      lastUserMsg && db.aIMessage.create({
         data: {
           userId: resolvedUserId,
           role: 'user',
           content: lastUserMsg.content,
           source: source ?? 'chat',
         },
-      })
-    }
-
-    // Call AI
-    const aiResponse = await chatCompletion(messages)
-
-    // Save AI response to DB
-    await db.aIMessage.create({
-      data: {
-        userId: resolvedUserId,
-        role: 'assistant',
-        content: aiResponse,
-        source: source ?? 'chat',
-      },
-    })
+      }).catch(e => console.error('[/api/ai/chat] DB save user msg error:', e.message)),
+      db.aIMessage.create({
+        data: {
+          userId: resolvedUserId,
+          role: 'assistant',
+          content: aiResponse,
+          source: source ?? 'chat',
+        },
+      }).catch(e => console.error('[/api/ai/chat] DB save AI msg error:', e.message)),
+    ]).catch(() => {}) // swallow any remaining errors
 
     return NextResponse.json({ response: aiResponse })
   } catch (error) {

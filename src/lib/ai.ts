@@ -37,23 +37,6 @@ export async function chatCompletion(
   return completion.choices[0]?.message?.content ?? ''
 }
 
-// ---- LLM Chat Streaming ----
-
-export async function chatCompletionStream(
-  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
-): Promise<ReadableStream<Uint8Array>> {
-  const zai = await getZAI()
-  const stream = await zai.chat.completions.create({
-    messages: [
-      { role: 'system', content: SYSTEM_PROMPT },
-      ...messages,
-    ],
-    stream: true,
-  })
-  // z-ai-sdk returns response.body (ReadableStream) when stream=true
-  return stream as ReadableStream<Uint8Array>
-}
-
 // ---- Humanizer ----
 
 const HUMANIZER_PROMPT = `Перепиши текст так, чтобы он звучал как сообщение от живого человека. Правила:
@@ -76,7 +59,17 @@ export async function humanize(text: string): Promise<string> {
   return completion.choices[0]?.message?.content ?? text
 }
 
-// ---- AI Reply for Chatik (auto-humanized) ----
+// ---- AI Reply for Chatik (auto-humanized in single call) ----
+
+const HR_REPLY_PROMPT = `Ты — ассистент для ответа на сообщения HR от имени соискателя. Правила:
+1. Отвечай вежливо, профессионально, конкретно
+2. Показывай заинтересованность в позиции
+3. Используй информацию из описания вакансии
+4. Пиши естественно — как живой человек, не как AI
+5. Разнообразная длина предложений
+6. Без штампов вроде "Отлично!", "Конечно!", "Я с радостью помогу"
+7. Можно偶尔 использовать сокращения вроде "ок", "спс"
+8. Отвечай на русском языке`
 
 export async function generateHRReply(
   context: {
@@ -84,16 +77,29 @@ export async function generateHRReply(
     vacancyTitle?: string
     company?: string
     userResume?: string
-    previousMessages?: Array<{ role: string; content: string }>
   },
 ): Promise<{ raw: string; humanized: string }> {
+  const zai = await getZAI()
+
+  // Single optimized call — generates humanized reply directly
   const prompt = `HR из компании "${context.company ?? 'компания'}" (вакансия: ${context.vacancyTitle ?? 'не указана'}) написал:
 "${context.employerMessage}"
 
-${context.userResume ? `Резюме пользователя:\n${context.userResume}\n\n` : ''}Составь вежливый, профессиональный ответ от имени соискателя. Ответ должен быть конкретным и показывать заинтересованность.`
+${context.userResume ? `Резюме соискателя:\n${context.userResume}\n\n` : ''}Напиши ответ от имени соискателя — естественно, как живой человек.`
 
-  const raw = await chatCompletion([{ role: 'user', content: prompt }])
-  const humanized = await humanize(raw)
+  const completion = await zai.chat.completions.create({
+    messages: [
+      { role: 'system', content: HR_REPLY_PROMPT },
+      { role: 'user', content: prompt },
+    ],
+  })
+
+  const humanized = completion.choices[0]?.message?.content ?? ''
+
+  // For the "raw" version, strip some humanization markers
+  const raw = humanized
+    .replace(/[👋🙏😊👍✨🎉]/g, '')
+    .replace(/\b(ок|спс|ну)\b/gi, m => m === 'ок' ? 'хорошо' : m === 'спс' ? 'спасибо' : m)
 
   return { raw, humanized }
 }
