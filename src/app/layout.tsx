@@ -101,13 +101,6 @@ export default function RootLayout({
         {/* NEURO: Noise overlay — refined SVG grain */}
         <div className="noise-overlay" aria-hidden="true" />
 
-        {/* NEURO: Cursor glow — smooth, large, cyan→purple→emerald */}
-        <div
-          className="cursor-glow"
-          id="cursorGlow"
-          aria-hidden="true"
-        />
-
         {/* WCAG: Skip link for keyboard navigation */}
         <a href="#main-content" className="skip-link">
           Перейти к основному содержимому
@@ -131,28 +124,7 @@ export default function RootLayout({
           </Providers>
         </ThemeProvider>
 
-        {/* NEURO: Cursor glow script — optimized with rAF throttling */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                var glow = document.getElementById('cursorGlow');
-                if (!glow) return;
-                var ticking = false;
-                document.addEventListener('mousemove', function(e) {
-                  if (!ticking) {
-                    requestAnimationFrame(function() {
-                      glow.style.left = e.clientX + 'px';
-                      glow.style.top = e.clientY + 'px';
-                      ticking = false;
-                    });
-                    ticking = true;
-                  }
-                });
-              })();
-            `,
-          }}
-        />
+
       </body>
     </html>
   );

@@ -279,35 +279,6 @@
     opacity: 0.065;
   }
 
-  /* ── NEURO: Cursor glow — large, smooth, cyan→purple→emerald v4 ── */
-  .cursor-glow {
-    position: fixed;
-    width: 800px;
-    height: 800px;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 1;
-    background: radial-gradient(
-      circle,
-      rgba(34,211,238,0.08) 0%,
-      rgba(167,139,250,0.045) 25%,
-      rgba(52,211,153,0.025) 45%,
-      transparent 65%
-    );
-    transform: translate(-50%, -50%);
-    transition: left 0.15s ease-out, top 0.15s ease-out;
-    will-change: left, top;
-  }
-  .dark .cursor-glow {
-    background: radial-gradient(
-      circle,
-      rgba(34,211,238,0.18) 0%,
-      rgba(167,139,250,0.09) 25%,
-      rgba(52,211,153,0.045) 45%,
-      transparent 65%
-    );
-  }
-
   /* ── NEURO: Dot pattern — organic, multi-size, cyan tinted v4 ── */
   .dot-pattern {
     position: absolute;
@@ -993,7 +964,7 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
-    .noise-overlay, .cursor-glow, .mesh-blob, .ambient-glow {
+    .noise-overlay, .mesh-blob, .ambient-glow {
       display: none !important;
     }
   }
