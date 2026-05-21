@@ -17,11 +17,71 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITE_URL = "https://hhcopilot.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "HH Job Copilot — AI-ассистент для поиска работы",
-  description: "Автоматизируй поиск работы на HH.ru с AI. Авто-отклики, чат с HR через Chatik API, интервью-ассистент с ASR. Найди работу мечты быстрее.",
-  keywords: ["HH.ru", "AI", "поиск работы", "автоотклики", "интервью", "Chatik API", "карьера"],
+  description:
+    "Автоматизируй поиск работы на HH.ru с AI. Авто-отклики, чат с HR через Chatik API, интервью-ассистент с ASR. Найди работу мечты быстрее.",
+  keywords: [
+    "HH.ru",
+    "AI",
+    "поиск работы",
+    "автоотклики",
+    "интервью",
+    "Chatik API",
+    "карьера",
+    "job search",
+    "AI assistant",
+    "resume",
+    "auto apply",
+  ],
   authors: [{ name: "HH Job Copilot" }],
+  creator: "HH Job Copilot",
+  publisher: "HH Job Copilot",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      "ru-RU": SITE_URL,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: SITE_URL,
+    title: "HH Job Copilot — AI-ассистент для поиска работы",
+    description:
+      "Автоматизируй поиск работы на HH.ru с AI. Авто-отклики, чат с HR через Chatik API, интервью-ассистент с ASR.",
+    siteName: "HH Job Copilot",
+    images: [
+      {
+        url: `${SITE_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "HH Job Copilot — AI-ассистент для поиска работы на HH.ru",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HH Job Copilot — AI-ассистент для поиска работы",
+    description:
+      "Автоматизируй поиск работы на HH.ru с AI. Авто-отклики, чат с HR, интервью-ассистент.",
+    images: [`${SITE_URL}/og-image.png`],
+    creator: "@hhcopilot",
+  },
   icons: {
     icon: "/logo.svg",
   },

@@ -21,19 +21,9 @@ const MOCK_ANALYTICS: AnalyticsData = {
 }
 
 async function fetchAnalyticsAPI(): Promise<AnalyticsData> {
-  // In the future, this will fetch from a real analytics API
-  // For now, return mock data
-  const res = await fetch('/api/ai/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      messages: [{ role: 'user', content: 'Покажи аналитику за неделю' }],
-      source: 'analytics',
-    }),
-  })
+  const res = await fetch('/api/analytics?userId=mock-user-001')
   if (!res.ok) throw new Error('Failed to fetch analytics')
-  // For now, still return mock data as the AI response isn't structured analytics
-  return MOCK_ANALYTICS
+  return res.json()
 }
 
 export function useAnalytics() {

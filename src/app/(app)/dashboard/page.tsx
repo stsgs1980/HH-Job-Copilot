@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { AIDigest, UserMessage, VacancyResponse, InterviewLive, AnalyticsInline, ChatPanel } from '@/components/dashboard'
+import { AIDigest, UserMessage, VacancyResponse, InterviewLive, AnalyticsInline, ChatPanel, SkeletonAIDigest, SkeletonVacancyResponse, SkeletonInterviewLive, SkeletonAnalyticsInline, SkeletonChatPanel, SkeletonChatMessage } from '@/components/dashboard'
 import { useChatContext } from '@/contexts/chat-context'
 import { useHHChat } from '@/hooks/use-hh-chat'
 import { useFeatureFlag } from '@/hooks/use-feature-flag'
@@ -75,8 +75,17 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* When no chat messages, show the default dashboard view */}
-          {chat.messages.length === 0 && (
+          {/* When no chat messages, show skeleton or default dashboard view */}
+          {chat.messages.length === 0 && hhChat.isLoading && (
+            <div className="space-y-6">
+              <SkeletonAIDigest />
+              <SkeletonChatMessage role="user" />
+              <SkeletonVacancyResponse />
+              <SkeletonInterviewLive />
+              <SkeletonAnalyticsInline />
+            </div>
+          )}
+          {chat.messages.length === 0 && !hhChat.isLoading && (
             <>
               <AIDigest />
               <UserMessage text="Ответь Елене из Яндекса, что готов на собеседование завтра в 14:00. И покажи новые вакансии по React" />
@@ -90,7 +99,8 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      {showPanel && <ChatPanel onClose={() => setShowPanel(false)} chats={hhChat.chats} isLoading={hhChat.isLoading} />}
+      {showPanel && hhChat.isLoading && <SkeletonChatPanel />}
+      {showPanel && !hhChat.isLoading && <ChatPanel onClose={() => setShowPanel(false)} chats={hhChat.chats} isLoading={hhChat.isLoading} />}
     </>
   )
 }

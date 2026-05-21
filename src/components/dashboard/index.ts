@@ -4,3 +4,12 @@ export { VacancyResponse } from './vacancy-response'
 export { InterviewLive } from './interview-live'
 export { AnalyticsInline } from './analytics-inline'
 export { ChatPanel } from './chat-panel'
+
+export {
+  SkeletonAIDigest,
+  SkeletonVacancyResponse,
+  SkeletonInterviewLive,
+  SkeletonAnalyticsInline,
+  SkeletonChatPanel,
+  SkeletonChatMessage,
+} from './skeletons'
